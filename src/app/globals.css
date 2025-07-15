@@ -1,11 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
 @custom-variant dark (&:is(.dark *));
+
+
 
 :root {
 
-  --primary: #3197d6;
+  --primary: #0b2653;
   --secondary: oklch(0.97 0 0);
   --blue: "#3197d6";
   --black: "#333333";
