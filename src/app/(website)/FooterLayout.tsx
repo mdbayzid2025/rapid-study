@@ -9,6 +9,8 @@ const FooterLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <div className="">
+        <Navbar />
+        
         <ConfigProvider
         theme={{
           token: {
@@ -18,9 +20,7 @@ const FooterLayout = ({ children }: { children: React.ReactNode }) => {
         >
           {children}
         </ConfigProvider>
-      </div>
-      <Navbar />
-
+      </div>      
       { pathname === "/select-service" ? "" : <p>Footer</p>}
     </div>
   )
