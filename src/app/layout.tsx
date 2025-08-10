@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Teko, } from "next/font/google";
 import "./globals.css";
+import { ConfigProvider } from "antd";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -29,10 +30,71 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      
       <body
         className={` ${teko.className}antialiased`}
       >
+        <ConfigProvider
+      theme={{
+        token: { colorPrimary: "#808080" },
+        components: {
+          Input: {
+            borderRadius: 12,
+            colorBorder: "#989898",
+            colorText: "#121212",
+            inputFontSize: 16,
+            colorTextPlaceholder: "#808080", 
+            // colorBgContainer: "#000000"           
+          },
+
+          // Modal: {
+          //   contentBg: "#232323",
+          //   colorIcon: "white",
+          //   colorBgMask: "rgba(64,64,64,0.5)",
+          //   headerBg: "transparent",
+          //   titleColor: "#909090 ",
+          //   titleFontSize: 22,
+          // },
+          Select: {
+            colorBgContainer: "rgba(255, 255, 255, 0.1)",
+            colorBorder: "#808080",
+            colorText: "#FFFFFF",
+            colorBgElevated: "#808080",
+            optionSelectedBg: "#121212",
+            optionActiveBg: "#404040",
+            // colorTextPlaceholder: "#808080", 
+            // colorTextPlaceholder: "#808080", 
+          },
+          Collapse: {
+            headerBg: "#404040",
+            contentBg: "#232323",
+            colorText: "#909090",
+            fontSize: 18,                        
+          },
+          Pagination: {
+            itemActiveBg: "#808080",
+            itemBg: "rgba(0,42,96,0.3215686274509804)",
+            colorPrimary: "rgb(255,255,255)",
+            colorText: "#ffffff",
+            colorTextDisabled: "rgba(255,255,255,0.5)",
+            borderRadius: 25,
+            itemSize: 40,
+          },
+          Table: {
+            colorBgContainer: "#232323",
+            borderColor: "#989898",
+            headerBg: "#404040",
+            headerColor: "#ffffff",
+            headerSplitColor: "transparent",
+            colorText: "#ffffff",
+            colorSplit: "transparent",
+            cellPaddingBlock: 13,
+          },
+        },
+      }}
+    >
         {children}
+        </ConfigProvider>
       </body>
     </html>
   );
