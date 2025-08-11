@@ -31,59 +31,6 @@ const Navbar = () => {
       </Container>
       </div>
 
-      <div className="bg-white pb-5">
-        <Container>
-          <div className="flex items-center justify-between bg-white py-6">
-            <img src="/logo-dark.png" alt="" className='w-48' />
-            <div className="flex items-center gap-5">
-              <div className="flex items-center gap-3">
-                <div className="">
-                  <CiClock2 size={60} className='text-chart-4' />
-                </div>
-                <div className="">
-                  <h1 className='text-primary font-bold text-xl'>SO 9001</h1>
-                  <p className='uppercase text-md'>Certification</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="">
-                  <CiClock2 size={60} className='text-chart-4' />
-                </div>
-                <div className="">
-                  <h1 className='text-primary font-bold text-xl'>24/7</h1>
-                  <p className='uppercase text-md'>Service</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="">
-                  <CiClock2 size={60} className='text-chart-4' />
-                </div>
-                <div className="">
-                  <h1 className='text-primary font-bold text-xl'>Qualified</h1>
-                  <p className='uppercase text-md'>Professionals</p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </Container>        
-      </div>
-      {/* <Container>
-        <div className="bg-primary flex items-center justify-between px-5 py-10 -mt-10 text-white">
-          <div className="flex items-center text-black font-medium text-xl">
-            {
-              menuItems && menuItems.map(menu => <Link key={menu?.name} href={menu?.link} className='ml-3'>{menu?.name}</Link>)
-            }
-          </div>
-          <div className="flex items-center gap-5">
-            <IoSearchOutline  size={24} color='#fff'/>
-            <div className="bg-chart-4 px-5 py-5 font-medium">
-              GET A Quote
-            </div>
-          </div>
-        </div>
-        </Container> */}
-
     </div>
   )
 }
