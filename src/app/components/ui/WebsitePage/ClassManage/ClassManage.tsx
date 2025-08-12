@@ -1,40 +1,37 @@
-import React from 'react'
-import ClassHeader from './ClassHeader'
-import Container from '@/app/components/shared/Container/Container'
-import { Col, Row } from 'antd'
-import ClassNote from './ClassNote'
-import Assignment from './Assignment'
-import ClassResourse from './ClassResourse'
-import UpcomingEvents from './UpcomingEvents'
-import ClassTodo from './ClassTodo'
-// import 'antd/dist/antd.css'; // Import Ant Design's CSS
+"use client";
+
+import React from "react";
+import ClassInfo from "./ClassInfo";
+import Container from "@/app/components/shared/Container/Container";
+import { assignments, classNotesData, todoItems, upcomingEventsData } from "@/app/data/mockData";
+import Assignment from "./Assignment";
+import ClassAllNotes from "./ClassAllNotes";
+import UpcomingEvents from "./UpcomingEvents";
+import TodoList from "./TodoList";
+import ClassNotifications from "./ClassNotifications";
 
 const ClassManage = () => {
   return (
     <div>
-        <Container>
-        <ClassHeader />
-        <Row>
-            {/* --------- Main Content ----------- */}
-            <Col span={15}>
-            <div className="" style={{ padding: '10px'}}>
-            <ClassNote />
-            <Assignment />
-            <ClassResourse />
+      <div className="bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto p-6">
+          <ClassInfo />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <ClassAllNotes notes={classNotesData} />
+              <Assignment assignments={assignments} />
             </div>
-            </Col>
 
-            {/* -------- Sidebar ---------------- */}
-            <Col span={9}>
-             <div style={{ paddingInline: '10px', paddingBlock: 15,  background: "#ddd", borderRadius: 10 }}>
-            <UpcomingEvents />
-            <ClassTodo />
+            <div className="space-y-6">
+              <UpcomingEvents events={upcomingEventsData} />
+              <TodoList items={todoItems}/>
+              <ClassNotifications />
             </div>
-            </Col>
-        </Row>
-        </Container>
+          </div>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default ClassManage
+export default ClassManage;

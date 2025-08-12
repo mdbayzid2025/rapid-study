@@ -1,12 +1,13 @@
-import ClassManage from '@/app/components/ui/WebsitePage/ClassManage/ClassManage'
-import React from 'react'
+import ClassManage from "@/app/components/ui/WebsitePage/ClassManage/ClassManage";
+
+
 
 const page = () => {
   return (
-    <div>
-        <ClassManage />
+    <div>      
+      <ClassManage />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

@@ -1,60 +1,56 @@
-import React from 'react'
-import { FaFacebookF, FaLinkedinIn, FaTwitter } from 'react-icons/fa'
-import { IoCall, IoLogoYoutube, IoSearchOutline } from 'react-icons/io5'
-import { MdOutlineMailOutline } from 'react-icons/md'
-import Container from '../Container/Container'
-import Link from 'next/link'
-import { CiClock2 } from 'react-icons/ci'
-import { Button } from 'antd'
+import { Bell, BookOpen, User } from "lucide-react";
+import React from "react";
+import Link from "next/link";
 
 const Navbar = () => {
   return (
-    // <div className='absolute top-0 left-0 w-full z-50  '>
-    <div className=' w-full z-50  '>
-      <div className="bg-primary">
-      <Container>
-        <div className="flex items-center justify-between h-12">
-          <div className="flex items-center gap-5 text-white">
-            <div className='flex items-center gap-3'>              
-              <p>Madrasha Code: 11011</p>
-              <p>EIIN: 107906</p>
-            </div>
-            <div className='flex items-center gap-3'>
-              <MdOutlineMailOutline />
-              <p>masuk797@gmail.com</p>
-            </div>
+    <div className="bg-white shadow-sm border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center gap-3">
+            <Link href="/" className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <BookOpen className="w-5 h-5 text-white" />
+            </Link>
+            <span className="text-xl font-bold text-gray-900">ClassHub</span>
           </div>
-          <div className="flex items-center gap-3 text-white">
-            <Button type='primary' size='middle'>BB Online Abedon</Button>
+
+          <nav className="flex items-center space-x-8">
+            <Link href="/" className="text-blue-600 font-medium">
+              Dashboard
+            </Link>
+            <Link href="/profile" className="text-gray-500 hover:text-gray-700">
+              Profile
+            </Link>
+            <Link href="/dashboard" className="text-gray-500 hover:text-gray-700">
+              Dashboard
+            </Link>
+            <Link href="/students-manage" className="text-gray-500 hover:text-gray-700">
+              Students Manage
+            </Link>
+            <Link href="/tasks" className="text-gray-500 hover:text-gray-700">
+              Tasks
+            </Link>
+            <Link href="/assignments" className="text-gray-500 hover:text-gray-700">
+              Assignments
+            </Link>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <button className="relative p-2 text-gray-400 hover:text-gray-500">
+              <Bell className="w-5 h-5" />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                3
+              </span>
+            </button>
+            <button className="p-2 text-gray-400 hover:text-gray-500">
+              <User className="w-5 h-5" />
+            </button>
+            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
           </div>
         </div>
-      </Container>
       </div>
-
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
-
-
-const menuItems = [
-  {
-    name: "Home",
-    link: "/",
-  },
-
-  {
-    name: "Projects",
-    link: "/projects",
-  },
-  
-  {
-    name: "Blog",
-    link: "/blog",
-  },
-  {
-    name: "Contact Us",
-    link: "/contact-us",
-  },  
-]
+export default Navbar;

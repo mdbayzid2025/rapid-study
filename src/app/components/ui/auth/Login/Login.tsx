@@ -82,7 +82,7 @@ export default function LoginPage() {
             size="large"
             className="bg-gradient-to-r from-blue-500 to-indigo-500"
           >
-            Sign Up
+            Login / Sign Up
           </Button>
         </Form>
 
