@@ -1,0 +1,62 @@
+import { baseApi } from './baseApi';
+
+export interface Event {
+  id: string;
+  title: string;
+  description: string;
+  type: 'exam' | 'assignment' | 'test' | 'field-trip' | 'seminar';
+  classId: string;
+  className: string;
+  date: string;
+  dueDate?: string;
+  priority: 'low' | 'medium' | 'high';
+  createdBy: string;
+  createdAt: string;
+}
+
+export const eventApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    getEvents: builder.query<Event[], { classId?: string; upcoming?: boolean }>({
+      query: (params) => ({
+        url: '/events',
+        params,
+      }),
+      providesTags: ['Event'],
+    }),
+    getEvent: builder.query<Event, string>({
+      query: (id) => `/events/${id}`,
+      providesTags: ['Event'],
+    }),
+    createEvent: builder.mutation<Event, Partial<Event>>({
+      query: (eventData) => ({
+        url: '/events',
+        method: 'POST',
+        body: eventData,
+      }),
+      invalidatesTags: ['Event'],
+    }),
+    updateEvent: builder.mutation<Event, { id: string; data: Partial<Event> }>({
+      query: ({ id, data }) => ({
+        url: `/events/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['Event'],
+    }),
+    deleteEvent: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/events/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Event'],
+    }),
+  }),
+});
+
+export const {
+  useGetEventsQuery,
+  useGetEventQuery,
+  useCreateEventMutation,
+  useUpdateEventMutation,
+  useDeleteEventMutation,
+} = eventApi;
