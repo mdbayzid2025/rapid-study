@@ -1,23 +1,27 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Teko } from "next/font/google";
-import "./globals.css";
-import { ConfigProvider } from "antd";
+
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider } from "antd";
+import type { Metadata } from "next";
+import { Teko , Poppins} from "next/font/google";
+import "./globals.css";
+import Providers from "@/urils/Providers";
+import  { Toaster } from 'react-hot-toast';
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
 
 const teko = Teko({
   variable: "--font-teko",
   subsets: ["latin"],
 });
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"], // optional, choose needed weights
+});
+
+
+
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -26,71 +30,27 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={` ${teko.className}antialiased`}>
+      <body className={`${poppins.className} antialiased`}>
         <ConfigProvider
           theme={{
             token: { colorPrimary: "#808080" },
             components: {
-              Input: {
-                borderRadius: 12,
-                colorBorder: "#989898",
-                colorText: "#121212",
-                inputFontSize: 16,
-                colorTextPlaceholder: "#808080",
-                // colorBgContainer: "#000000"
-              },
-
-              // Modal: {
-              //   contentBg: "#232323",
-              //   colorIcon: "white",
-              //   colorBgMask: "rgba(64,64,64,0.5)",
-              //   headerBg: "transparent",
-              //   titleColor: "#909090 ",
-              //   titleFontSize: 22,
-              // },
-              Select: {
-                colorBgContainer: "#FFFFFF", // White container background
-                colorBorder: "#D9D9D9", // Light gray border
-                colorText: "#000000", // Black text
-                colorBgElevated: "#FFFFFF", // Elevated dropdown matches container
-                optionSelectedBg: "#E6F4FF", // Light blue highlight for selected
-                optionActiveBg: "#F5F5F5", // Light gray hover background
-                colorTextPlaceholder: "#A0A0A0", // Soft gray placeholder
-              },
-              Collapse: {
-                headerBg: "#404040",
-                contentBg: "#232323",
-                colorText: "#909090",
-                fontSize: 18,
-              },
-              Pagination: {
-                itemActiveBg: "#808080",
-                itemBg: "rgba(0,42,96,0.3215686274509804)",
-                colorPrimary: "rgb(255,255,255)",
-                colorText: "#ffffff",
-                colorTextDisabled: "rgba(255,255,255,0.5)",
-                borderRadius: 25,
-                itemSize: 40,
-              },
-              // Table: {
-              //   colorBgContainer: "#232323",
-              //   borderColor: "#989898",
-              //   headerBg: "#404040",
-              //   headerColor: "#ffffff",
-              //   headerSplitColor: "transparent",
-              //   colorText: "#ffffff",
-              //   colorSplit: "transparent",
-              //   cellPaddingBlock: 13,
-              // },
+              Input: { borderRadius: 12, colorBorder: "#989898" },
+              Select: { colorBgContainer: "#FFFFFF" },
+              Collapse: { headerBg: "#404040" },
+              Pagination: { itemActiveBg: "#808080" },
             },
           }}
         >
-          <AntdRegistry>{children}</AntdRegistry>
+            <Providers>
+            <AntdRegistry>
+              {children}
+              <Toaster />
+              </AntdRegistry>
+              </Providers>          
         </ConfigProvider>
       </body>
     </html>

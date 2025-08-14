@@ -1,137 +1,135 @@
 "use client";
 
-import React, { useState } from 'react';
-import { 
-  Plus, 
-  Download, 
-  Search, 
-  Filter, 
-  Eye, 
-  Edit, 
-  Trash2, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  Edit,
+  Eye,
+  Filter,
   Grid,
   List,
-  ChevronLeft,
-  ChevronRight
-} from 'lucide-react';
+  Plus,
+  Search,
+  Trash2,
+} from "lucide-react";
+import React, { useState } from "react";
 
-
-import StudentAddModal from './StudentAddModal'; 
-import { Student } from '@/types';
-import { mockStudents } from '@/app/data/mockData';
+import { mockStudents } from "@/app/data/mockData";
+import { Student } from "@/types";
+import StudentAddModal from "./StudentAddModal";
 
 const StudentsManage: React.FC = () => {
   const [students, setStudents] = useState<Student[]>(mockStudents);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [gradeFilter, setGradeFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
-  const [sectionFilter, setSectionFilter] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [gradeFilter, setGradeFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [sectionFilter, setSectionFilter] = useState("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [currentPage, setCurrentPage] = useState(1);
   const [studentsPerPage] = useState(10);
-  
+
   const [modalState, setModalState] = useState({
     isOpen: false,
-    mode: 'add' as 'add' | 'edit' | 'view',
-    student: null as Student | null
+    mode: "add" as "add" | "edit" | "view",
+    student: null as Student | null,
   });
 
   // Filter students based on search and filters
-  const filteredStudents = students.filter(student => {
-    const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.studentId.toLowerCase().includes(searchTerm.toLowerCase());
-    
+  const filteredStudents = students.filter((student) => {
+    const matchesSearch =
+      student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.studentId.toLowerCase().includes(searchTerm.toLowerCase());
+
     const matchesGrade = !gradeFilter || student.grade === gradeFilter;
     const matchesStatus = !statusFilter || student.status === statusFilter;
     const matchesSection = !sectionFilter || student.section === sectionFilter;
-    
+
     return matchesSearch && matchesGrade && matchesStatus && matchesSection;
   });
 
   // Pagination
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
+  const currentStudents = filteredStudents.slice(
+    indexOfFirstStudent,
+    indexOfLastStudent
+  );
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
 
-  const handleAddStudent = (studentData: Omit<Student, 'id'>) => {
+  const handleAddStudent = (studentData: Omit<Student, "id">) => {
     const newStudent: Student = {
       ...studentData,
       id: (students.length + 1).toString(),
-      avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop&crop=face'
+      avatar:
+        "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop&crop=face",
     };
     setStudents([...students, newStudent]);
   };
 
-  const handleEditStudent = (studentData: Omit<Student, 'id'>) => {
+  const handleEditStudent = (studentData: Omit<Student, "id">) => {
     if (modalState.student) {
-      setStudents(students.map(s => 
-        s.id === modalState.student!.id 
-          ? { ...studentData, id: modalState.student!.id, avatar: modalState.student!.avatar }
-          : s
-      ));
+      setStudents(
+        students.map((s) =>
+          s.id === modalState.student!.id
+            ? {
+                ...studentData,
+                id: modalState.student!.id,
+                avatar: modalState.student!.avatar,
+              }
+            : s
+        )
+      );
     }
   };
 
   const handleDeleteStudent = (studentId: string) => {
-    if (window.confirm('Are you sure you want to delete this student?')) {
-      setStudents(students.filter(s => s.id !== studentId));
+    if (window.confirm("Are you sure you want to delete this student?")) {
+      setStudents(students.filter((s) => s.id !== studentId));
     }
   };
 
-  const openModal = (mode: 'add' | 'edit' | 'view', student?: Student) => {
+  const openModal = (mode: "add" | "edit" | "view", student?: Student) => {
     setModalState({
       isOpen: true,
       mode,
-      student: student || null
+      student: student || null,
     });
   };
 
   const closeModal = () => {
     setModalState({
       isOpen: false,
-      mode: 'add',
-      student: null
+      mode: "add",
+      student: null,
     });
   };
 
   const clearFilters = () => {
-    setSearchTerm('');
-    setGradeFilter('');
-    setStatusFilter('');
-    setSectionFilter('');
+    setSearchTerm("");
+    setGradeFilter("");
+    setStatusFilter("");
+    setSectionFilter("");
   };
 
   const getStatusBadgeColor = (status: string) => {
-    return status === 'Active' 
-      ? 'bg-green-100 text-green-800' 
-      : 'bg-yellow-100 text-yellow-800';
+    return status === "Active"
+      ? "bg-green-100 text-green-800"
+      : "bg-yellow-100 text-yellow-800";
   };
 
   return (
     <div className="flex-1 bg-gray-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
       <main className="">
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-          <div className="flex items-center space-x-4 mb-4 sm:mb-0">
-            <button 
-              onClick={() => openModal('add')}
-              className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              <Plus size={16} />
-              <span>Add Student</span>
-            </button>
-            <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-              <Download size={16} />
-              <span>Export</span>
-            </button>
-          </div>
-          
+          <div className="flex items-center space-x-4 mb-4 sm:mb-0"></div>
+
           <div className="flex items-center space-x-2">
             <span className="text-sm text-gray-600">Total Students: </span>
-            <span className="font-semibold text-gray-900">{filteredStudents.length}</span>
+            <span className="font-semibold text-gray-900">
+              {filteredStudents.length}
+            </span>
           </div>
         </div>
 
@@ -139,7 +137,10 @@ const StudentsManage: React.FC = () => {
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <Search
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={18}
+              />
               <input
                 type="text"
                 placeholder="Search students..."
@@ -148,7 +149,7 @@ const StudentsManage: React.FC = () => {
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
-            
+
             <select
               value={gradeFilter}
               onChange={(e) => setGradeFilter(e.target.value)}
@@ -160,7 +161,7 @@ const StudentsManage: React.FC = () => {
               <option value="Grade 11">Grade 11</option>
               <option value="Grade 12">Grade 12</option>
             </select>
-            
+
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -170,7 +171,7 @@ const StudentsManage: React.FC = () => {
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
             </select>
-            
+
             <select
               value={sectionFilter}
               onChange={(e) => setSectionFilter(e.target.value)}
@@ -182,7 +183,7 @@ const StudentsManage: React.FC = () => {
               <option value="Section C">Section C</option>
             </select>
           </div>
-          
+
           <div className="flex items-center justify-between mt-4">
             <button
               onClick={clearFilters}
@@ -191,24 +192,24 @@ const StudentsManage: React.FC = () => {
               <Filter size={16} />
               <span>Clear</span>
             </button>
-            
+
             <div className="flex items-center space-x-2">
               <button
-                onClick={() => setViewMode('grid')}
+                onClick={() => setViewMode("grid")}
                 className={`p-2 rounded-lg transition-colors ${
-                  viewMode === 'grid' 
-                    ? 'bg-indigo-100 text-indigo-600' 
-                    : 'text-gray-600 hover:bg-gray-100'
+                  viewMode === "grid"
+                    ? "bg-indigo-100 text-indigo-600"
+                    : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
                 <Grid size={16} />
               </button>
               <button
-                onClick={() => setViewMode('list')}
+                onClick={() => setViewMode("list")}
                 className={`p-2 rounded-lg transition-colors ${
-                  viewMode === 'list' 
-                    ? 'bg-indigo-100 text-indigo-600' 
-                    : 'text-gray-600 hover:bg-gray-100'
+                  viewMode === "list"
+                    ? "bg-indigo-100 text-indigo-600"
+                    : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
                 <List size={16} />
@@ -219,17 +220,30 @@ const StudentsManage: React.FC = () => {
 
         {/* Students List */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-          <div className="p-6 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">Student List</h2>
+          <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Student List
+            </h2>
+           
+            <button
+              onClick={() => openModal("add")}
+              className="cursor-pointer flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              <Plus size={16} />
+              <span>Add Student</span>
+            </button>
           </div>
-          
-          {viewMode === 'list' ? (
+
+          {viewMode === "list" ? (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      <input type="checkbox" className="rounded border-gray-300" />
+                      <input
+                        type="checkbox"
+                        className="rounded border-gray-300"
+                      />
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Student
@@ -256,20 +270,33 @@ const StudentsManage: React.FC = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {currentStudents.map((student) => (
-                    <tr key={student.id} className="hover:bg-gray-50 transition-colors">
+                    <tr
+                      key={student.id}
+                      className="hover:bg-gray-50 transition-colors"
+                    >
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <input type="checkbox" className="rounded border-gray-300" />
+                        <input
+                          type="checkbox"
+                          className="rounded border-gray-300"
+                        />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center space-x-3">
                           <img
-                            src={student.avatar || 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop&crop=face'}
+                            src={
+                              student.avatar ||
+                              "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop&crop=face"
+                            }
                             alt={student.name}
                             className="w-10 h-10 rounded-full object-cover"
                           />
                           <div>
-                            <div className="font-medium text-gray-900">{student.name}</div>
-                            <div className="text-sm text-gray-500">{student.email}</div>
+                            <div className="font-medium text-gray-900">
+                              {student.name}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {student.email}
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -283,7 +310,11 @@ const StudentsManage: React.FC = () => {
                         {student.section}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(student.status)}`}>
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(
+                            student.status
+                          )}`}
+                        >
                           {student.status}
                         </span>
                       </td>
@@ -293,13 +324,13 @@ const StudentsManage: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center space-x-2">
                           <button
-                            onClick={() => openModal('view', student)}
+                            onClick={() => openModal("view", student)}
                             className="p-1 text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
                           >
                             <Eye size={16} />
                           </button>
                           <button
-                            onClick={() => openModal('edit', student)}
+                            onClick={() => openModal("edit", student)}
                             className="p-1 text-green-600 hover:bg-green-50 rounded transition-colors"
                           >
                             <Edit size={16} />
@@ -321,16 +352,26 @@ const StudentsManage: React.FC = () => {
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {currentStudents.map((student) => (
-                  <div key={student.id} className="bg-gray-50 p-6 rounded-lg border hover:shadow-md transition-shadow">
+                  <div
+                    key={student.id}
+                    className="bg-gray-50 p-6 rounded-lg border hover:shadow-md transition-shadow"
+                  >
                     <div className="flex items-center space-x-4 mb-4">
                       <img
-                        src={student.avatar || 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop&crop=face'}
+                        src={
+                          student.avatar ||
+                          "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop&crop=face"
+                        }
                         alt={student.name}
                         className="w-16 h-16 rounded-full object-cover"
                       />
                       <div>
-                        <h3 className="font-semibold text-gray-900">{student.name}</h3>
-                        <p className="text-sm text-gray-600">{student.studentId}</p>
+                        <h3 className="font-semibold text-gray-900">
+                          {student.name}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          {student.studentId}
+                        </p>
                       </div>
                     </div>
                     <div className="space-y-2 mb-4">
@@ -344,22 +385,28 @@ const StudentsManage: React.FC = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Status:</span>
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(student.status)}`}>
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(
+                            student.status
+                          )}`}
+                        >
                           {student.status}
                         </span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">Enrolled: {student.enrollmentDate}</span>
+                      <span className="text-sm text-gray-500">
+                        Enrolled: {student.enrollmentDate}
+                      </span>
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => openModal('view', student)}
+                          onClick={() => openModal("view", student)}
                           className="p-1 text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
                         >
                           <Eye size={16} />
                         </button>
                         <button
-                          onClick={() => openModal('edit', student)}
+                          onClick={() => openModal("edit", student)}
                           className="p-1 text-green-600 hover:bg-green-50 rounded transition-colors"
                         >
                           <Edit size={16} />
@@ -382,9 +429,11 @@ const StudentsManage: React.FC = () => {
           <div className="px-6 py-4 border-t border-gray-200">
             <div className="flex items-center justify-between">
               <div className="text-sm text-gray-600">
-                Showing {indexOfFirstStudent + 1} to {Math.min(indexOfLastStudent, filteredStudents.length)} of {filteredStudents.length} results
+                Showing {indexOfFirstStudent + 1} to{" "}
+                {Math.min(indexOfLastStudent, filteredStudents.length)} of{" "}
+                {filteredStudents.length} results
               </div>
-              
+
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
@@ -393,12 +442,13 @@ const StudentsManage: React.FC = () => {
                 >
                   <ChevronLeft size={16} />
                 </button>
-                
+
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter(page => 
-                    page === 1 || 
-                    page === totalPages || 
-                    Math.abs(page - currentPage) <= 1
+                  .filter(
+                    (page) =>
+                      page === 1 ||
+                      page === totalPages ||
+                      Math.abs(page - currentPage) <= 1
                   )
                   .map((page, index, array) => (
                     <React.Fragment key={page}>
@@ -409,17 +459,19 @@ const StudentsManage: React.FC = () => {
                         onClick={() => setCurrentPage(page)}
                         className={`px-3 py-1 border rounded transition-colors ${
                           currentPage === page
-                            ? 'bg-indigo-600 text-white border-indigo-600'
-                            : 'border-gray-300 hover:bg-gray-50'
+                            ? "bg-indigo-600 text-white border-indigo-600"
+                            : "border-gray-300 hover:bg-gray-50"
                         }`}
                       >
                         {page}
                       </button>
                     </React.Fragment>
                   ))}
-                
+
                 <button
-                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  onClick={() =>
+                    setCurrentPage(Math.min(totalPages, currentPage + 1))
+                  }
                   disabled={currentPage === totalPages}
                   className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -435,7 +487,9 @@ const StudentsManage: React.FC = () => {
       <StudentAddModal
         isOpen={modalState.isOpen}
         onClose={closeModal}
-        onSave={modalState.mode === 'add' ? handleAddStudent : handleEditStudent}
+        onSave={
+          modalState.mode === "add" ? handleAddStudent : handleEditStudent
+        }
         student={modalState.student}
         mode={modalState.mode}
       />

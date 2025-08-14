@@ -70,13 +70,13 @@ const StudentAddModal: React.FC<StudentModalProps> = ({
   const title = mode === 'add' ? 'Add New Student' : mode === 'edit' ? 'Edit Student' : 'Student Details';
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4">
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-1 cursor-pointer hover:bg-gray-100 rounded-lg transition-colors"
           >
             <X size={20} className="text-gray-500" />
           </button>
@@ -209,13 +209,13 @@ const StudentAddModal: React.FC<StudentModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 cursor-pointer text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                className="px-4 py-2 cursor-pointer bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
               >
                 {mode === 'add' ? 'Add Student' : 'Save Changes'}
               </button>

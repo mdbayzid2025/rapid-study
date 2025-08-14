@@ -3,9 +3,12 @@ import React, { useState } from "react";
 import { Button, Input, Table } from "antd";
 import { Edit, Trash2 } from "lucide-react";
 import DeleteConfirmationDialog from "../../DeleteConfirmationDialog";
+import { useGetTeachersQuery } from "@/store/api/teacherApi";
 
 const TeachersList = ({ teachers, onDelete, onUpdate, viewMode, setViewMode }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
+
+  const {data, isLoading, refetch} = useGetTeachersQuery(undefined);
 
   // Filter teachers based on search term
   const filteredTeachers = teachers.filter((teacher: any) =>
@@ -51,6 +54,12 @@ const TeachersList = ({ teachers, onDelete, onUpdate, viewMode, setViewMode }: a
     },
   ];
 
+  if(isLoading){
+    return <p>Loading</p>
+  }
+  if(data){
+    console.log("teacher", data);
+  }
   return (
     <div>
       <div className="flex flex-col md:flex-row gap-4 mb-6 ">

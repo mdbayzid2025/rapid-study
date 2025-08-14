@@ -1,3 +1,19 @@
+export type Teacher = {
+  _id: string; // MongoDB generated ID
+  name: string;  
+  designation?: string; // Teacher's role/designation (e.g., "Math Teacher")
+  department?: string; // Department (e.g., "Math", "Science")
+  email?: string;
+  contact?: string; // Optional contact number
+  photo?: string; // Optional photo URL
+  remarks?: string; // Optional remarks about the teacher
+  subjects: string[]; // Array of subjects the teacher teaches
+  status: "Active" | "Inactive"; // Teacher's status  
+  createdAt: string; // Timestamp when the teacher was created
+  updatedAt: string; // Timestamp when the teacher's data was last updated
+};
+
+
 export interface ClassNote {
   id: string;
   title: string;
