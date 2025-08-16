@@ -7,6 +7,7 @@ export const subjectApi = baseApi.injectEndpoints({
       query: () => ({
         url: "/subjects", 
       }),
+      transformResponse: (res: {data: any}) => res?.data,
       providesTags: ["Subject"],
     }),
 

@@ -20,11 +20,16 @@ import ChapterFilter from "./ChapterFilter";
 import { useState } from "react";
 import AddNoteModal from "./AddNoteModal";
 import EditNoteModal from "./EditNoteModal";
+import { useGetNotesQuery } from "@/store/api/noteApi";
 
 const Notes = () => {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
+    const {data:notesData, isLoading} = useGetNotesQuery(null);
+
+  console.log("notesData", notesData)
+  if(isLoading)<p>Loading....</p>
   return (
     <div className="mt-10">
       <div className="flex justify-between items-center mb-6">
@@ -47,11 +52,11 @@ const Notes = () => {
           style={{ height: 48 }}
           className="w-full max-w-[500px] "
         />
-        <ChapterFilter />
+        {/* <ChapterFilter /> */}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {notes.map((note) => (
-          <div key={note.id} className="relative bg-transparent">
+        {notesData?.map((note: any) => (
+          <div key={note._id} className="relative bg-transparent">
             <div className="absolute bg-transparent w-full px-5 top-2 right-2 z-10 flex justify-between gap-1">
               <Button
                 size="icon"

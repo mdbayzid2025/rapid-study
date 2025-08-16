@@ -16,11 +16,12 @@ export interface Note {
 
 export const noteApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getNotes: builder.query<Note[], { classId?: string; subject?: string; tag?: string }>({
+    getNotes: builder.query({
       query: (params) => ({
         url: '/notes',
         params,
       }),
+      transformResponse: (res: {data : any})=> res?.data,
       providesTags: ['Note'],
     }),
     getNote: builder.query<Note, string>({

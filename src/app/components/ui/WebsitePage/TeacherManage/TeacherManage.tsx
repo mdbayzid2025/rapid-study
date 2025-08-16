@@ -30,56 +30,40 @@ const TeacherManage: React.FC = () => {
     data: teachersData,
     isLoading,
     refetch,
-  } = useGetTeachersQuery(undefined);
-  console.log(teachersData);
+  } = useGetTeachersQuery(undefined);  
 
   const [modalState, setModalState] = useState({
     isOpen: false,
     mode: "add" as "add" | "edit" | "view",
     teacher: null as Teacher | null,
   });
+  
+  
+// Filter teachers based on search and filters
+const filteredTeachers = teachersData
+  ? teachersData?.filter((teacher: any) => {
+      const matchesSearch =
+        teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        teacher._id.toLowerCase().includes(searchTerm.toLowerCase());
 
-  // Filter teachers based on search and filters
-  const filteredTeachers = !teachersData
-    ? []
-    : teachersData?.data?.filter((teacher: any) => {
-        const matchesSearch =
-          teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          teacher._id.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesDepartment =
+        !departmentFilter || teacher?.department === departmentFilter;
+      const matchesStatus = !statusFilter || teacher?.status === statusFilter;
 
-        const matchesDepartment =
-          !departmentFilter || teacher.department === departmentFilter;
-        const matchesStatus = !statusFilter || teacher.status === statusFilter;
+      return matchesSearch && matchesDepartment && matchesStatus;
+    })
+  : [];
 
-        return matchesSearch && matchesDepartment && matchesStatus;
-      });
 
   // Pagination
   const indexOfLastTeacher = currentPage * teachersPerPage;
   const indexOfFirstTeacher = indexOfLastTeacher - teachersPerPage;
-  const currentTeachers = filteredTeachers.slice(
+  const currentTeachers = filteredTeachers?.slice(
     indexOfFirstTeacher,
     indexOfLastTeacher
   );
-  const totalPages = Math.ceil(filteredTeachers.length / teachersPerPage);
+  const totalPages = Math.ceil(filteredTeachers?.length / teachersPerPage);
 
-  const handleEditTeacher = (teacherData: Omit<Teacher, "id">) => {
-    if (modalState.teacher) {
-      setTeachers(
-        teachers.map((t) =>
-          t._id === modalState.teacher!._id
-            ? {
-                ...teacherData,
-                _id: modalState.teacher!._id,
-                photo: modalState.teacher!.photo,
-                createdAt: modalState.teacher!.createdAt,
-                updatedAt: new Date().toISOString(),
-              }
-            : t
-        )
-      );
-    }
-  };
 
   const handleDeleteTeacher = (teacherId: string) => {
     if (window.confirm("Are you sure you want to delete this teacher?")) {
@@ -115,6 +99,9 @@ const TeacherManage: React.FC = () => {
       : "bg-yellow-100 text-yellow-800";
   };
 
+  if(isLoading){
+    return <p>Loading....</p>
+  }
   return (
     <div className="flex-1  px-4 sm:px-6 lg:px-8">
       <main className="">
@@ -125,7 +112,7 @@ const TeacherManage: React.FC = () => {
           <div className="flex items-center space-x-2">
             <span className="text-sm text-gray-600">Total Teachers: </span>
             <span className="font-semibold text-gray-900">
-              {filteredTeachers.length}
+              {filteredTeachers?.length}
             </span>
           </div>
         </div>
@@ -153,10 +140,13 @@ const TeacherManage: React.FC = () => {
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             >
               <option value="">All Departments</option>
-              <option value="Math">Math</option>
-              <option value="Science">Science</option>
+              <option value="CSE">CSE</option>
+              <option value="EEE">EEE</option>
+              <option value="ETE">ETE</option>                            
               <option value="English">English</option>
+              <option value="Bangla">Bangla</option>
               <option value="History">History</option>
+              <option value="BA">BA</option>
             </select>
 
             <select
@@ -255,7 +245,7 @@ const TeacherManage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {currentTeachers.map((teacher: any) => (
+                  {currentTeachers?.map((teacher: any) => (
                     <tr
                       key={teacher?._id}
                       className="hover:bg-gray-50 transition-colors"
@@ -340,7 +330,7 @@ const TeacherManage: React.FC = () => {
           ) : (
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {currentTeachers.map((teacher: any) => (
+                {currentTeachers?.map((teacher: any) => (
                   <div
                     key={teacher._id}
                     className="bg-gray-50 p-6 rounded-lg border hover:shadow-md transition-shadow"
@@ -411,8 +401,8 @@ const TeacherManage: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="text-sm text-gray-600">
                 Showing {indexOfFirstTeacher + 1} to{" "}
-                {Math.min(indexOfLastTeacher, filteredTeachers.length)} of{" "}
-                {filteredTeachers.length} results
+                {Math.min(indexOfLastTeacher, filteredTeachers?.length)} of{" "}
+                {filteredTeachers?.length} results
               </div>
 
               <div className="flex items-center space-x-2">

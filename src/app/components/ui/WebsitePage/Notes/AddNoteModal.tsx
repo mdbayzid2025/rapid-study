@@ -1,8 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -10,7 +9,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import ChapterFilter from "./ChapterFilter";
+import { useGetSubjectsQuery } from "@/store/api/subjectApi";
+import TagInput from "@/app/components/shared/TagInput";
+import { useDropzone } from "react-dropzone"; // Import react-dropzone
+import { FaRegFileAlt, FaTimes } from "react-icons/fa"; // Import icon for remove button
+
 import {
   Select,
   SelectContent,
@@ -21,34 +24,25 @@ import {
 
 const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedValue, setSelectedValue] = useState("3"); // default value is 3 (Medium)    
-
-  const [selectedChapter, setSelectedChapter] = useState('');
-
-  const options = [
-    { label: "Low", value: "1" },
-    { label: "Medium", value: "3" },
-    { label: "High", value: "5" },
-  ];
-
-  const handleSelect = (value: string) => {
-    setSelectedValue(value);
-    setSearchTerm(""); // Clear the search after selection
-  };
+  
+  const { data: subjectData } = useGetSubjectsQuery(undefined);
+  const [tags, setTags] = useState<string[]>(["react", "nextjs"]);
+  const [images, setImages] = useState<File[]>([]); // For image uploads
+  const [documents, setDocuments] = useState<File[]>([]); // For document uploads
 
   const [noteForm, setNoteForm] = useState({
     title: "",
     description: "",
     subject: "",
-    chapter: "",
-    priority: 3,
-    tags: "",
+    priority: "",    
   });
 
   const handleAddNote = () => {
-    console.log("Note added:", noteForm);
-    setIsAddDialogOpen(false);
-    resetNoteForm();
+    console.log("Note added:", {...noteForm, tags});
+    console.log("Images:", images);
+    console.log("Documents:", documents);
+    // setIsAddDialogOpen(false);
+    // resetNoteForm();
   };
 
   const resetNoteForm = () => {
@@ -56,29 +50,64 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
       title: "",
       description: "",
       subject: "",
-      chapter: "",
-      priority: 3,
-      tags: "",
+      priority: "",      
     });
+    setImages([]);
+    setDocuments([]);
   };
 
-    // Sample options for the dropdown
-  const options2 = [
-    'JavaScript',
-    'Python',
-    'React',
-    'Node.js',
-    'CSS',
-    'HTML',
-    'TypeScript',
-    'Go',
-    'Ruby',
-    'Java',
-  ];
-
-  const filteredOptions = options2.filter((option :any) =>
-    option.toLowerCase().includes(searchTerm.toLowerCase())
+  // Sample options for the dropdown
+  const filteredOptions = subjectData?.filter((subject: any) =>
+    subject?.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Handle file selection for images using react-dropzone
+  const onDropImages = (acceptedFiles: File[]) => {
+    setImages((prevImages) => [...prevImages, ...acceptedFiles]);
+  };
+
+  // Handle file selection for documents using react-dropzone
+  const onDropDocuments = (acceptedFiles: File[]) => {
+    setDocuments((prevDocuments) => [...prevDocuments, ...acceptedFiles]);
+  };
+
+  // Set up the dropzone for images
+  const {
+    getRootProps: getRootPropsImages,
+    getInputProps: getInputPropsImages,
+  } = useDropzone({
+    onDrop: onDropImages,
+    accept: "image/*" as any,
+    multiple: true,
+  });
+
+  // Set up the dropzone for documents
+  const { getRootProps: getRootPropsDocs, getInputProps: getInputPropsDocs } =
+    useDropzone({
+      onDrop: onDropDocuments,
+      accept: ".pdf,.doc,.docx,.txt" as any,
+      multiple: true,
+    });
+
+  // Handle file removal
+  const removeDocument = (file: File) => {
+    setDocuments(documents.filter((doc) => doc !== file));
+  };
+
+  // Handle file removal
+  const removeImage = (file: File) => {
+    setImages(images.filter((img) => img !== file));
+  };
+
+  // handle priority change
+  const handlePriorityChange = (value: string) => {
+    setNoteForm((prev) => ({ ...prev, priority: value }));
+  };
+
+  // handle subject change
+  const handleSubjectChange = (value: string) => {
+    setNoteForm((prev) => ({ ...prev, subject: value }));
+  };
 
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -98,33 +127,71 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
             />
           </div>
 
+          <div className="grid gap-2">
+            <label htmlFor="images" className="text-lg font-semibold">
+              Upload Images
+            </label>
+            <div
+              {...getRootPropsImages({
+                className: "dropzone border-2 border-dashed p-4",
+              })}
+            >
+              <input {...getInputPropsImages()} />
+              <p>Drag & drop some images here, or click to select files</p>
+            </div>
+            <div className="mt-2">
+              {images.length > 0 && (
+                <div>
+                  <strong>Selected Images:</strong>
+                  <div className="flex gap-4 mt-2">
+                    {images.map((image, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt={image.name}
+                          className="w-24 h-24 object-cover rounded-lg"
+                        />
+                        <span
+                          className="absolute top-0 right-0 text-red-500 cursor-pointer text-xl"
+                          onClick={() => removeImage(image)}
+                        >
+                          <FaTimes />
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Priority Select Input */}
           <div className="grid grid-cols-2 gap-x-5">
             <div className="grid gap-2 w-full">
               <Label htmlFor="priority" className="mb-2.5">
-                Priority (1-5)
+                Priority
               </Label>
-              <Select value={selectedValue} onValueChange={handleSelect}>
+              <Select value={noteForm?.priority} onValueChange={handlePriorityChange }>
                 <SelectTrigger className="w-full !h-12">
-                  {" "}
-                  {/* Apply width here */}
                   <SelectValue placeholder="Set priority" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">★ (Low)</SelectItem>
-                  <SelectItem value="3">★★★ (Medium)</SelectItem>
-                  <SelectItem value="5">★★★★★ (High)</SelectItem>
+                  <SelectItem value="Low">Low</SelectItem>
+                  <SelectItem value="Medium">Medium</SelectItem>
+                  <SelectItem value="High">High</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-
             <div className="w-full">
               <label className="block mb-2 text-sm font-semibold">
-                Select Language
+                Select Subject
               </label>
-              <Select value={selectedChapter} onValueChange={setSelectedChapter}>
+              <Select
+                value={noteForm?.subject}
+                onValueChange={handleSubjectChange }
+              >
                 <SelectTrigger className="w-full !h-12">
-                  <SelectValue placeholder="Select a language" />
+                  <SelectValue placeholder="Select a Subject" />
                 </SelectTrigger>
                 <SelectContent>
                   <div className="p-2">
@@ -135,9 +202,9 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="mb-2"
                     />
-                    {filteredOptions.map((option) => (
-                      <SelectItem key={option} value={option}>
-                        {option}
+                    {filteredOptions?.map((subject: any) => (
+                      <SelectItem key={subject?._id} value={subject?._id}>
+                        {subject?.name}
                       </SelectItem>
                     ))}
                   </div>
@@ -148,18 +215,14 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
 
           {/* Tags Input */}
           <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="tags">Tags (comma separated)</Label>
-              <Input
-                id="tags"
-                value={noteForm.tags}
-                className="h-[48]"
-                onChange={(e: any) =>
-                  setNoteForm({ ...noteForm, tags: e.target.value })
-                }
-                placeholder="e.g. Important, Exam, Review"
-              />
-            </div>
+            <Label htmlFor="tags">Tags (comma separated)</Label>
+            <TagInput
+              value={tags}
+              onChange={setTags}
+              placeholder="Add tags…"
+              maxTags={10}
+              allowNew
+            />
           </div>
 
           {/* Description Input */}
@@ -175,11 +238,48 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
               rows={3}
             />
           </div>
+          {/* Document Upload Section with Drag and Drop */}
+          <div className="grid gap-2 mt-4">
+            <Label htmlFor="documents">Upload Documents</Label>
+            <div
+              {...getRootPropsDocs({
+                className: "dropzone border-2 border-dashed p-4",
+              })}
+            >
+              <input {...getInputPropsDocs()} />
+              <p>Drag & drop some documents here, or click to select files</p>
+            </div>
+            <div className="mt-2">
+              {documents.length > 0 && (
+                <div>
+                  <strong>Selected Documents:</strong>
+                  <ul className="space-y-2 grid grid-cols-4 gap-2">
+                    {documents.map((doc, index) => (
+                      <li
+                        key={index}
+                        className="flex justify-between items-center border p-2 h-14 bg-slate-100"
+                      >
+                        <FaRegFileAlt className="mr-2" />
+                        <span>{doc?.name.slice(0, 20)}</span>
+                        <button
+                          className="text-red-500 ml-2"
+                          onClick={() => removeDocument(doc)}
+                        >
+                          <FaTimes />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         <DialogFooter>
           <Button
             variant="outline"
+            className="cursor-pointer"
             onClick={() => {
               resetNoteForm();
               setIsAddDialogOpen(false);
@@ -187,7 +287,9 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
           >
             Cancel
           </Button>
-          <Button onClick={handleAddNote}>Add Note</Button>
+          <Button className="cursor-pointer" onClick={handleAddNote}>
+            Add Note
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

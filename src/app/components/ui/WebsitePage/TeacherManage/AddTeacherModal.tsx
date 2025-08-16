@@ -14,13 +14,7 @@ interface TeacherModalProps {
   mode: "add" | "edit" | "view";
 }
 
-const TeacherAddModal: React.FC<TeacherModalProps> = ({
-  isOpen,
-  onClose,
-  teacher,
-  mode,
-}) => {
-  const [formData, setFormData] = useState({
+const initialState = {
     name: "",
     email: "",
     contact: "",
@@ -29,7 +23,15 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
     remarks: "",
     status: "Active" as "Active" | "Inactive",
     photo: "" as string | File,
-  });
+  }
+
+const TeacherAddModal: React.FC<TeacherModalProps> = ({
+  isOpen,
+  onClose,
+  teacher,
+  mode,
+}) => {
+  const [formData, setFormData] = useState(initialState);
 
   const [createTeacher, { isLoading }] = useCreateTeacherMutation();
   const [updateTeacher, { isLoading: updating }] = useUpdateTeacherMutation();
@@ -47,16 +49,7 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
         photo: teacher?.photo ?? "",
       });
     } else {
-      setFormData({
-        name: "",
-        email: "",
-        contact: "",
-        designation: "",
-        department: "",
-        remarks: "",
-        status: "Active",
-        photo: "",
-      });
+      setFormData(initialState);
     }
   }, [teacher, isOpen]);
 
@@ -134,8 +127,16 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
       ? "Edit Teacher"
       : "Teacher Details";
 
+
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+      setFormData(initialState);
+    }
+  };
+      
   return (
-    <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50">
+    <div onClick={handleOverlayClick} className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl max-w-xl w-full mx-4 overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">{title}</h2>

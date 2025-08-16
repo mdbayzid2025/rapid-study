@@ -56,15 +56,15 @@ export const NoteCard: React.FC<NoteCardProps> = ({
   const [viewerImageIndex, setViewerImageIndex] = useState(0);
   //   const { toast } = useToast();
 
-  const images = attachments.filter((att) => att.type === "image");
-  const documents = attachments.filter((att) => att.type !== "image");
+  const images = attachments?.filter((att) => att.type === "image");
+  const documents = attachments?.filter((att) => att.type !== "image");
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    setCurrentImageIndex((prev) => (prev + 1) % images?.length);
   };
 
   const handlePrevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    setCurrentImageIndex((prev) => (prev - 1 + images?.length) % images?.length);
   };
 
   const openImageViewer = (index: number) => {
@@ -73,11 +73,11 @@ export const NoteCard: React.FC<NoteCardProps> = ({
   };
 
   const handleViewerNext = () => {
-    setViewerImageIndex((prev) => (prev + 1) % images.length);
+    setViewerImageIndex((prev) => (prev + 1) % images?.length);
   };
 
   const handleViewerPrev = () => {
-    setViewerImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    setViewerImageIndex((prev) => (prev - 1 + images?.length) % images?.length);
   };
 
   const downloadFile = (url: string, fileName?: string) => {
@@ -175,7 +175,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
         <CardContent className="p-0">
           <div className="relative">
             <div className="relative w-full h-54 bg-gray-200 dark:bg-gray-700 overflow-hidden">
-              {images.length > 0 ? (
+              {images?.length > 0 ? (
                 <>
                   <img
                     src={images[currentImageIndex].url}
@@ -194,7 +194,8 @@ export const NoteCard: React.FC<NoteCardProps> = ({
                 </div>
               )}
 
-              {images.length > 1 && (
+              {/* {images?.length < 1 && ( */}
+              {!images?.length  && (
                 <>
                   <Button
                     size="icon"
@@ -223,7 +224,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
                 <h3 className="font-semibold text-lg">{title}</h3>
 
                 <div className="flex gap-2">
-                    {images.length > 0 && (
+                    {images?.length > 0 && (
                 <>
                   <Button
                     size="icon"
@@ -249,7 +250,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
                 </>
               )}
 
-              {images.length > 1 && (
+              {images?.length > 1 && (
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 flex space-x-1">
                   {images.map((_, index) => (
                     <div
@@ -271,7 +272,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
               </p>
 
               <div className="flex items-center justify-between">
-                {tags.length > 0 && (
+                {tags?.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-2 mb-3">
                     {tags.map((tag, index) => (
                       <span
@@ -288,11 +289,12 @@ export const NoteCard: React.FC<NoteCardProps> = ({
                 </div>
               </div>
 
-              {documents.length > 0 && (
+              {/* {documents?.length > 0 && ( */}
+              {!documents?.length && (
                 <div className="mt-3 border-t pt-3">
                   <p className="text-xs font-medium mb-2">Attachments</p>
                   <div className="space-y-2">
-                    {documents.map((doc, index) => (
+                    {documents?.map((doc, index) => (
                       <div
                         key={index}
                         className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors"
@@ -323,17 +325,23 @@ export const NoteCard: React.FC<NoteCardProps> = ({
         <DialogContent className="max-w-3xl h-[80vh] p-0 overflow-hidden">
           <DialogHeader className="absolute top-0 left-0 right-0 z-10 bg-black/50 backdrop-blur-sm">
             <DialogTitle className="text-white px-4 py-2">
-              {title} - Image {viewerImageIndex + 1} of {images.length}
+              {title} - Image {viewerImageIndex + 1} of {images?.length}
             </DialogTitle>
           </DialogHeader>
 
           <div className="relative flex items-center justify-center w-full h-full bg-black">
-            <img
-              src={images[viewerImageIndex]?.url}
+            {/* <img
+              src={images[viewerImageIndex]?.url ?? "/placeholder"}
               alt={
                 images[viewerImageIndex]?.caption ||
                 `Full size ${viewerImageIndex + 1}`
               }
+              className="max-h-full max-w-full object-contain"
+            /> */}
+
+            <img
+              src="/placeholder.png"
+              alt="image"
               className="max-h-full max-w-full object-contain"
             />
 
@@ -373,7 +381,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
             </div>
 
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-              {images.map((_, index) => (
+              {images?.map((_, index) => (
                 <div
                   key={index}
                   className={cn(
