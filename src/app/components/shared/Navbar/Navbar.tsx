@@ -1,6 +1,11 @@
 import { Bell, BookOpen, User } from "lucide-react";
 import React from "react";
 import Link from "next/link";
+import { io } from 'socket.io-client';
+
+
+// Connect to the Socket.io server
+const socket = io('http://localhost:5000'); // Use your backend URL
 
 const Navbar = () => {
   return (
@@ -39,12 +44,12 @@ const Navbar = () => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <button className="relative p-2 text-gray-400 hover:text-gray-500">
+            <Link href="notifications" className="relative p-2 text-gray-400 hover:text-gray-500">
               <Bell className="w-5 h-5" />
               <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                 3
               </span>
-            </button>
+            </Link>
             <button className="p-2 text-gray-400 hover:text-gray-500">
               <User className="w-5 h-5" />
             </button>

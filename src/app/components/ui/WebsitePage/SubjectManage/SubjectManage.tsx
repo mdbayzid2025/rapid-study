@@ -107,10 +107,6 @@ const Subjects: React.FC = () => {
     setEditingSubject(null);
   };
 
-  const totalSubjects = subjects.length;
-  const activeStudents = subjects.filter(subject => subject.status === 'Active').reduce((sum, subject) => sum + subject.studentCount, 0);
-  const totalCapacity = subjects.reduce((sum, subject) => sum + subject.capacity, 0);
-
   return (
     <div className="p-8">
       {/* Breadcrumb */}
@@ -223,40 +219,6 @@ const Subjects: React.FC = () => {
               </div>
             );
           })}
-        </div>
-      </div>
-
-      {/* Stats and Actions */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-8">
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">Total Subjects:</span> {totalSubjects}
-          </div>
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">Active Students:</span> {activeStudents}
-          </div>
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">Total Capacity:</span> {totalCapacity}
-          </div>
-        </div>
-        <div className="flex items-center space-x-3">
-          <button className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-            <Download className="h-4 w-4" />
-            <span>Export</span>
-          </button>
-          <button className="flex items-center space-x-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
-            <MoreHorizontal className="h-4 w-4" />
-            <span>Bulk Actions</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200 text-sm text-gray-500">
-        <div>© 2025 Education Management System. All rights reserved.</div>
-        <div className="flex items-center space-x-4">
-          <span>Version 2.1.0</span>
-          <span>Last updated: Jan 2025</span>
         </div>
       </div>
 

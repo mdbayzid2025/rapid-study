@@ -16,9 +16,9 @@ export default function HomeMain() {
       {/* <ClassManage /> */}
       {/* <Dashboard /> */}
       <Container>
-      {/* <Dashboard2 /> */}
+      <Dashboard2 />
       {/* <TeacherManage /> */}
-      <Notes />
+      {/* <Notes /> */}
       </Container>
     </div>
   );

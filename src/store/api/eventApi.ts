@@ -50,6 +50,10 @@ export const eventApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Event'],
     }),
+    getNotification: builder.query({
+      query: ()=>`/notifications`,
+      transformResponse: (res: {data: any})=> res?.data
+    }),    
   }),
 });
 
@@ -59,4 +63,6 @@ export const {
   useCreateEventMutation,
   useUpdateEventMutation,
   useDeleteEventMutation,
+
+  useGetNotificationQuery,
 } = eventApi;

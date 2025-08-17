@@ -7,8 +7,8 @@ import { usePathname } from 'next/navigation';
 const FooterLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   return (
-    <div>
-      <div className="">
+    <div className='flex flex-col'>
+      <div className="h-full">
         <Navbar />
         
         <ConfigProvider
@@ -22,7 +22,7 @@ const FooterLayout = ({ children }: { children: React.ReactNode }) => {
         </ConfigProvider>
       </div>      
       { pathname === "/select-service" ? "" : 
-      <footer className="relative mt-20 bg-gray-900 px-4 pt-20">
+      <footer className="relative bottom-0 hidden bg-gray-900 px-4 pt-20 mt-auto">
   <div className="absolute -top-10 left-1/2 h-16 w-16 -translate-x-1/2 rounded-xl border-4 border-sky-500 bg-white p-2">
   <img className="h-full object-cover mx-auto" src="https://upload.wikimedia.org/wikipedia/en/1/1d/Prime_University.png" alt="" /></div>
   <nav aria-label="Footer Navigation" className="mx-auto mb-10 flex max-w-lg flex-col gap-10 text-center sm:flex-row sm:text-left">
