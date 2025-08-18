@@ -16,18 +16,18 @@ export interface Event {
 
 export const eventApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getEvents: builder.query<Event[], { classId?: string; upcoming?: boolean }>({
+    getEvents: builder.query({
       query: (params) => ({
         url: '/events',
         params,
       }),
       providesTags: ['Event'],
     }),
-    getEvent: builder.query<Event, string>({
+    getEvent: builder.query({
       query: (id) => `/events/${id}`,
       providesTags: ['Event'],
     }),
-    createEvent: builder.mutation<Event, Partial<Event>>({
+    createEvent: builder.mutation({
       query: (eventData) => ({
         url: '/events',
         method: 'POST',
@@ -35,7 +35,7 @@ export const eventApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Event'],
     }),
-    updateEvent: builder.mutation<Event, { id: string; data: Partial<Event> }>({
+    updateEvent: builder.mutation({
       query: ({ id, data }) => ({
         url: `/events/${id}`,
         method: 'PATCH',
@@ -43,7 +43,7 @@ export const eventApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Event'],
     }),
-    deleteEvent: builder.mutation<void, string>({
+    deleteEvent: builder.mutation({
       query: (id) => ({
         url: `/events/${id}`,
         method: 'DELETE',

@@ -3,13 +3,17 @@
 import React from 'react';
 import { Calendar, Clock, Plus } from 'lucide-react';
 import AddEventForm from './AddEventForm';
+import dayjs from 'dayjs';
+
+
 
 
 interface UpcomingEventsProps {
+  upcomingEvents:any
   events: any[];
 }
 
-const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events: initialEvents }) => {
+const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events: initialEvents, upcomingEvents}: any) => {
   const [events, setEvents] = React.useState(initialEvents);
   const [showAddForm, setShowAddForm] = React.useState(false);
 
@@ -40,9 +44,10 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events: initialEvents }
   };
 
   const handleAddEvent = (newEvent: Event) => {
-    setEvents(prev => [...prev, newEvent]);
+    setEvents((prev:any) => [...prev, newEvent]);
   };
 
+  console.log("events", upcomingEvents)
   return (
     <>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -59,9 +64,23 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events: initialEvents }
             Add
           </button>
         </div>
+                <div className="space-y-3">
+          {upcomingEvents && upcomingEvents.map((event:any) => (
+            <div key={event._id} className={`border-l-4 pl-4 py-3 border-green-200 bg-green-50 text-green-700`}>
+              <h4 className="font-medium text-green-700">{event.eventTitle}</h4>
+              <div className="flex items-center text-sm  mt-1 text-red-400 font-normal">
+                <Clock className="w-4 h-4 mr-1 " />
+                {dayjs(event.date).format("MMMM DD, YYYY")} &nbsp; <span className=''>{event.time}</span>
+              </div>
+              <span className={`inline-block  py-1 rounded text-sm font-semibold mt-2 border-green-200 bg-green-50 text-green-700`}>
+                {getEventLabel(event.eventType)}
+              </span>
+            </div>
+          ))}
+        </div>
 
-        <div className="space-y-3">
-          {events.map((event) => (
+        {/* <div className="space-y-3">
+          {events.map((event:any) => (
             <div key={event.id} className={`border-l-4 pl-4 py-3 ${getEventColor(event.type)}`}>
               <h4 className="font-medium text-gray-900">{event.title}</h4>
               <div className="flex items-center text-sm text-gray-600 mt-1">
@@ -73,7 +92,7 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events: initialEvents }
               </span>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
       <AddEventForm

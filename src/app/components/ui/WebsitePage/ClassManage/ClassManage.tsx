@@ -9,8 +9,15 @@ import ClassAllNotes from "./ClassAllNotes";
 import UpcomingEvents from "./UpcomingEvents";
 import TodoList from "./TodoList";
 import ClassNotifications from "./ClassNotifications";
+import { useGetSubjectQuery } from "@/store/api/subjectApi";
 
 const ClassManage = () => {
+  const {data:subjectData, isLoading} = useGetSubjectQuery(undefined);
+
+  console.log("subjectData", subjectData);
+
+
+
   return (
     <div>
       <div className="bg-gray-50 min-h-screen">
@@ -23,8 +30,8 @@ const ClassManage = () => {
             </div>
 
             <div className="space-y-6">
-              <UpcomingEvents events={upcomingEventsData} />
-              <TodoList items={todoItems}/>
+              <UpcomingEvents upcomingEvents={subjectData?.events} events={upcomingEventsData} />
+              <TodoList todos={subjectData?.todos} items={todoItems}/>
               <ClassNotifications />
             </div>
           </div>

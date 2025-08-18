@@ -2,12 +2,19 @@ import { Bell, BookOpen, User } from "lucide-react";
 import React from "react";
 import Link from "next/link";
 import { io } from 'socket.io-client';
+import { useGetNotificationQuery } from "@/store/api/eventApi";
 
 
 // Connect to the Socket.io server
 const socket = io('http://localhost:5000'); // Use your backend URL
 
 const Navbar = () => {
+
+  const { data: notificationData } = useGetNotificationQuery(undefined);
+
+  console.log("notificationData", notificationData);
+  const unRead = notificationData?.filter((notification: any)=> notification?.read === false);
+
   return (
     <div className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,7 +54,7 @@ const Navbar = () => {
             <Link href="notifications" className="relative p-2 text-gray-400 hover:text-gray-500">
               <Bell className="w-5 h-5" />
               <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                3
+                {unRead?.length ?? 0}
               </span>
             </Link>
             <button className="p-2 text-gray-400 hover:text-gray-500">

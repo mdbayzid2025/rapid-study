@@ -14,8 +14,10 @@ export const subjectApi = baseApi.injectEndpoints({
     // Get a single subject
     getSubject: build.query({
       query: (id) => ({
-        url: `/subjects/${id}`, 
+        url: `/subjects/689dd1d15904e9fc0fea8f3f`, 
+        // url: `/subjects/${id}`, 
       }),
+      transformResponse: (res: {data:any})=> res?.data,
       providesTags: ["Subject"],
     }),
 

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Calendar, Clock } from 'lucide-react';
+import { useGetSubjectsQuery } from '@/store/api/subjectApi';
 
 interface AddEventFormProps {
   isOpen: boolean;
@@ -10,29 +11,35 @@ interface AddEventFormProps {
 }
 
 const AddEventForm: React.FC<AddEventFormProps> = ({ isOpen, onClose, onSubmit }) => {
+  const { data: subjects, isLoading, isError } = useGetSubjectsQuery(undefined);
   const [formData, setFormData] = useState({
-    title: '',
+    eventTitle: '',
     date: '',
-    time: '',
-    type: 'discussion' as 'exam' | 'discussion' | 'office-hours' | 'assignment',
-    description: '',
-    location: ''
+    time: '',    
+    subject: '',  // Referring to subject ID
+    location: '',
+    description: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const event = {
-      id: Date.now().toString(),
-      ...formData
+      eventTitle: formData.eventTitle,
+      date: formData.date,
+      time: formData.time,      
+      subject: formData.subject,
+      location: formData.location,
+      description: formData.description,
+      createdAt: new Date().toISOString(),
     };
     onSubmit(event);
     setFormData({
-      title: '',
+      eventTitle: '',
       date: '',
-      time: '',
-      type: 'discussion',
-      description: '',
-      location: ''
+      time: '',      
+      subject: '',
+      location: '',
+      description: ''
     });
     onClose();
   };
@@ -67,8 +74,8 @@ const AddEventForm: React.FC<AddEventFormProps> = ({ isOpen, onClose, onSubmit }
             <input
               type="text"
               required
-              value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              value={formData.eventTitle}
+              onChange={(e) => setFormData(prev => ({ ...prev, eventTitle: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter event title..."
             />
@@ -106,20 +113,25 @@ const AddEventForm: React.FC<AddEventFormProps> = ({ isOpen, onClose, onSubmit }
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Event Type *
+              Subject *
             </label>
-            <select
-              required
-              value={formData.type}
-              onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as any }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              {eventTypes.map(type => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              ))}
-            </select>
+            {isLoading && <p>Loading subjects...</p>}
+            {isError && <p className="text-red-600">Failed to load subjects.</p>}
+            {!isLoading && !isError && subjects && (
+              <select
+                required
+                value={formData.subject}
+                onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Select subject...</option>
+                {subjects.map((subject: { _id: string; name: string }) => (
+                  <option key={subject._id} value={subject._id}>
+                    {subject.name}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
           <div>
