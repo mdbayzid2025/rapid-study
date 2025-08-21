@@ -96,7 +96,7 @@ const Notes = () => {
               title={note.title}
               description={note.description}
               createdAt={note.createdAt}
-              attachments={note.attachments}
+              images={note?.images}
               priority={note.priority}              
               tags={note.tags}
             />
@@ -254,4 +254,50 @@ const notes = [
       },
     ],
   },
+];
+
+
+const attachments = [
+  {
+    url: "https://res.cloudinary.com/detjedqvq/image/upload/v1755352668/uploads/file.png",
+    type: "image",
+    fileName: "file.png",
+    caption: "Sample Image 1",
+  },
+  {
+    url: "https://res.cloudinary.com/detjedqvq/image/upload/v1755352671/uploads/file.jpg",
+    type: "image",
+    fileName: "file.jpg",
+    caption: "Sample Image 2",
+  },
+  {
+    url: "https://res.cloudinary.com/detjedqvq/image/upload/v1755352672/uploads/file.jpg",
+    type: "image",
+    fileName: "file2.jpg",
+    caption: "Sample Image 3",
+  },
+  {
+    url: "https://example.com/sample.pdf",
+    type: "pdf",
+    fileName: "sample.pdf",
+    caption: "Sample PDF Document",
+  },
+  {
+    url: "https://example.com/sample.docx",
+    type: "word",
+    fileName: "sample.docx",
+    caption: "Sample Word Document",
+  },
+  {
+    url: "https://example.com/sample.pptx",
+    type: "powerpoint",
+    fileName: "sample.pptx",
+    caption: "Sample PowerPoint Presentation",
+  },
+  {
+    url: "https://example.com/sample.zip",
+    type: "other",
+    fileName: "sample.zip",
+    caption: "Sample Archive File",
+  }
 ];

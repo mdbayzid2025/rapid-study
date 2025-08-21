@@ -15,9 +15,7 @@ const ClassManage = () => {
   const {data:subjectData, isLoading} = useGetSubjectQuery(undefined);
 
   console.log("subjectData", subjectData);
-
-
-
+  
   return (
     <div>
       <div className="bg-gray-50 min-h-screen">
@@ -26,7 +24,8 @@ const ClassManage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
               <ClassAllNotes notes={classNotesData} />
-              <Assignment assignments={assignments} />
+              {/* <Assignment assignments={subjectData?.assignments} /> */}
+              <Assignment assignments={subjectData?.assignments} />
             </div>
 
             <div className="space-y-6">
@@ -42,3 +41,7 @@ const ClassManage = () => {
 };
 
 export default ClassManage;
+
+
+
+

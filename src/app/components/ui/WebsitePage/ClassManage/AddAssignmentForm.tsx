@@ -1,93 +1,72 @@
 "use client";
 
-import React, { useState } from 'react';
-import { X, Calendar, AlertCircle } from 'lucide-react';
+import React, { useState } from "react";
+import { X, Calendar, AlertCircle } from "lucide-react";
+import { useGetSubjectsQuery } from "@/store/api/subjectApi";
+import { useCreateAssignmentMutation } from "@/store/api/assignmentApi";
 
 interface AddAssignmentFormProps {
   isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (assignment: any) => void;
+  onClose: () => void;  
 }
 
-const AddAssignmentForm: React.FC<AddAssignmentFormProps> = ({ isOpen, onClose, onSubmit }) => {
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    dueDate: '',
-    dueTime: '',
-    status: 'pending' as 'pending' | 'completed' | 'overdue',
-    priority: 'medium' as 'high' | 'medium' | 'low',
-    points: '',
-    category: '',
-    instructions: '',
-    submissionType: 'online' as 'online' | 'paper' | 'presentation'
-  });
+const initialState = {
+    title: "",
+    submissionDate: "",
+    subject: '',
+    time: "",
+    detailedInstructions: "",
+  }
 
-  const handleSubmit = (e: React.FormEvent) => {
+const AddAssignmentForm: React.FC<AddAssignmentFormProps> = ({
+  isOpen,
+  onClose,  
+}) => {
+  const [formData, setFormData] = useState(initialState);
+  const { data: subjects, isLoading, isError } = useGetSubjectsQuery(undefined);
+  const [createAssignment, {isLoading:adding}] = useCreateAssignmentMutation();
+  
+
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    const assignment = {
-      id: Date.now().toString(),
-      ...formData,
-      dueDate: formData.dueTime 
-        ? `${new Date(formData.dueDate).toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
-          })} at ${formData.dueTime}`
-        : new Date(formData.dueDate).toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
-          }),
-      createdAt: new Date().toISOString()
-    };
-    onSubmit(assignment);
-    setFormData({
-      title: '',
-      description: '',
-      dueDate: '',
-      dueTime: '',
-      status: 'pending',
-      priority: 'medium',
-      points: '',
-      category: '',
-      instructions: '',
-      submissionType: 'online'
-    });
-    onClose();
+
+ const combinedDate = new Date(`${formData.submissionDate}T${formData.time}`);
+
+  const assignment = {
+    title: formData.title,
+    subject: formData.subject,
+    submissionDate: combinedDate,
+    time: formData.time, 
+    detailedInstructions: formData.detailedInstructions,    
   };
 
-  const priorities = [
-    { value: 'high', label: 'High Priority', color: 'text-red-600' },
-    { value: 'medium', label: 'Medium Priority', color: 'text-yellow-600' },
-    { value: 'low', label: 'Low Priority', color: 'text-green-600' }
-  ];
 
-  const categories = [
-    'Programming',
-    'Research',
-    'Essay',
-    'Project',
-    'Lab Report',
-    'Presentation',
-    'Quiz',
-    'Exam',
-    'Other'
-  ];
-
-  const submissionTypes = [
-    { value: 'online', label: 'Online Submission' },
-    { value: 'paper', label: 'Paper Submission' },
-    { value: 'presentation', label: 'Presentation' }
-  ];
+     try {
+      const res = await createAssignment(assignment);
+      console.log("assignment", res);
+      
+      onClose();
+    } catch (error) {
+      console.log("error", error)
+    }               
+  };
 
   if (!isOpen) return null;
 
+      const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (e.target === e.currentTarget) {
+        onClose();
+        setFormData(initialState);
+      }
+    };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div onClick={handleOverlayClick} className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Add New Assignment</h2>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Add New Assignment
+          </h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -105,7 +84,9 @@ const AddAssignmentForm: React.FC<AddAssignmentFormProps> = ({ isOpen, onClose, 
               type="text"
               required
               value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, title: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter assignment title..."
             />
@@ -113,18 +94,30 @@ const AddAssignmentForm: React.FC<AddAssignmentFormProps> = ({ isOpen, onClose, 
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description *
+              Subject *
             </label>
-            <textarea
-              required
-              rows={3}
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              placeholder="Enter assignment description..."
-            />
+            {isLoading && <p>Loading subjects...</p>}
+            {isError && (
+              <p className="text-red-600">Failed to load subjects.</p>
+            )}
+            {!isLoading && !isError && subjects && (
+              <select
+                required
+                value={formData.subject}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, subject: e.target.value }))
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Select subject...</option>
+                {subjects.map((subject: { _id: string; name: string }) => (
+                  <option key={subject._id} value={subject._id}>
+                    {subject.name}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
-
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -134,8 +127,13 @@ const AddAssignmentForm: React.FC<AddAssignmentFormProps> = ({ isOpen, onClose, 
               <input
                 type="date"
                 required
-                value={formData.dueDate}
-                onChange={(e) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
+                value={formData.submissionDate}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    submissionDate: e.target.value,
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -146,78 +144,13 @@ const AddAssignmentForm: React.FC<AddAssignmentFormProps> = ({ isOpen, onClose, 
               </label>
               <input
                 type="time"
-                value={formData.dueTime}
-                onChange={(e) => setFormData(prev => ({ ...prev, dueTime: e.target.value }))}
+                value={formData.time}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, time: e.target.value }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Priority
-              </label>
-              <select
-                value={formData.priority}
-                onChange={(e) => setFormData(prev => ({ ...prev, priority: e.target.value as any }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                {priorities.map(priority => (
-                  <option key={priority.value} value={priority.value}>
-                    {priority.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Points/Grade
-              </label>
-              <input
-                type="text"
-                value={formData.points}
-                onChange={(e) => setFormData(prev => ({ ...prev, points: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="e.g., 100 pts"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category
-              </label>
-              <select
-                value={formData.category}
-                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="">Select category...</option>
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Submission Type
-            </label>
-            <select
-              value={formData.submissionType}
-              onChange={(e) => setFormData(prev => ({ ...prev, submissionType: e.target.value as any }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              {submissionTypes.map(type => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              ))}
-            </select>
           </div>
 
           <div>
@@ -226,25 +159,16 @@ const AddAssignmentForm: React.FC<AddAssignmentFormProps> = ({ isOpen, onClose, 
             </label>
             <textarea
               rows={4}
-              value={formData.instructions}
-              onChange={(e) => setFormData(prev => ({ ...prev, instructions: e.target.value }))}
+              value={formData.detailedInstructions}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  detailedInstructions: e.target.value,
+                }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
               placeholder="Enter detailed assignment instructions..."
             />
-          </div>
-
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div className="flex items-start">
-              <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5 mr-2" />
-              <div>
-                <h4 className="text-sm font-medium text-yellow-800">Assignment Preview</h4>
-                <p className="text-sm text-yellow-700 mt-1">
-                  {formData.title || 'Assignment Title'} • 
-                  {formData.dueDate ? ` Due: ${new Date(formData.dueDate).toLocaleDateString()}` : ' No due date set'}
-                  {formData.dueTime && ` at ${formData.dueTime}`}
-                </p>
-              </div>
-            </div>
           </div>
 
           <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">

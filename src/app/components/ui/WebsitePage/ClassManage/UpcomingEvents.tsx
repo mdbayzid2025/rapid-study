@@ -4,6 +4,7 @@ import React from 'react';
 import { Calendar, Clock, Plus } from 'lucide-react';
 import AddEventForm from './AddEventForm';
 import dayjs from 'dayjs';
+import { useCreateEventMutation } from '@/store/api/eventApi';
 
 
 
@@ -16,6 +17,7 @@ interface UpcomingEventsProps {
 const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events: initialEvents, upcomingEvents}: any) => {
   const [events, setEvents] = React.useState(initialEvents);
   const [showAddForm, setShowAddForm] = React.useState(false);
+  const [createEvent, {isLoading}] = useCreateEventMutation();
 
   const getEventColor = (type: any['type']) => {
     switch (type) {
@@ -43,11 +45,16 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events: initialEvents, 
     }
   };
 
-  const handleAddEvent = (newEvent: Event) => {
-    setEvents((prev:any) => [...prev, newEvent]);
+  const handleAddEvent = async (newEvent: Event) => {
+    try {
+      const res = createEvent(newEvent);
+
+      console.log("res", res)
+    } catch (error) {
+      console.log("error", error)
+    }    
   };
 
-  console.log("events", upcomingEvents)
   return (
     <>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">

@@ -21,14 +21,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCreateNoteMutation } from "@/store/api/noteApi";
 
 const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   
   const { data: subjectData } = useGetSubjectsQuery(undefined);
-  const [tags, setTags] = useState<string[]>(["react", "nextjs"]);
+  const [tags, setTags] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]); // For image uploads
   const [documents, setDocuments] = useState<File[]>([]); // For document uploads
+  const [createNote, {isLoading}] = useCreateNoteMutation();
+
 
   const [noteForm, setNoteForm] = useState({
     title: "",
@@ -37,13 +40,34 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
     priority: "",    
   });
 
-  const handleAddNote = () => {
+  const handleAddNote = async () => {
     console.log("Note added:", {...noteForm, tags});
     console.log("Images:", images);
     console.log("Documents:", documents);
     // setIsAddDialogOpen(false);
     // resetNoteForm();
+      
+    const formData = new FormData();
+    formData.append("title", noteForm?.title);
+    formData.append("description", noteForm?.description);
+    formData.append("subject", noteForm?.subject);
+    formData.append("priority", noteForm?.priority);
+    formData.append("tags", JSON.stringify(tags)); 
+
+    images.forEach(image=>{
+      formData.append("images", image)
+    })
+
+  try {
+    const res = await createNote(formData);
+
+    console.log("notes", res);
+  } catch (error) {
+    console.log("error", error)
+  }
+
   };
+
 
   const resetNoteForm = () => {
     setNoteForm({

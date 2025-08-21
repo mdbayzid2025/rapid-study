@@ -1,18 +1,6 @@
 import { baseApi } from './baseApi';
 
-export interface Note {
-  id: string;
-  title: string;
-  content: string;
-  subject: string;
-  classId: string;
-  tags: string[];
-  attachments: string[];
-  authorId: string;
-  authorName: string;
-  createdAt: string;
-  updatedAt: string;
-}
+
 
 export const noteApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -24,19 +12,19 @@ export const noteApi = baseApi.injectEndpoints({
       transformResponse: (res: {data : any})=> res?.data,
       providesTags: ['Note'],
     }),
-    getNote: builder.query<Note, string>({
+    getNote: builder.query({
       query: (id) => `/notes/${id}`,
       providesTags: ['Note'],
     }),
-    createNote: builder.mutation<Note, Partial<Note>>({
+    createNote: builder.mutation({
       query: (noteData) => ({
         url: '/notes',
         method: 'POST',
         body: noteData,
       }),
-      invalidatesTags: ['Note'],
+      invalidatesTags: ['Note', 'Subject'],
     }),
-    updateNote: builder.mutation<Note, { id: string; data: Partial<Note> }>({
+    updateNote: builder.mutation({
       query: ({ id, data }) => ({
         url: `/notes/${id}`,
         method: 'PATCH',
@@ -44,7 +32,7 @@ export const noteApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Note'],
     }),
-    deleteNote: builder.mutation<void, string>({
+    deleteNote: builder.mutation({
       query: (id) => ({
         url: `/notes/${id}`,
         method: 'DELETE',

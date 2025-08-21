@@ -8,7 +8,7 @@ export const subjectApi = baseApi.injectEndpoints({
         url: "/subjects", 
       }),
       transformResponse: (res: {data: any}) => res?.data,
-      providesTags: ["Subject"],
+      providesTags: ["Subject", "Event"],
     }),
 
     // Get a single subject

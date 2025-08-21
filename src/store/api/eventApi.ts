@@ -33,7 +33,7 @@ export const eventApi = baseApi.injectEndpoints({
         method: 'POST',
         body: eventData,
       }),
-      invalidatesTags: ['Event'],
+      invalidatesTags: ['Event', 'Subject'],
     }),
     updateEvent: builder.mutation({
       query: ({ id, data }) => ({

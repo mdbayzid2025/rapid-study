@@ -12,6 +12,16 @@ interface AddTodoFormProps {
   subject?: string;
 }
 
+const initialState = {
+    title: "",
+    startDate: "",
+    endDate: "",
+    subject: "",
+    priority: "Medium" as "High" | "Medium" | "Low",
+    status: "Pending",
+  }
+
+
 const AddTodoForm: React.FC<AddTodoFormProps> = ({
   isOpen,
   onClose,
@@ -20,18 +30,9 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({
 }) => {
   const { data: subjects, isLoading, isError } = useGetSubjectsQuery(undefined);
   const [createTodo, { isLoading: adding }] = useCreateToDoMutation();
-  const [formData, setFormData] = useState({
-    title: "",
-    startDate: "",
-    endDate: "",
-    subject: "",
-    priority: "Medium" as "High" | "Medium" | "Low",
-    status: "Pending",
-  });
-
+  const [formData, setFormData] = useState(initialState);
 
   
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const todo = {
@@ -48,6 +49,7 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({
       const res = await createTodo(todo);
       console.log("s todfo", res);
 
+      onClose();
       setFormData({
         title: "",
         startDate: "",
@@ -62,14 +64,14 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({
   };
 
   const priorities = [
-    { value: "high", label: "High Priority", color: "text-red-600 bg-red-100" },
+    { value: "High", label: "High Priority", color: "text-red-600 bg-red-100" },
     {
-      value: "medium",
+      value: "Medium",
       label: "Medium Priority",
       color: "text-yellow-600 bg-yellow-100",
     },
     {
-      value: "low",
+      value: "Low",
       label: "Low Priority",
       color: "text-green-600 bg-green-100",
     },
@@ -77,8 +79,15 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({
 
   if (!isOpen) return null;
 
+    const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+      setFormData(initialState);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-black/50 bg-opacity-50 mb-0 flex items-center justify-center z-99">
+    <div onClick={handleOverlayClick} className="fixed inset-0 bg-black/50 bg-opacity-50 mb-0 flex items-center justify-center z-99">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">Add New Task</h2>

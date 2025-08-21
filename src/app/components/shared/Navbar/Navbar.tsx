@@ -6,7 +6,7 @@ import { useGetNotificationQuery } from "@/store/api/eventApi";
 
 
 // Connect to the Socket.io server
-const socket = io('http://localhost:5000'); // Use your backend URL
+// const socket = io('http://localhost:5000'); // Use your backend URL
 
 const Navbar = () => {
 
