@@ -1,15 +1,13 @@
 "use client";
 
-import React from "react";
-import ClassInfo from "./ClassInfo";
-import Container from "@/app/components/shared/Container/Container";
-import { assignments, classNotesData, todoItems, upcomingEventsData } from "@/app/data/mockData";
+import { classNotesData, todoItems } from "@/app/data/mockData";
+import { useGetSubjectQuery } from "@/store/api/subjectApi";
 import Assignment from "./Assignment";
 import ClassAllNotes from "./ClassAllNotes";
-import UpcomingEvents from "./UpcomingEvents";
-import TodoList from "./TodoList";
+import ClassInfo from "./ClassInfo";
 import ClassNotifications from "./ClassNotifications";
-import { useGetSubjectQuery } from "@/store/api/subjectApi";
+import TodoList from "./TodoList";
+import UpcomingEvents from "./UpcomingEvents";
 
 const ClassManage = () => {
   const {data:subjectData, isLoading} = useGetSubjectQuery(undefined);
@@ -29,7 +27,7 @@ const ClassManage = () => {
             </div>
 
             <div className="space-y-6">
-              <UpcomingEvents upcomingEvents={subjectData?.events} events={upcomingEventsData} />
+              <UpcomingEvents upcomingEvents={subjectData?.events} />
               <TodoList todos={subjectData?.todos} items={todoItems}/>
               <ClassNotifications />
             </div>

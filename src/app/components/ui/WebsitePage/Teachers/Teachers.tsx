@@ -62,9 +62,10 @@ const Teachers = () => {
       render: (name: string) => <span className="font-semibold">{name}</span>,
     },
     {
-      title: "Role",
-      dataIndex: "role",
-      key: "role",
+      title: "Designation",
+      dataIndex: "designation",
+      key: "designation",
+      render: (text :any, record:any) =><span className="capitalize">{text} ({record?.department})</span>
     },
     {
       title: "Email",
@@ -142,7 +143,7 @@ const Teachers = () => {
                       <Title level={4} className="!my-0 text-xl font-semibold">
                         {teacher?.name}
                       </Title>
-                      <Text className="text-gray-500">{teacher?.role}</Text>
+                      <Text className="text-gray-500">{teacher?.designation} ({teacher?.department})</Text>
                     </div>
                   </div>
 

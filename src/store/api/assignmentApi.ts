@@ -10,6 +10,7 @@ export const assignmentApi = baseApi.injectEndpoints({
         url: "/assignments",
         params,
       }),
+      transformResponse: (res:{data: any}) => res?.data,
       providesTags: ["Assignment"],
     }),
 

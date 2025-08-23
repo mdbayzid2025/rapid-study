@@ -15,36 +15,36 @@ export interface Task {
 
 export const taskApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getTasks: builder.query<Task[], { status?: string; priority?: string }>({
-      query: (params) => ({
-        url: '/tasks',
-        params,
+    getTasks: builder.query({
+      query: () => ({
+        url: '/todos',        
       }),
+      transformResponse: (res: {data: any})=> res?.data,
       providesTags: ['Task'],
     }),
-    getTask: builder.query<Task, string>({
-      query: (id) => `/tasks/${id}`,
+    getTask: builder.query({
+      query: (id) => `/todos/${id}`,
       providesTags: ['Task'],
     }),
-    createTask: builder.mutation<Task, Partial<Task>>({
+    createTask: builder.mutation({
       query: (taskData) => ({
-        url: '/tasks',
+        url: '/todos',
         method: 'POST',
         body: taskData,
       }),
       invalidatesTags: ['Task'],
     }),
-    updateTask: builder.mutation<Task, { id: string; data: Partial<Task> }>({
+    updateTask: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/tasks/${id}`,
+        url: `/todos/${id}`,
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: ['Task'],
+      invalidatesTags: ['Task', 'Stats'],
     }),
-    deleteTask: builder.mutation<void, string>({
+    deleteTask: builder.mutation({
       query: (id) => ({
-        url: `/tasks/${id}`,
+        url: `/todos/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Task'],

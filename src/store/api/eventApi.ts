@@ -1,15 +1,15 @@
-import { baseApi } from './baseApi';
+import { baseApi } from "./baseApi";
 
 export interface Event {
   id: string;
   title: string;
   description: string;
-  type: 'exam' | 'assignment' | 'test' | 'field-trip' | 'seminar';
+  type: "exam" | "assignment" | "test" | "field-trip" | "seminar";
   classId: string;
   className: string;
   date: string;
   dueDate?: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: "low" | "medium" | "high";
   createdBy: string;
   createdAt: string;
 }
@@ -18,48 +18,56 @@ export const eventApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getEvents: builder.query({
       query: (params) => ({
-        url: '/events',
+        url: "/events",
         params,
       }),
-      providesTags: ['Event'],
+      transformResponse: (res: {data: any}) => res?.data,
+      providesTags: ["Event"],
     }),
     getEvent: builder.query({
       query: (id) => `/events/${id}`,
-      providesTags: ['Event'],
+      providesTags: ["Event"],
     }),
     createEvent: builder.mutation({
       query: (eventData) => ({
-        url: '/events',
-        method: 'POST',
+        url: "/events",
+        method: "POST",
         body: eventData,
       }),
-      invalidatesTags: ['Event', 'Subject'],
+      invalidatesTags: ["Event", "Subject"],
     }),
     updateEvent: builder.mutation({
       query: ({ id, data }) => ({
         url: `/events/${id}`,
-        method: 'PATCH',
+        method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ['Event'],
+      invalidatesTags: ["Event"],
     }),
     deleteEvent: builder.mutation({
       query: (id) => ({
         url: `/events/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
-      invalidatesTags: ['Event'],
+      invalidatesTags: ["Event"],
     }),
     getNotification: builder.query({
-      query: ()=>`/notifications`,
-      transformResponse: (res: {data: any})=> res?.data
-    }),    
+      query: () => `/notifications`,
+      transformResponse: (res: { data: any }) => res?.data,
+    }),
+    getStats: builder.query({
+      query: () => `/notifications/stats`,
+      transformResponse: (res: { data: any }) => res?.data,
+      providesTags: ["Stats"],
+    }),
   }),
 });
 
 export const {
   useGetEventsQuery,
   useGetEventQuery,
+  useGetStatsQuery,
+
   useCreateEventMutation,
   useUpdateEventMutation,
   useDeleteEventMutation,

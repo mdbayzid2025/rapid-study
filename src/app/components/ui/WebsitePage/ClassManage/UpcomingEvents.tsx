@@ -10,12 +10,10 @@ import { useCreateEventMutation } from '@/store/api/eventApi';
 
 
 interface UpcomingEventsProps {
-  upcomingEvents:any
-  events: any[];
+  upcomingEvents:any  
 }
 
-const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events: initialEvents, upcomingEvents}: any) => {
-  const [events, setEvents] = React.useState(initialEvents);
+const UpcomingEvents: React.FC<UpcomingEventsProps> = ({  upcomingEvents}: any) => {  
   const [showAddForm, setShowAddForm] = React.useState(false);
   const [createEvent, {isLoading}] = useCreateEventMutation();
 
@@ -57,7 +55,7 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events: initialEvents, 
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-white  rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <Calendar className="w-5 h-5 text-blue-600 mr-2" />
@@ -71,7 +69,7 @@ const UpcomingEvents: React.FC<UpcomingEventsProps> = ({ events: initialEvents, 
             Add
           </button>
         </div>
-                <div className="space-y-3">
+                <div className="space-y-3 max-h-[300px] overflow-y-auto ">
           {upcomingEvents && upcomingEvents.map((event:any) => (
             <div key={event._id} className={`border-l-4 pl-4 py-3 border-green-200 bg-green-50 text-green-700`}>
               <h4 className="font-medium text-green-700">{event.eventTitle}</h4>
