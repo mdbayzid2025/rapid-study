@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 import {
   BookOpen,
@@ -11,7 +11,7 @@ import {
   Plus,
   Trash,
 } from "lucide-react";
-
+import { AiTwotoneNotification } from "react-icons/ai";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,7 +27,11 @@ import {
 import { Button } from "@/components/ui/button";
 
 // import { Button } from "antd";
-import { useGetEventsQuery, useGetStatsQuery } from "@/store/api/eventApi";
+import {
+  useCreateEventMutation,
+  useGetEventsQuery,
+  useGetStatsQuery,
+} from "@/store/api/eventApi";
 
 import dayjs from "dayjs";
 import { useGetNotesQuery } from "@/store/api/noteApi";
@@ -38,6 +42,9 @@ import { RecentTask } from "./RecentTask";
 import { useGetAssignmentsQuery } from "@/store/api/assignmentApi";
 import { UpcomingAssignments } from "./UpcomingAssignments";
 import UpcomingEvents from "../WebsitePage/ClassManage/UpcomingEvents";
+import AddNoteModal from "../WebsitePage/Notes/AddNoteModal";
+import AddEventForm from "../WebsitePage/ClassManage/AddEventForm";
+import AddAssignmentForm from "../WebsitePage/ClassManage/AddAssignmentForm";
 
 // import { mockTasks, mockAssignments, mockNotes, mockNotices } from '../data/mockData';
 
@@ -46,9 +53,23 @@ const Dashboard: React.FC = () => {
   const { data: tasksData } = useGetTasksQuery(undefined);
   const { data: notesData, isLoading } = useGetNotesQuery(null);
   const { data: assignmentData } = useGetAssignmentsQuery(undefined);
-
   const { data: eventsData } = useGetEventsQuery(undefined);
+  const [createEvent, { isLoading: addingEvents }] = useCreateEventMutation();
 
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [showAddEventForm, setShowAddEventForm] = React.useState(false);
+  const [showAddForm, setShowAddForm] = React.useState(false);
+  // ------ Add events ------------
+
+  const handleAddEvent = async (newEvent: Event) => {
+    try {
+      const res = createEvent(newEvent);
+
+      console.log("res", res);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   return (
     <div className="flex-1 bg-gray-50">
       <main className="p-8">
@@ -87,18 +108,40 @@ const Dashboard: React.FC = () => {
             Quick Actions
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {quickActions.map((action, index) => {
-              const Icon = action.icon;
-              return (
-                <button
-                  key={index}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-lg transition-colors ${action.color}`}
-                >
-                  <Icon className="w-6 h-6" />
-                  <span className="text-sm font-medium">{action.label}</span>
-                </button>
-              );
-            })}
+            {/* Add Note */}
+            <button
+              onClick={() => setIsAddDialogOpen(true)}
+              className={`flex flex-col items-center gap-2 p-4 rounded-lg transition-colors bg-blue-50 text-blue-600 hover:bg-blue-100`}
+            >
+              <FileText className="w-6 h-6" />
+              <span className="text-sm font-medium">Add Note</span>
+            </button>
+
+            {/* Add Event */}
+            <button
+              onClick={() => setShowAddEventForm(true)}
+              className={`flex flex-col items-center gap-2 p-4 rounded-lg transition-colors bg-green-50 text-green-600 hover:bg-green-100`}
+            >
+              <FileText className="w-6 h-6" />
+              <span className="text-sm font-medium">New Event</span>
+            </button>
+
+            {/* Add Task */}
+            <button
+              onClick={() => setShowAddForm(true)}
+              className={`flex flex-col items-center gap-2 p-4 rounded-lg transition-colors bg-purple-50 text-purple-600 hover:bg-purple-100`}
+            >
+              <FileText className="w-6 h-6" />
+              <span className="text-sm font-medium">Add Assignment</span>
+            </button>
+
+            {/* Add Task */}
+            <button
+              className={`flex flex-col items-center gap-2 p-4 rounded-lg transition-colors bg-amber-50 text-amber-600 hover:bg-amber-100`}
+            >
+              <AiTwotoneNotification className="w-6 h-6" />
+              <span className="text-sm font-medium">Notice</span>
+            </button>
           </div>
         </div>
 
@@ -194,8 +237,7 @@ const Dashboard: React.FC = () => {
 
           {/* Right Sidebar */}
           <div className="space-y-8">
-
-                        {/* Recent Notes */}
+            {/* Recent Notes */}
             <div className="bg-white rounded-lg shadow-lg border border-gray-200">
               <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
@@ -321,7 +363,21 @@ const Dashboard: React.FC = () => {
                 </a>
               </div>
             </div> */}
-            
+            <AddNoteModal
+              isAddDialogOpen={isAddDialogOpen}
+              setIsAddDialogOpen={setIsAddDialogOpen}
+            />
+
+            <AddEventForm
+              isOpen={showAddEventForm}
+              onClose={() => setShowAddEventForm(false)}
+              onSubmit={handleAddEvent}
+            />
+
+            <AddAssignmentForm
+              isOpen={showAddForm}
+              onClose={() => setShowAddForm(false)}
+            />
           </div>
         </div>
       </main>
@@ -332,78 +388,6 @@ const Dashboard: React.FC = () => {
 export default Dashboard;
 
 // +------------------------------ Data -----------------------
-const mockTasks: any[] = [
-  {
-    id: "1",
-    title: "Complete Math Assignment Chapter 5",
-    description: "Solve problems 1-15 from textbook",
-    dueDate: "Tomorrow",
-    priority: "High",
-    status: "Pending",
-    subject: "Mathematics",
-  },
-  {
-    id: "2",
-    title: "Review Science Notes",
-    description: "Go through chemistry formulas",
-    dueDate: "Friday",
-    priority: "Medium",
-    status: "Pending",
-    subject: "Science",
-  },
-  {
-    id: "3",
-    title: "Submit History Essay",
-    description: "Essay on World War II",
-    dueDate: "Completed",
-    priority: "High",
-    status: "Completed",
-    subject: "History",
-  },
-];
-
-const mockAssignments: any[] = [
-  {
-    id: "1",
-    title: "Physics Lab Report",
-    subject: "Physics",
-    dueDate: "Dec 15, 2024",
-    priority: "Urgent",
-    daysLeft: 3,
-  },
-  {
-    id: "2",
-    title: "English Literature Analysis",
-    subject: "English",
-    dueDate: "Dec 20, 2024",
-    priority: "Moderate",
-    daysLeft: 8,
-  },
-];
-
-const mockNotes: any[] = [
-  {
-    id: "1",
-    title: "Chemistry Formula Review",
-    content: "Important formulas for upcoming exam",
-    createdAt: "2 hours ago",
-    subject: "Chemistry",
-  },
-  {
-    id: "2",
-    title: "Math Problem Solutions",
-    content: "Step-by-step solutions for complex problems",
-    createdAt: "Yesterday",
-    subject: "Mathematics",
-  },
-  {
-    id: "3",
-    title: "History Timeline Notes",
-    content: "Key dates and events timeline",
-    createdAt: "2 days ago",
-    subject: "History",
-  },
-];
 
 const mockNotices: any[] = [
   {
@@ -419,28 +403,5 @@ const mockNotices: any[] = [
     content: "Chemistry lab assignment is now available",
     createdAt: "1 day ago",
     type: "success",
-  },
-];
-
-const quickActions = [
-  {
-    icon: FileText,
-    label: "Add Note",
-    color: "bg-blue-50 text-blue-600 hover:bg-blue-100",
-  },
-  {
-    icon: Calendar,
-    label: "New Event",
-    color: "bg-green-50 text-green-600 hover:bg-green-100",
-  },
-  {
-    icon: CheckSquare,
-    label: "Add Task",
-    color: "bg-amber-50 text-amber-600 hover:bg-amber-100",
-  },
-  {
-    icon: BookOpen,
-    label: "Assignment",
-    color: "bg-purple-50 text-purple-600 hover:bg-purple-100",
   },
 ];

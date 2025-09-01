@@ -1,13 +1,10 @@
 "use client";
 import { useGetAssignmentsQuery } from "@/store/api/assignmentApi";
 import dayjs from "dayjs";
-import Link from "next/link";
-import React from "react";
 
 export const Assignments = () => {
   const {
-    data: assignments,
-    isLoading,
+    data: assignments,    
     error,
   } = useGetAssignmentsQuery(undefined);
 
