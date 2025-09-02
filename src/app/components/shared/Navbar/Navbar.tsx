@@ -1,7 +1,7 @@
 "use client";
 
 import { Bell, BookOpen, User } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { io } from "socket.io-client";
 import { useGetNotificationQuery } from "@/store/api/eventApi";
@@ -11,7 +11,10 @@ import { MenuProps } from "antd";
 import { Dropdown, Space } from 'antd';
 
 // Connect to the Socket.io server
-// const socket = io('http://localhost:5000'); // Use your backend URL
+const socket = io('http://localhost:5000'); // Use your backend URL
+socket.on("connect", ()=>{
+  console.log(`you are connect with socket ${socket?.id}`);  
+})
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -22,6 +25,21 @@ const Navbar = () => {
     (notification: any) => notification?.read === false
   );
 
+   useEffect(() => {
+    const socket = io();  // Connects to the server on the same domain by default
+
+    socket.on('connect', () => {
+      console.log('Connected to the server!');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from the server');
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   const items = [
     {
       key: "1",

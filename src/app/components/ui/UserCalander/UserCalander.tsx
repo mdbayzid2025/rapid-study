@@ -11,10 +11,10 @@ import { useGetCalanderDataQuery } from "@/store/api/settingApi";
 const eventData = [
   {
     title: "Team Meeting",
-    start: new Date(2025, 8, 5, 10, 0),
-    end: new Date(2025, 8, 5, 11, 0),
+    start: new Date("2025-09-02T00:00:00.000Z"),
+    // end: new Date("2025-09-02T00:00:00.000Z"),
     allDay: false,
-    color: "#f4a261",
+    color: "#edede1",
   },
   {
     title: "Project Deadline",
@@ -40,17 +40,16 @@ const eventData = [
 ];
 
 // Main Calendar Component
-const UserCalendar: React.FC = () => {
-  const [events] = useState(eventData); // Use the demo JSON events
+const UserCalendar: React.FC = () => {  
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [currentView, setCurrentView] = useState<View>(Views.MONTH);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
   const {data: calenderDara } = useGetCalanderDataQuery(undefined)
 
-  console.log("calenderDara", calenderDara);
-  
-
+const events = calenderDara?.map((event:any)=>{
+  return {...event, start: new Date(event?.start), end: new Date(event?.start),}
+})
   // Setup localizer
   moment.locale("en-GB");
   const localizer = momentLocalizer(moment);

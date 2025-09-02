@@ -6,8 +6,7 @@ import React from "react";
 
 
 export const UpcomingAssignments = ({ assignments }: any) => {
-  console.log("assignments", assignments);
-
+  
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 mt-8 relative">
       <div className="p-6 border-b border-gray-100 sticky -top-2 bg-white">
