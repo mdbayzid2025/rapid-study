@@ -1,11 +1,17 @@
+
+
+import Container from '@/app/components/shared/Container/Container'
+import Dashboard from '@/app/components/ui/Dashboard/Dashboard'
 import React from 'react'
 
-const Dashboard = () => {
+const DashboardPage = () => {
   return (
     <div>
-      {/* <Dashboard/> */}
+      <Container>
+        <Dashboard/>
+      </Container>
     </div>
   )
 }
 
-export default Dashboard
+export default DashboardPage

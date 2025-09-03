@@ -47,15 +47,19 @@ const Navbar = () => {
       disabled: true,
     },
     {
+      key: "2",
+      label: <Link href="/dashboard">Dashboard</Link>,
+    },
+    {
       type: "divider" as const,
     },
     {
-      key: "2",
-      label: "Profile",
+      key: "3",
+      label: <Link href="/profile">Profile</Link>,
       extra: "⌘P",
     },
     {
-      key: "3",
+      key: "4",
       label: "Billing",
       extra: "⌘B",
     },
@@ -87,14 +91,17 @@ const Navbar = () => {
             >
               Classes
             </Link>            
-            <Link
+            {/* <Link
               href="/students-manage"
               className="text-gray-500 hover:text-gray-700"
             >
               Students Manage
-            </Link>
+            </Link> */}
             <Link href="/tasks-list" className="text-gray-500 hover:text-gray-700">
               Tasks
+            </Link>
+            <Link href="/gallery" className="text-gray-500 hover:text-gray-700">
+              Gallery
             </Link>
             <Link
               href="/assignments"

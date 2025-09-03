@@ -1,38 +1,46 @@
-// app/login/page.jsx (Next.js 13+ App Router)
-// or pages/login.jsx if using Pages Router
-
-"use client"; // Only if in App Router
+"use client";
 import { useState } from "react";
-import { Button, Input, Radio, Form, Checkbox } from "antd";
-import { UserOutlined, LockOutlined, BookOutlined, TeamOutlined } from "@ant-design/icons";
+import { Button, Input, Form, Checkbox } from "antd";
+import {
+  UserOutlined,
+  LockOutlined,
+  BookOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
 
 export default function LoginPage() {
   const [role, setRole] = useState("student");
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f9fbfd]">
-      <div className="bg-white p-8 rounded-xl w-full max-w-md shadow-sm">
+    <div className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden">
+      {/* Background Decoration */}
+      <div className="absolute w-full h-full inset-0 opacity-10 bg-[url('https://img.freepik.com/free-vector/education-pattern-background-doodle-style_53876-115365.jpg?t=st=1756877977~exp=1756881577~hmac=5f2d2c80363a05f9be19e7935cd4ae545bdbd896d41a4cbcccb3e7526f18f7db&w=1480')] bg-center bg-cover bg-no-repeat"></div>
+
+      {/* Main Card */}
+      <div className="relative bg-white p-8 rounded-2xl w-full max-w-md shadow-xl z-10">
         {/* Logo */}
         <div className="flex justify-center mb-4">
-          <div className="bg-blue-100 p-4 rounded-full">
+          <div className="bg-blue-100 p-4 rounded-full shadow-sm">
             <BookOutlined className="text-blue-600 text-3xl" />
           </div>
         </div>
 
         {/* Title */}
-        <h1 className="text-center text-2xl font-bold mb-1">Login to Your Account</h1>
+        <h1 className="text-center text-2xl font-bold mb-1">
+          Login to Your Account
+        </h1>
         <p className="text-center text-gray-500 mb-6">
           Welcome back! Please sign in to continue
         </p>
 
         {/* Role Selection */}
         <p className="mb-2 font-medium text-gray-700">Select Your Role</p>
-        <div className="flex gap-3 mb-5">
+        <div className="grid grid-cols-2 gap-3 mb-6">
           <Button
             block
             size="large"
-            className={`!h-[80px] flex flex-col items-center py-4 ${
-              role === "student" ? "border-blue-500 bg-blue-50" : ""
+            className={`!h-[80px] flex flex-col items-center justify-center py-4 rounded-xl ${
+              role === "student" ? "border-blue-500 bg-blue-50 shadow-md" : ""
             }`}
             icon={<BookOutlined className="text-xl" />}
             onClick={() => setRole("student")}
@@ -42,8 +50,8 @@ export default function LoginPage() {
           <Button
             block
             size="large"
-            className={`!h-[80px] flex flex-col items-center py-4 ${
-              role === "teacher" ? "border-blue-500 bg-blue-50" : ""
+            className={`!h-[80px] flex flex-col items-center justify-center py-4 rounded-xl ${
+              role === "teacher" ? "border-blue-500 bg-blue-50 shadow-md" : ""
             }`}
             icon={<TeamOutlined className="text-xl" />}
             onClick={() => setRole("teacher")}
@@ -58,7 +66,7 @@ export default function LoginPage() {
             <Input
               size="large"
               prefix={<UserOutlined />}
-              style={{height: 48}}
+              style={{ height: 48 }}
               placeholder="Enter your email"
             />
           </Form.Item>
@@ -66,7 +74,7 @@ export default function LoginPage() {
             <Input.Password
               size="large"
               prefix={<LockOutlined />}
-              style={{height: 48}}
+              style={{ height: 48 }}
               placeholder="Enter your password"
             />
           </Form.Item>
@@ -80,20 +88,11 @@ export default function LoginPage() {
             htmlType="submit"
             block
             size="large"
-            className="bg-gradient-to-r from-blue-500 to-indigo-500"
+            className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg"
           >
             Login / Sign Up
           </Button>
         </Form>
-
-        {/* Links */}
-        {/* <div className="mt-4 text-center">
-          <a className="text-blue-500" href="#">Forgot your password?</a>
-        </div>
-        <div className="mt-2 text-center text-gray-600">
-          Don’t have an account?{" "}
-          <a className="text-blue-500" href="#">Sign up</a>
-        </div> */}
       </div>
     </div>
   );

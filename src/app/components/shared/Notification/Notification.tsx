@@ -59,8 +59,7 @@ export const Notification = ({open, setOpen}:any) => {
         placement="right"
         width={350}
         onClose={() => setOpen(false)}
-        open={open}
-        bodyStyle={{ padding: 0 }}
+        open={open}        
       >
         <div
           style={{ height: "calc(100vh - 64px)", overflowY: "auto", padding: "12px" }}
