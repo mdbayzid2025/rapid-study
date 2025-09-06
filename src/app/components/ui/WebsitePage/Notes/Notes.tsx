@@ -92,7 +92,7 @@ const Notes = () => {
                 </AlertDialogContent>
               </AlertDialog>
             </div>
-            <NoteCard
+            <NoteCard            
               title={note?.title}
               subject={note?.subject?.name}
               description={note?.description}

@@ -1,7 +1,5 @@
-// SubjectCard.tsx
-
 import React from "react";
-import { BookOpen, ArrowRight } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 
@@ -17,28 +15,42 @@ interface SubjectCardProps {
 }
 
 const SubjectCard: React.FC<SubjectCardProps> = ({ subject }) => {
+  // Static Teacher Data
+  const teacher = {
+    name: "John Doe",
+    designation: "Professor of Mathematics",
+    avatar: "https://randomuser.me/api/portraits/men/41.jpg", // Static avatar URL
+  };
+
   return (
-    <div className="w-full rounded-lg overflow-hidden transform transition-all hover:scale-105 bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-500">
-      <Card className="h-full text-white bg-transparent py-0 gap-0">
-        <CardHeader className="p-4">
+    <Link href={`/subjects/${subject.id}`} className="w-full rounded-lg overflow-hidden transform transition-all hover:scale-105 shadow-lg">
+      {/* Sky Gradient Background */}
+      <Card className="h-full bg-gradient-to-r from-blue-400/20 via-indigo-500/15 to-purple-600/10 text-white border border-transparent gap-0 rounded-lg p-0">
+        <CardHeader className="p-4 h-18">
           <div className="flex justify-between items-center">
-            <CardTitle className="text-lg font-semibold">{subject.name}</CardTitle>
-            <div className="bg-white text-blue-500 p-2 rounded-full">
-              <BookOpen size={20} />
+            <CardTitle className="text-[15px] font-bold text-purple-800">{subject.name}</CardTitle>
+            <div className="bg-white text-indigo-600 p-1 rounded-full">
+              <BookOpen size={15} />
             </div>
           </div>
         </CardHeader>
-        <CardContent className="h-10">
-          <Link
-            href={`/subjects/${subject.id}`}
-            className="inline-flex items-center text-white border border-white rounded-md px-4 hover:bg-white hover:text-blue-500 transition-all"
-          >
-            View Details
-            <ArrowRight size={14} className="ml-2" />
-          </Link>
+
+        {/* Card Content */}
+        <CardContent className="flex flex-col px-4 pb-4">
+          <div className="flex items-center space-x-4">
+            <img
+              src={teacher.avatar}
+              alt={teacher.name}
+              className="w-8 h-8 rounded-full border-2 border-white"
+            />
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold text-gray-900">{teacher.name}</span>
+              <span className="text-xs text-gray-700">{teacher.designation}</span>
+            </div>
+          </div>
         </CardContent>
       </Card>
-    </div>
+    </Link>
   );
 };
 

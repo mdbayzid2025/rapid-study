@@ -9,6 +9,7 @@ import { Notification } from "../Notification/Notification";
 
 import { Button, MenuProps } from "antd";
 import { Dropdown, Space } from 'antd';
+import Container from "../Container/Container";
 
 // Connect to the Socket.io server
 const socket = io('http://localhost:5000'); // Use your backend URL
@@ -66,7 +67,8 @@ const Navbar = () => {
   ];
   return (
     <div className="bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
+      <div className="">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-3">
             <Link
@@ -90,6 +92,12 @@ const Navbar = () => {
               className="text-gray-500 hover:text-gray-700"
             >
               Classes
+            </Link>            
+            <Link
+              href="/notes"
+              className="text-gray-500 hover:text-gray-700"
+            >
+              Notes
             </Link>            
             {/* <Link
               href="/students-manage"
@@ -134,6 +142,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      </Container>
       <Notification open={open} setOpen={setOpen} />
     </div>
   );

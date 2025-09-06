@@ -81,18 +81,15 @@ const Classes: React.FC = () => {
   return (
     <Container>
       <div>
-        <div className="flex items-center gap-6 my-8 p-4 bg-[url('https://images.all-free-download.com/images/graphiclarge/abstract_summer_floral_vector_illustration_148571.jpg')] bg-cover bg-no-repeat bg-bottom rounded-lg shadow-lg">
+        <div className="flex border items-center justify-center gap-6 my-8 p-4  bg-bottom rounded-lg gradient-to-r from-indigo-50 via-white to-purple-50 ">
         {/* <div className="flex items-center gap-6 my-8 p-4 bg-[url('/header-bg.jpg')] bg-cover bg-no-repeat rounded-lg shadow-lg"> */}
-          <div className="p-3 bg-white rounded-full shadow-md">
-            <School className="h-8 w-8 text-indigo-600" />
+          <div className="p-2 border bg-white rounded-full shadow-md">
+            <School size={24} className=" text-indigo-600" />
           </div>
-          <div className="text-black">
-            <h1 className="text-3xl font-extrabold leading-tight">
-              Classes & Subjects
-            </h1>
-            <p className="text-xl text-purple-700 font-bold mt-2">
-              Explore and browse through available subjects grouped by semester.
-            </p>
+          <div className="">
+            <h1 className="text-3xl  leading-tight">
+              Classes List
+            </h1>            
           </div>
         </div>
 
@@ -107,7 +104,7 @@ const Classes: React.FC = () => {
                   return (
                     <div key={cls.id}>
                       <h3 className="font-semibold text-lg">{cls.name}</h3>
-                      <div className="mt-4 grid md:grid-cols-4 grid-cols-2 gap-5">
+                      <div className="mt-4 grid md:grid-cols-5 grid-cols-2 gap-2 gap-y-4">
                         {classSubjects.map((subject) => (
                           <SubjectCard key={subject.id} subject={subject} />
                         ))}

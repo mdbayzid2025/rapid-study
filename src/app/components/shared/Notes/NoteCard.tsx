@@ -113,8 +113,8 @@ export const NoteCard = ({
 
   return (
     <>
-      <Card      
-        className={`overflow-hidden hover:shadow-md mb-1 transition-all border-l-4 ${getPriorityBorderColor()}`}
+      <Card     
+        className={`overflow-hidden hover:shadow-md mb-1 transition-all border-l-4  ${getPriorityBorderColor()}`}
       >
         <CardContent className="p-0">
           <div className="relative">
@@ -190,10 +190,11 @@ export const NoteCard = ({
                     color="currentColor"
                     className="text-orange-500/80"
                   />
-                  <span> {subject}</span>
+                  {/* <span className="whitespace-nowrap">{subject?.length > 100 ? subject?.slice(0, 100) + '...' : subject}</span> */}
+                  {subject}
                 </div>
                 <div
-                  className={`  text-center ${getPriorityColor()} text-xs px-2 mb-1 py-0.5 rounded-full`}
+                  className={`text-center ${getPriorityColor()} text-xs px-2 mb-1 py-0.5 rounded-full`}
                 >
                   {priority}
                 </div>
