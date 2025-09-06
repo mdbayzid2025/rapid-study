@@ -42,7 +42,7 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
 
   const handleAddNote = async () => {
     console.log("Note added:", {...noteForm, tags});
-    console.log("Images:", images);
+    console.log("images:", images);
     console.log("Documents:", documents);
     // setIsAddDialogOpen(false);
     // resetNoteForm();
@@ -54,8 +54,11 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
     formData.append("priority", noteForm?.priority);
     formData.append("tags", JSON.stringify(tags)); 
 
-    images.forEach(image=>{
+    images?.length > 0 && images.forEach(image=>{
       formData.append("images", image)
+    })
+    documents?.length > 0 && documents.forEach(doc=>{
+      formData.append("documents", doc)
     })
 
   try {

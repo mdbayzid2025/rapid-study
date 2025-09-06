@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 import { useGetNotificationQuery } from "@/store/api/eventApi";
 import { Notification } from "../Notification/Notification";
 
-import { MenuProps } from "antd";
+import { Button, MenuProps } from "antd";
 import { Dropdown, Space } from 'antd';
 
 // Connect to the Socket.io server
@@ -97,12 +97,12 @@ const Navbar = () => {
             >
               Students Manage
             </Link> */}
-            <Link href="/tasks-list" className="text-gray-500 hover:text-gray-700">
-              Tasks
+            <Link href="/events" className="text-gray-500 hover:text-gray-700">
+              Events
             </Link>
-            <Link href="/gallery" className="text-gray-500 hover:text-gray-700">
+            {/* <Link href="/gallery" className="text-gray-500 hover:text-gray-700">
               Gallery
-            </Link>
+            </Link> */}
             <Link
               href="/assignments"
               className="text-gray-500 hover:text-gray-700"
@@ -118,15 +118,14 @@ const Navbar = () => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="notifications"
-              className="relative p-2 text-gray-400 hover:text-gray-500"
+            <button              
+              className="relative cursor-pointer p-2 text-gray-400 hover:text-gray-500"
             >
               <Bell onClick={() => setOpen(true)} className="w-5 h-5" />
               <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                 {unRead?.length ?? 0}
               </span>
-            </Link>
+            </button>
             <Dropdown menu={{ items }}>
               <button className="p-2 text-gray-400 hover:text-gray-500 cursor-pointer">
                 <User className="w-7 h-7" />

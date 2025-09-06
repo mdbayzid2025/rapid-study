@@ -119,7 +119,7 @@ const StudentsManage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 bg-gray-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex-1 bg-gray-50  mx-auto px-4 sm:px-6 lg:px-8">
       <main className="">
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">

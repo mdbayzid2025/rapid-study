@@ -103,7 +103,7 @@ const filteredTeachers = teachersData
     return <p>Loading....</p>
   }
   return (
-    <div className="flex-1  px-4 sm:px-6 lg:px-8">
+    <div className="flex-1">
       <main className="">
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">

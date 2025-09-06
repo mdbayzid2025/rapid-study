@@ -11,7 +11,6 @@ const FooterLayout = ({ children }: { children: React.ReactNode }) => {
     <div className="flex flex-col">
       <div className="h-full">
         <Navbar />
-
         <ConfigProvider
           theme={{
             token: {
@@ -30,7 +29,6 @@ const FooterLayout = ({ children }: { children: React.ReactNode }) => {
 export default FooterLayout;
 
 /*
-
 https://propertydevelopmentltd.com/
 https://nde.com.bd/
 
@@ -38,5 +36,4 @@ primary color: #0f67b1
 Secondary color: #03457c
 blue: #3197d6
 black #333333
-
 */

@@ -4,10 +4,8 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="">
-      <Container>
-        <TeacherManage />
-      </Container>
+    <div className="">      
+        <TeacherManage />      
     </div>
   );
 };

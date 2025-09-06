@@ -1,17 +1,12 @@
-
-
-import Container from '@/app/components/shared/Container/Container'
-import Dashboard from '@/app/components/ui/Dashboard/Dashboard'
-import React from 'react'
+'use client';
+import Dashboard from '@/app/components/ui/Dashboard/Dashboard';
 
 const DashboardPage = () => {
-  return (
-    <div>
-      <Container>
-        <Dashboard/>
-      </Container>
-    </div>
-  )
+  return (    
+      <div className='flex'>
+        <Dashboard />
+      </div>    
+  );
 }
 
-export default DashboardPage
+export default DashboardPage;

@@ -27,8 +27,7 @@ export const TaskList = () => {
 
 
   return (
-    <div>
-      <Container>
+    <div>      
         <div className="bg-white shadow-sm border border-gray-100 mb-5 min-h-[70vh] mt-10">
           <div className="p-6 border-b border-gray-100 mb-2">
             <div className="flex items-center justify-between">
@@ -96,8 +95,7 @@ export const TaskList = () => {
           isOpen={showAddForm}
           onClose={() => setShowAddForm(false)}
           refetch={refetch}
-        />
-      </Container>
+        />      
     </div>
   );
 };
