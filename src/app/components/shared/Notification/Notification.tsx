@@ -57,7 +57,7 @@ export const Notification = ({open, setOpen}:any) => {
       <Drawer
         title="Notifications"
         placement="right"
-        width={350}
+        width={400}
         onClose={() => setOpen(false)}
         open={open}        
       >
