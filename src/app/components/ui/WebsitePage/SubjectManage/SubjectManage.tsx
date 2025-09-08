@@ -48,7 +48,7 @@ const Subjects: React.FC = () => {
   const [openSemester, setOpenSemester] = useState(false);
   const [selectSemester, setSelectSemester] = useState(null);
 
-  const {data:semesterData, isLoading} = useGetSemesterQuery(undefined);
+  const {data:semesterData, refetch, isLoading} = useGetSemesterQuery(undefined);
 
 
   if(isLoading) <p>Loading...</p>
@@ -167,7 +167,7 @@ const Subjects: React.FC = () => {
         </div>
 
         {/* Semesters Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid gap-6">
           {semesterData && semesterData?.map((semester :any) => {
           
             return (
@@ -179,16 +179,16 @@ const Subjects: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="space-y-3">
+                <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {semester?.subjects.length > 0 ? semester?.subjects.map((subject : any) => (
                     <div key={subject._id} className="bg-white rounded-lg p-4 border border-gray-200">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-lg text-blue-500 font-semibold">{subject?.name}</p>
+                          <p className="text-sm text-blue-500 font-semibold h-12">{subject?.name}</p>
                           <div className="text-sm text-gray-600 flex items-center gap-2">
                             <img height={50} width={50} className='rounded-md' src={subject?.teacher?.photo ?? "/placeholder.png"} alt="" srcSet="" />
                             <div className="flex flex-col">
-                           <span className='font-semibold'>{subject?.teacher?.name}</span> 
+                           <span className='font-semibold whitespace-nowrap'>{subject?.teacher?.name}</span> 
                            <span >{subject?.teacher?.department}</span>                               
                             </div>
                             </div>
@@ -227,6 +227,7 @@ const Subjects: React.FC = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}        
         subjectData={editingSubject}
+        refetch={refetch}
       />
 
       {/* Semester Modal */}

@@ -295,7 +295,7 @@ export const mockNotices: Notice[] = [
   }
 ];
 
-export const mockTeachers: Teacher[] = [
+export const mockTeachers: any[] = [
   {
     _id: "1",
     name: "John Doe",

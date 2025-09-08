@@ -25,59 +25,58 @@ import { useCreateNoteMutation } from "@/store/api/noteApi";
 
 const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
-  
+
   const { data: subjectData } = useGetSubjectsQuery(undefined);
   const [tags, setTags] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]); // For image uploads
   const [documents, setDocuments] = useState<File[]>([]); // For document uploads
-  const [createNote, {isLoading}] = useCreateNoteMutation();
-
+  const [createNote, { isLoading }] = useCreateNoteMutation();
 
   const [noteForm, setNoteForm] = useState({
     title: "",
     description: "",
     subject: "",
-    priority: "",    
+    priority: "",
   });
 
   const handleAddNote = async () => {
-    console.log("Note added:", {...noteForm, tags});
+    console.log("Note added:", { ...noteForm, tags });
     console.log("images:", images);
     console.log("Documents:", documents);
     // setIsAddDialogOpen(false);
     // resetNoteForm();
-      
+
     const formData = new FormData();
     formData.append("title", noteForm?.title);
     formData.append("description", noteForm?.description);
     formData.append("subject", noteForm?.subject);
     formData.append("priority", noteForm?.priority);
-    formData.append("tags", JSON.stringify(tags)); 
+    formData.append("tags", JSON.stringify(tags));
 
-    images?.length > 0 && images.forEach(image=>{
-      formData.append("images", image)
-    })
-    documents?.length > 0 && documents.forEach(doc=>{
-      formData.append("documents", doc)
-    })
+    images?.length > 0 &&
+      images.forEach((image) => {
+        formData.append("images", image);
+      });
+    documents?.length > 0 &&
+      documents.forEach((doc) => {
+        formData.append("documents", doc);
+      });
 
-  try {
-    const res = await createNote(formData);
-
-    console.log("notes", res);
-  } catch (error) {
-    console.log("error", error)
-  }
-
+    try {
+      const res = await createNote(formData);
+      setIsAddDialogOpen(false);
+      console.log("notes", res);
+    } catch (error) {
+      console.log("error", error);
+    }
   };
-
 
   const resetNoteForm = () => {
     setNoteForm({
       title: "",
       description: "",
       subject: "",
-      priority: "",      
+      priority: "",
     });
     setImages([]);
     setDocuments([]);
@@ -138,7 +137,7 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
 
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-      <DialogContent className="sm:max-w-[650px]">
+      <DialogContent className="sm:max-w-[650px] h-full max-h-[800px] overflow-y-auto">
         <div className="grid gap-4 py-4">
           {/* Title Input */}
           <div className="grid gap-2">
@@ -198,7 +197,10 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
               <Label htmlFor="priority" className="mb-2.5">
                 Priority
               </Label>
-              <Select value={noteForm?.priority} onValueChange={handlePriorityChange }>
+              <Select
+                value={noteForm?.priority}
+                onValueChange={handlePriorityChange}
+              >
                 <SelectTrigger className="w-full !h-12">
                   <SelectValue placeholder="Set priority" />
                 </SelectTrigger>
@@ -215,7 +217,7 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
               </label>
               <Select
                 value={noteForm?.subject}
-                onValueChange={handleSubjectChange }
+                onValueChange={handleSubjectChange}
               >
                 <SelectTrigger className="w-full !h-12">
                   <SelectValue placeholder="Select a Subject" />
@@ -284,12 +286,12 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
                     {documents.map((doc, index) => (
                       <li
                         key={index}
-                        className="flex justify-between items-center border p-2 h-14 bg-slate-100"
+                        className="flex justify-between items-center border p-2 h-14 bg-slate-100 whitespace-wrap"
                       >
                         <FaRegFileAlt className="mr-2" />
                         <span>{doc?.name.slice(0, 20)}</span>
                         <button
-                          className="text-red-500 ml-2"
+                          className="text-red-500 ml-2 cursor-pointer"
                           onClick={() => removeDocument(doc)}
                         >
                           <FaTimes />

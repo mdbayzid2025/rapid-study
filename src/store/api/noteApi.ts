@@ -34,7 +34,7 @@ export const noteApi = baseApi.injectEndpoints({
     }),
     deleteNote: builder.mutation({
       query: (id) => ({
-        url: `/notes/${id}`,
+        url: `/notes/${id}`, 
         method: 'DELETE',
       }),
       invalidatesTags: ['Note'],

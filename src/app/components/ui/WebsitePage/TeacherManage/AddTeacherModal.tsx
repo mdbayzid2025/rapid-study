@@ -10,36 +10,39 @@ import { useUpdateTeacherMutation } from "@/store/api/teacherApi";
 interface TeacherModalProps {
   isOpen: boolean;
   onClose: () => void;
-  teacher?: Teacher | null;
+  refetch: () => void;
+  teacher?: any | null;
   mode: "add" | "edit" | "view";
 }
 
 const initialState = {
-    name: "",
-    email: "",
-    contact: "",
-    designation: "",
-    department: "",
-    remarks: "",
-    status: "Active" as "Active" | "Inactive",
-    photo: "" as string | File,
-  }
+  name: "",
+  nameCode: "",
+  email: "",
+  contact: "",
+  designation: "",
+  department: "",
+  remarks: "",
+  status: "Active" as "Active" | "Inactive",
+  photo: "" as string | File,
+};
 
 const TeacherAddModal: React.FC<TeacherModalProps> = ({
   isOpen,
   onClose,
   teacher,
   mode,
+  refetch
 }) => {
   const [formData, setFormData] = useState(initialState);
 
   const [createTeacher, { isLoading }] = useCreateTeacherMutation();
-  const [updateTeacher, { isLoading: updating }] = useUpdateTeacherMutation();
-
+  const [updateTeacher, { isLoading: updating }] = useUpdateTeacherMutation();  
   useEffect(() => {
     if (teacher) {
       setFormData({
         name: teacher?.name ?? "",
+        nameCode: teacher?.nameCode ?? "",
         email: teacher?.email ?? "",
         contact: teacher?.contact ?? "",
         designation: teacher?.designation ?? "",
@@ -54,30 +57,36 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
   }, [teacher, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault();  
+   const data = new FormData();
 
-    const data = new FormData();
+// Helper to append only if the value is not null, undefined, or empty string
+const appendIfExists = (key: string, value: any) => {
+  if (value !== undefined && value !== null && value !== "") {
+    data.append(key, value);
+  }
+};
 
-    // Append the fields to the FormData object
-    data.append("name", formData.name);
-    data.append("email", formData.email);
-    data.append("contact", formData.contact);
-    data.append("designation", formData.designation);
-    data.append("department", formData.department);
-    data.append("remarks", formData.remarks);
-    data.append("status", formData.status);
+appendIfExists("name", formData.name);
+appendIfExists("email", formData.email);
+appendIfExists("contact", formData.contact);
+appendIfExists("nameCode", formData.nameCode);
+appendIfExists("designation", formData.designation);
+appendIfExists("department", formData.department);
+appendIfExists("remarks", formData.remarks);
+appendIfExists("status", formData.status);
 
-    // Check if the photo exists and append it
-    if (formData.photo && typeof formData.photo !== "string") {
-      data.append("photo", formData.photo);
-    }
-
+// Special handling for file upload
+if (formData.photo && typeof formData.photo !== "string") {
+  data.append("photo", formData.photo);
+}
     try {
-      if (teacher) {
-        // Update teacher
+      if (teacher) {        
         const res = await updateTeacher({ id: teacher?._id, data }).unwrap();
-        console.log("Update response", res);
+        console.log("updateTeacher", res);
+        
         if (res?.data) {
+          refetch()
           toast.success("Teacher Updated");
           onClose();
         } else {
@@ -86,7 +95,7 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
       } else {
         // Create teacher
         const res = await createTeacher(data).unwrap();
-        console.log("Create response", res);
+        console.log("createTeacher", res);
         if (res?.data) {
           toast.success("Teacher Added");
           onClose();
@@ -127,17 +136,19 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
       ? "Edit Teacher"
       : "Teacher Details";
 
-
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
       setFormData(initialState);
     }
   };
-      
+
   return (
-    <div onClick={handleOverlayClick} className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-xl max-w-xl w-full mx-4 overflow-y-auto">
+    <div
+      onClick={handleOverlayClick}
+      className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div className="bg-white rounded-xl shadow-xl max-w-xl w-full mx-4 overflow-y-auto max-h-[800px]">
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
           <button
@@ -177,7 +188,7 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
                 </div>
               )}
             </div>
-            <div>
+            <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Full Name
               </label>
@@ -186,8 +197,20 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                readOnly={isReadOnly}
-                required
+                readOnly={isReadOnly}                
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Short Name
+              </label>
+              <input
+                type="text"
+                name="nameCode"
+                value={formData.nameCode}
+                onChange={handleInputChange}
+                readOnly={isReadOnly}                
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50"
               />
             </div>
@@ -201,8 +224,7 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
                 name="designation"
                 value={formData.designation}
                 onChange={handleInputChange}
-                readOnly={isReadOnly}
-                required
+                readOnly={isReadOnly}                
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50"
               />
             </div>
@@ -216,8 +238,7 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                readOnly={isReadOnly}
-                required
+                readOnly={isReadOnly}                
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50"
               />
             </div>
@@ -232,26 +253,12 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
                 name="contact"
                 value={formData.contact}
                 onChange={handleInputChange}
-                readOnly={isReadOnly}
-                required
+                readOnly={isReadOnly}                
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50"
               />
             </div>
 
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1 ">
-                Remarks
-              </label>
-              <input
-                type="text"
-                name="remarks"
-                value={formData.remarks}
-                onChange={handleInputChange}
-                readOnly={isReadOnly}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50"
-              />
-            </div>
+      
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -261,8 +268,7 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
                 name="department"
                 value={formData.department}
                 onChange={handleInputChange}
-                disabled={isReadOnly}
-                required
+                disabled={isReadOnly}                
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50"
               >
                 <option value="">Select Department</option>
@@ -292,6 +298,19 @@ const TeacherAddModal: React.FC<TeacherModalProps> = ({
                   <option value="Inactive">Inactive</option>
                 </select>
               </div>
+            </div>
+                  <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1 ">
+                Remarks
+              </label>
+              <input
+                type="text"
+                name="remarks"
+                value={formData.remarks}
+                readOnly={isReadOnly}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50"
+              />
             </div>
           </div>
 

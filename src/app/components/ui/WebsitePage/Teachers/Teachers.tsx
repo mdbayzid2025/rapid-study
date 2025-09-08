@@ -27,10 +27,7 @@ const { Title, Text } = Typography;
 const { Search } = Input;
 
 const Teachers = () => {
-  const {
-    data: teachersData,
-    isLoading,
-  } = useGetTeachersQuery(undefined);
+  const { data: teachersData, isLoading } = useGetTeachersQuery(undefined);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -65,7 +62,11 @@ const Teachers = () => {
       title: "Designation",
       dataIndex: "designation",
       key: "designation",
-      render: (text :any, record:any) =><span className="capitalize">{text} ({record?.department})</span>
+      render: (text: any, record: any) => (
+        <span className="capitalize">
+          {text} ({record?.department})
+        </span>
+      ),
     },
     {
       title: "Email",
@@ -129,7 +130,7 @@ const Teachers = () => {
             renderItem={(teacher: any) => (
               <List.Item>
                 <Card
-                  className="rounded-xl shadow-lg p-4 hover:shadow-xl transition-shadow duration-300"
+                  className="rounded-xl !bg-slate-200/40 shadow-lg p-4 hover:shadow-xl transition-shadow duration-300"
                   bordered={false}
                 >
                   <div className="flex items-center space-x-4 mb-4 gap-3">
@@ -143,7 +144,9 @@ const Teachers = () => {
                       <Title level={4} className="!my-0 text-xl font-semibold">
                         {teacher?.name}
                       </Title>
-                      <Text className="text-gray-500">{teacher?.designation} ({teacher?.department})</Text>
+                      <Text className="text-gray-500">
+                        {teacher?.designation} ({teacher?.department})
+                      </Text>
                     </div>
                   </div>
 
@@ -151,20 +154,21 @@ const Teachers = () => {
 
                   <Space direction="vertical" size="small" className="w-full">
                     <div className="flex items-center space-x-2">
-                      <MailOutlined className="text-gray-500" />
-                      <Text>{teacher?.email}</Text>
+                      <PhoneOutlined className="text-gray-500" />
+                      <Text>{teacher?.contact}</Text>
                     </div>
+
                     <Divider className="!my-2" />
 
                     <div className="flex items-center space-x-2">
-                      <PhoneOutlined className="text-gray-500" />
-                      <Text>{teacher?.contact}</Text>
+                      <MailOutlined className="text-gray-500" />
+                      <Text>{teacher?.email}</Text>
                     </div>
                   </Space>
 
                   <Divider className="!my-2" />
 
-                  <div className="flex items-center space-x-2">
+                  <div className="hidden  items-center space-x-2">
                     <FaRegCommentDots className="text-gray-500" />
                     <Text>{teacher?.remarks}</Text>
                   </div>

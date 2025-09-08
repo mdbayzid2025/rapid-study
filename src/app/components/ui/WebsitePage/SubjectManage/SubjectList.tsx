@@ -1,8 +1,8 @@
 "use client"
-import React, { useState } from 'react';
-import { Table, Button, Modal } from 'antd';
-import SubjectAddModal from './SubjectAddModal';
-import SubjectEditModal from './SubjectEditModal';
+import { Button, Table } from 'antd';
+import { useState } from 'react';
+// import SubjectAddModal from './SubjectAddModal';
+// import SubjectEditModal from './SubjectEditModal';
 
 const SubjectList = () => {
   const [subjects, setSubjects] = useState([
@@ -58,15 +58,15 @@ const SubjectList = () => {
         rowKey="id"
       />
 
-      <SubjectAddModal show={showAddModal} onClose={() => setShowAddModal(false)} setSubjects={setSubjects} />
-      {subjectToEdit && (
+      {/* <SubjectAddModal show={showAddModal} onClose={() => setShowAddModal(false)} setSubjects={setSubjects} /> */}
+      {/* {subjectToEdit && (
         <SubjectEditModal
           show={showEditModal}
           onClose={() => setShowEditModal(false)}
           subjectToEdit={subjectToEdit}
           setSubjects={setSubjects}
         />
-      )}
+      )} */}
     </div>
   );
 };

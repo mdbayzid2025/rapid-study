@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -13,10 +12,17 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
+import React, { useState } from "react";
+
 import { mockTeachers } from "@/app/data/mockData"; // Import the mock data
+import {
+  useDeleteTeacherMutation,
+  useGetTeachersQuery,
+} from "@/store/api/teacherApi";
 import { Teacher } from "@/types";
 import TeacherAddModal from "./AddTeacherModal";
-import { useGetTeachersQuery } from "@/store/api/teacherApi";
+
+import ConfirmModal from "@/app/components/shared/ConfirmModal/ConfirmModal";
 
 const TeacherManage: React.FC = () => {
   const [teachers, setTeachers] = useState<Teacher[]>(mockTeachers);
@@ -26,34 +32,38 @@ const TeacherManage: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [currentPage, setCurrentPage] = useState(1);
   const [teachersPerPage] = useState(10);
+
+  const [deleteNoteId, setDeleteNoteId] = useState(null);
+  const [selectedTeacher, setSelectedTeacher] = useState<any | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const {
     data: teachersData,
     isLoading,
     refetch,
-  } = useGetTeachersQuery(undefined);  
+  } = useGetTeachersQuery(undefined);
+  const [deleteTeacher] = useDeleteTeacherMutation();
 
   const [modalState, setModalState] = useState({
     isOpen: false,
     mode: "add" as "add" | "edit" | "view",
     teacher: null as Teacher | null,
   });
-  
-  
-// Filter teachers based on search and filters
-const filteredTeachers = teachersData
-  ? teachersData?.filter((teacher: any) => {
-      const matchesSearch =
-        teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        teacher._id.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesDepartment =
-        !departmentFilter || teacher?.department === departmentFilter;
-      const matchesStatus = !statusFilter || teacher?.status === statusFilter;
+  // Filter teachers based on search and filters
+  const filteredTeachers = teachersData
+    ? teachersData?.filter((teacher: any) => {
+        const matchesSearch =
+          teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          teacher._id.toLowerCase().includes(searchTerm.toLowerCase());
 
-      return matchesSearch && matchesDepartment && matchesStatus;
-    })
-  : [];
+        const matchesDepartment =
+          !departmentFilter || teacher?.department === departmentFilter;
+        const matchesStatus = !statusFilter || teacher?.status === statusFilter;
 
+        return matchesSearch && matchesDepartment && matchesStatus;
+      })
+    : [];
 
   // Pagination
   const indexOfLastTeacher = currentPage * teachersPerPage;
@@ -65,9 +75,14 @@ const filteredTeachers = teachersData
   const totalPages = Math.ceil(filteredTeachers?.length / teachersPerPage);
 
 
-  const handleDeleteTeacher = (teacherId: string) => {
-    if (window.confirm("Are you sure you want to delete this teacher?")) {
-      setTeachers(teachers.filter((t) => t._id !== teacherId));
+  const handleDeleteTeacher = async () => {    
+    try {
+      const res = await deleteTeacher(selectedTeacher?._id);
+      console.log("Deleted teacher:", res);
+      setIsModalOpen(false);
+      refetch();
+    } catch (error) {
+      console.log("Error deleting teacher:", error);
     }
   };
 
@@ -99,8 +114,8 @@ const filteredTeachers = teachersData
       : "bg-yellow-100 text-yellow-800";
   };
 
-  if(isLoading){
-    return <p>Loading....</p>
+  if (isLoading) {
+    return <p>Loading....</p>;
   }
   return (
     <div className="flex-1">
@@ -142,7 +157,7 @@ const filteredTeachers = teachersData
               <option value="">All Departments</option>
               <option value="CSE">CSE</option>
               <option value="EEE">EEE</option>
-              <option value="ETE">ETE</option>                            
+              <option value="ETE">ETE</option>
               <option value="English">English</option>
               <option value="Bangla">Bangla</option>
               <option value="History">History</option>
@@ -297,7 +312,7 @@ const filteredTeachers = teachersData
                             teacher?.remarks
                           )}`}
                         >
-                          {teacher?.remarks}
+                          {teacher?.remarks || "N/A"}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -314,8 +329,11 @@ const filteredTeachers = teachersData
                           >
                             <Edit size={16} />
                           </button>
-                          <button
-                            onClick={() => handleDeleteTeacher(teacher._id)}
+                          <button                            
+                            onClick={() => {
+                              setSelectedTeacher(teacher);
+                              setIsModalOpen(true);
+                            }}
                             className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
                           >
                             <Trash2 size={16} />
@@ -348,6 +366,7 @@ const filteredTeachers = teachersData
                         <h3 className="font-semibold text-gray-900">
                           {teacher.name}
                         </h3>
+                        <p>{teacher?.designation}</p>
                       </div>
                     </div>
                     <div className="space-y-2 mb-4">
@@ -355,6 +374,18 @@ const filteredTeachers = teachersData
                         <span className="text-gray-600">Department:</span>
                         <span className="font-medium">
                           {teacher.department}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Contact:</span>
+                        <span className="font-medium">
+                          {teacher.contact}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Email:</span>
+                        <span className="font-medium">
+                          {teacher.email}
                         </span>
                       </div>
                       <div className="flex justify-between">
@@ -383,7 +414,10 @@ const filteredTeachers = teachersData
                           <Edit size={16} />
                         </button>
                         <button
-                          onClick={() => handleDeleteTeacher(teacher._id)}
+                          onClick={() => {
+                              setSelectedTeacher(teacher);
+                              setIsModalOpen(true);
+                            }}
                           className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
                         >
                           <Trash2 size={16} />
@@ -460,7 +494,15 @@ const filteredTeachers = teachersData
         onClose={closeModal}
         teacher={modalState.teacher}
         mode={modalState.mode}
+        refetch={refetch}
       />
+      {isModalOpen && (
+        <ConfirmModal
+          title={selectedTeacher?.name}
+          handleDeleteNote={handleDeleteTeacher}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
     </div>
   );
 };

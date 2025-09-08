@@ -1,10 +1,11 @@
 // Classes.tsx
-
+"use client";
 import React from "react";
 import { School } from "lucide-react";
 
 import Container from "@/app/components/shared/Container/Container";
 import SubjectCard from "./SubjectCard";
+import { useGetSemesterQuery } from "@/store/api/subjectApi";
 
 // Mock Classes and Subjects with Types
 
@@ -69,6 +70,11 @@ export const subjects: Subject[] = [
 ];
 
 const Classes: React.FC = () => {
+  const {
+    data: semesterData,
+    refetch,
+    isLoading,
+  } = useGetSemesterQuery(undefined);
   // Group classes by semester
   const groupedClasses = classes.reduce((acc, cls) => {
     if (!acc[cls.semester]) {
@@ -78,40 +84,34 @@ const Classes: React.FC = () => {
     return acc;
   }, {} as Record<string, ClassData[]>);
 
+  if (semesterData) {
+    console.log("semesterData", semesterData);
+  }
   return (
     <Container>
       <div>
         <div className="flex border items-center justify-center gap-6 my-8 p-4  bg-bottom rounded-lg gradient-to-r from-indigo-50 via-white to-purple-50 ">
-        {/* <div className="flex items-center gap-6 my-8 p-4 bg-[url('/header-bg.jpg')] bg-cover bg-no-repeat rounded-lg shadow-lg"> */}
+          {/* <div className="flex items-center gap-6 my-8 p-4 bg-[url('/header-bg.jpg')] bg-cover bg-no-repeat rounded-lg shadow-lg"> */}
           <div className="p-2 border bg-white rounded-full shadow-md">
             <School size={24} className=" text-indigo-600" />
           </div>
           <div className="">
-            <h1 className="text-3xl  leading-tight">
-              Classes List
-            </h1>            
+            <h1 className="text-3xl  leading-tight">Classes List</h1>
           </div>
         </div>
 
         <div>
-          {Object.keys(groupedClasses).map((semester) => (
-            <div key={semester} className="mb-8">
+          {semesterData && semesterData.map((semester: any) => (
+            <div key={semester?._id} className="mb-8">
               <div className="grid gap-6">
-                {groupedClasses[semester].map((cls) => {
-                  const classSubjects = subjects.filter(
-                    (s) => s.classId === cls.id
-                  );
-                  return (
-                    <div key={cls.id}>
-                      <h3 className="font-semibold text-lg">{cls.name}</h3>
-                      <div className="mt-4 grid md:grid-cols-5 grid-cols-2 gap-2 gap-y-4">
-                        {classSubjects.map((subject) => (
-                          <SubjectCard key={subject.id} subject={subject} />
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
+                <div>
+                  <h3 className="font-semibold text-lg">{semester.title}</h3>
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-5 gap-y-4">
+                    {semester?.subjects?.map((subject: any) => (
+                      <SubjectCard key={subject._id} subject={subject} />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           ))}

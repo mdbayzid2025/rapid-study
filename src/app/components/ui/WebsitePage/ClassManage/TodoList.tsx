@@ -40,10 +40,6 @@ const TodoList: React.FC<TodoListProps> = ({ todos, items: initialItems }) => {
         return "text-green-600 bg-green-100";
     }
   };
-
-  const handleAddTodo = (newTodo: TodoItem) => {
-    setItems((prev) => [newTodo, ...prev]);
-  };
   return (
     <>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -120,8 +116,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos, items: initialItems }) => {
 
       <AddTodoForm
         isOpen={showAddForm}
-        onClose={() => setShowAddForm(false)}
-        onSubmit={handleAddTodo}
+        onClose={() => setShowAddForm(false)}        
       />
     </>
   );

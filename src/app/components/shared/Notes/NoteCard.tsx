@@ -235,7 +235,7 @@ export const NoteCard = ({
               {documents?.length > 0 && (
                 <div className="mt-3 border-t pt-3">
                   <p className="text-xs font-medium mb-2">Attachments </p>
-                  <div className="space-y-2">
+                  <div className="space-x-2 grid-cols-3 gap-2 grid">
                     {documents.map((doc: any, index: any) => (
                       <div
                         key={index}
@@ -246,9 +246,9 @@ export const NoteCard = ({
                       >
                         <div className="flex items-center space-x-2">
                           {/* {getFileIcon(doc.type)} */}
-                          <FileText className="h-6 w-6 text-red-500" />
-                          <span className="text-sm truncate max-w-[150px]">
-                            {`Document ${index + 1}`}
+                          <FileText className="h-4 w-4 text-red-500" />
+                          <span className="text-[12px] truncate whitespace-wrap">
+                            {`Doc. ${index + 1}`}
                           </span>
                         </div>
                         <Button

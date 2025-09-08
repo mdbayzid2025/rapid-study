@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { NoteCard } from "@/app/components/shared/Notes/NoteCard";
 import {
@@ -13,23 +13,36 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { ConfigProvider, Input, Pagination, Select, Space } from "antd";
+import { useDeleteNoteMutation, useGetNotesQuery } from "@/store/api/noteApi";
+import { ConfigProvider, Input, Pagination } from "antd";
 import { Edit, Plus, Trash } from "lucide-react";
-import { IoSearchOutline } from "react-icons/io5";
-import ChapterFilter from "./ChapterFilter";
 import { useState } from "react";
+import { IoSearchOutline } from "react-icons/io5";
 import AddNoteModal from "./AddNoteModal";
 import EditNoteModal from "./EditNoteModal";
-import { useGetNotesQuery } from "@/store/api/noteApi";
 
 const Notes = () => {
-    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const { data: notesData, isLoading } = useGetNotesQuery(null);
+  const [deleteNote] = useDeleteNoteMutation();
 
-    const {data:notesData, isLoading} = useGetNotesQuery(null);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedNote, setSelectedNote] = useState(null);
+  const [deleteNoteId, setDeleteNoteId] = useState(null);
 
-  console.log("notesData", notesData)
-  if(isLoading)<p>Loading....</p>
+
+  console.log("notesData", notesData);
+  if (isLoading) <p>Loading....</p>;
+
+  const handleDeleteNote = async() => {
+    try {
+      const res = await deleteNote(deleteNoteId);
+      console.log("Deleted note:", res);
+    } catch (error) {
+    console.log("Error deleting note:", error);
+    }
+  }
+
   return (
     <div className="mt-10">
       <div className="flex justify-between items-center mb-6">
@@ -40,7 +53,10 @@ const Notes = () => {
           </p>
         </div>
 
-        <Button onClick={()=>setIsAddDialogOpen(true)} className="gap-2 cursor-pointer">
+        <Button
+          onClick={() => setIsAddDialogOpen(true)}
+          className="gap-2 cursor-pointer"
+        >
           <Plus className="h-4 w-4" /> Add New Note
         </Button>
       </div>
@@ -61,6 +77,10 @@ const Notes = () => {
               <Button
                 size="icon"
                 variant="ghost"
+                onClick={() => {
+                  setIsEditDialogOpen(true);
+                  setSelectedNote(note);
+                }}
                 className="h-7 w-7 bg-black/40 hover:bg-black/60 text-white"
               >
                 <Edit className="h-4 w-4" />
@@ -70,7 +90,8 @@ const Notes = () => {
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="h-7 w-7 bg-black/40 hover:bg-black/60 text-white"
+                    onClick={() => setDeleteNoteId(note._id)}
+                    className="h-7 w-7 bg-black/40 hover:bg-black/60 text-white cursor-pointer"
                   >
                     <Trash className="h-4 w-4" />
                   </Button>
@@ -85,14 +106,14 @@ const Notes = () => {
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction className="bg-red-600 hover:bg-red-700">
+                    <AlertDialogAction onClick={()=>handleDeleteNote()} className="bg-red-600 hover:bg-red-700 cursor-pointer">
                       Delete
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
             </div>
-            <NoteCard            
+            <NoteCard
               title={note?.title}
               subject={note?.subject?.name}
               description={note?.description}
@@ -106,30 +127,38 @@ const Notes = () => {
         ))}
       </div>
       <ConfigProvider
-          theme={{
-            components: {
-              Pagination: {
-                itemActiveBg: "#002C66",
-                borderRadius: 50,
-                colorText: "#000"
-              },
+        theme={{
+          components: {
+            Pagination: {
+              itemActiveBg: "#002C66",
+              borderRadius: 50,
+              colorText: "#000",
             },
-            token: {
-              colorPrimary: "white",
-            },
-          }}
-        >
-          <Pagination
-          style={{paddingTop: 20}}
-            align="center"            
-            total={30}
-            pageSize={10}
-            showQuickJumper={false}
-            showSizeChanger={false}            
-          />          
-        </ConfigProvider>
-        <AddNoteModal isAddDialogOpen={isAddDialogOpen} setIsAddDialogOpen={setIsAddDialogOpen}/>
-        <EditNoteModal isEditDialogOpen={isEditDialogOpen} setIsEditDialogOpen={setIsEditDialogOpen}/>
+          },
+          token: {
+            colorPrimary: "white",
+          },
+        }}
+      >
+        <Pagination
+          style={{ paddingTop: 20 }}
+          align="center"
+          total={30}
+          pageSize={10}
+          showQuickJumper={false}
+          showSizeChanger={false}
+        />
+      </ConfigProvider>
+      <AddNoteModal
+        isAddDialogOpen={isAddDialogOpen}
+        setIsAddDialogOpen={setIsAddDialogOpen}
+      />
+      <EditNoteModal
+        isEditDialogOpen={isEditDialogOpen}
+        setIsEditDialogOpen={setIsEditDialogOpen}        
+        editNote={selectedNote}
+        setEditNote={setSelectedNote}
+      />
     </div>
   );
 };

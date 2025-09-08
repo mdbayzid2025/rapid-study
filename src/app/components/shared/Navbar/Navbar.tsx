@@ -1,14 +1,13 @@
 "use client";
 
-import { Bell, BookOpen, User } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { io } from "socket.io-client";
 import { useGetNotificationQuery } from "@/store/api/eventApi";
+import { Bell, User } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import { Notification } from "../Notification/Notification";
 
-import { Button, MenuProps } from "antd";
-import { Dropdown, Space } from 'antd';
+import { Dropdown } from 'antd';
 import Container from "../Container/Container";
 
 // Connect to the Socket.io server
@@ -20,8 +19,7 @@ socket.on("connect", ()=>{
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { data: notificationData } = useGetNotificationQuery(undefined);
-
-  console.log("notificationData", notificationData);
+  
   const unRead = notificationData?.filter(
     (notification: any) => notification?.read === false
   );
@@ -72,10 +70,9 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-3">
             <Link
-              href="/"
-              className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
+              href="/"              
             >
-              <BookOpen className="w-5 h-5 text-white" />
+              <img src="/Prime_University.png" alt="logo" className="w-8 h-10 object-cover overflow-visible" />
             </Link>
             <span className="text-xl font-bold text-gray-900">ClassHub</span>
           </div>

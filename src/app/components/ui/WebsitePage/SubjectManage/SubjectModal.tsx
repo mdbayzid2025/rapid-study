@@ -9,22 +9,17 @@ import {
 import { useGetTeachersQuery } from "@/store/api/teacherApi";
 import toast from "react-hot-toast";
 
-interface Subject {
-  id: string;
-  name: string;
-  semester: string; // updated to string
-  teacher: string; // teacher _id
-  status: "Active" | "Inactive" | "Upcoming";
-}
 
 interface SubjectModalProps {
   isOpen: boolean;
   onClose: () => void;  
+  refetch: () => void;  
   subjectData: any | null;
 }
 
-const initialState: Omit<Subject, "id"> = {
+const initialState: Omit<any, "id"> = {
   name: "",
+  subjectCode: "",
   semester: "",
   teacher: "",
   status: "Active",
@@ -34,6 +29,7 @@ const SubjectModal: React.FC<SubjectModalProps> = ({
   isOpen,
   onClose,  
   subjectData,
+  refetch
 }) => {
   const [formData, setFormData] = useState(initialState);
 
@@ -47,6 +43,7 @@ const SubjectModal: React.FC<SubjectModalProps> = ({
       setFormData({
         name: subjectData.name || "",
         semester: subjectData.semester?._id || "",
+        subjectCode: subjectData.subjectCode || "",
         teacher: subjectData.teacher?._id || "",
         status: subjectData.status || "Active",
       });
@@ -55,6 +52,7 @@ const SubjectModal: React.FC<SubjectModalProps> = ({
         setFormData({
           name: "",
           semester: semesterData[0]._id || "",
+          subjectCode: semesterData?.subjectCode || "",
           teacher: teachersData[0]._id || "",
           status: "Active",
         });
@@ -64,10 +62,11 @@ const SubjectModal: React.FC<SubjectModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("data", formData);
+    
     try {
       const res = await createSubject(formData);
       console.log("Subject", res);
+      refetch()
       if (res?.data) {
         toast.success("Subject Added Successfully");
         onClose()
@@ -120,13 +119,25 @@ const SubjectModal: React.FC<SubjectModalProps> = ({
           {/* Subject Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Subject Name *
+              Course Name *
             </label>
             <input
               name="name"
               value={formData.name}
               onChange={handleChange}
               placeholder="Subject Name"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Course Code *
+            </label>
+            <input
+              name="subjectCode"
+              value={formData.subjectCode}
+              onChange={handleChange}
+              placeholder="Course Code"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>

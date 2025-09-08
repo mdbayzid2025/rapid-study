@@ -18,7 +18,7 @@ export const useGallery = (initialImages: GalleryImage[]) => {
     setActiveFilter(filter);
   };
 
-  const handleUploadImage = (imageData: { title: string; category: FilterCategory; file: File }) => {
+  const handleUploadImage = (imageData: { title: string; category: any; file: File }) => {
     // In a real application, you would upload the file to a server
     // For demo purposes, we'll create a local URL
     const newImage: GalleryImage = {
