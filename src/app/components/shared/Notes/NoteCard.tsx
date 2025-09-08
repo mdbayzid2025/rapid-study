@@ -23,6 +23,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { handleDownload } from "@/urils/downloadFile";
 import { url } from "inspector/promises";
+import { Tooltip } from "antd";
 
 export interface DocumentAttachment {
   url: string;
@@ -111,9 +112,19 @@ export const NoteCard = ({
     }
   };
 
+  const getDocumentName = (url: any) => {
+    const fileName = url.split("/").pop();
+    console.log("file name", fileName);
+    const withoutTime = fileName.replace(/^\d+-/, "");
+    console.log("withoutTime", withoutTime);
+    const cleanName = withoutTime.replace(/\.[^\.]+$/, "");
+
+    return cleanName;
+  };
+
   return (
     <>
-      <Card     
+      <Card
         className={`overflow-hidden hover:shadow-md mb-1 transition-all border-l-4  ${getPriorityBorderColor()}`}
       >
         <CardContent className="p-0">
@@ -133,7 +144,6 @@ export const NoteCard = ({
                   <span className="ml-2">No images available</span>
                 </div>
               )}
-             
             </div>
 
             <div className="p-4 ">
@@ -237,20 +247,21 @@ export const NoteCard = ({
                   <p className="text-xs font-medium mb-2">Attachments </p>
                   <div className="space-x-2 grid-cols-3 gap-2 grid">
                     {documents.map((doc: any, index: any) => (
+                      <Tooltip title={getDocumentName(doc)} >
                       <div
                         key={index}
                         className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors"
-                        onClick={() =>
-                          handleDownload(doc)
-                        }
+                        onClick={() => handleDownload(doc)}
                       >
-                        <div className="flex items-center space-x-2">
-                          {/* {getFileIcon(doc.type)} */}
-                          <FileText className="h-4 w-4 text-red-500" />
-                          <span className="text-[12px] truncate whitespace-wrap">
-                            {`Doc. ${index + 1}`}
-                          </span>
-                        </div>
+                        
+                          <div className="flex items-center space-x-2">
+                            {/* {getFileIcon(doc.type)} */}
+                            <FileText className="h-4 w-4 text-red-500" />
+                            <span className="text-[12px] truncate whitespace-wrap">
+                              {`Doc. ${index + 1}`}
+                            </span>
+                          </div>
+                        
                         <Button
                           size="icon"
                           variant="ghost"
@@ -259,6 +270,7 @@ export const NoteCard = ({
                           <Download className="h-3 w-3" />
                         </Button>
                       </div>
+                      </Tooltip>
                     ))}
                   </div>
                 </div>

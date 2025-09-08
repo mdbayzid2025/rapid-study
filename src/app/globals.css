@@ -4,7 +4,23 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* scroll bar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+  background: #dfdfdf00;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  /* background: #6b5ecc34;  */
+  background: #f6f6f6;
+  border-radius: 10px;
+}
 
 :root {
 
