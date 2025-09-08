@@ -1,4 +1,4 @@
-'use client';
+
 import Dashboard from '@/app/components/ui/Dashboard/Dashboard';
 
 const DashboardPage = () => {

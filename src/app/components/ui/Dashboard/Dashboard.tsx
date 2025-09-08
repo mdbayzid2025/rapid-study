@@ -2,17 +2,6 @@
 import React, { useState } from "react";
 
 import {
-  BookOpen,
-  Calendar,
-  CheckSquare,
-  Edit,
-  ExternalLink,
-  FileText,
-  Plus,
-  Trash,
-} from "lucide-react";
-import { AiTwotoneNotification } from "react-icons/ai";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -23,6 +12,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Edit,
+  FileText,
+  Plus,
+  Trash
+} from "lucide-react";
+import { AiTwotoneNotification } from "react-icons/ai";
 
 import { Button } from "@/components/ui/button";
 
@@ -33,20 +29,17 @@ import {
   useGetStatsQuery,
 } from "@/store/api/eventApi";
 
-import dayjs from "dayjs";
-import { useGetNotesQuery } from "@/store/api/noteApi";
-import { NoteCard } from "../../shared/Notes/NoteCard";
-import Link from "next/link";
-import { useGetTasksQuery } from "@/store/api/taskApi";
-import { RecentTask } from "./RecentTask";
 import { useGetAssignmentsQuery } from "@/store/api/assignmentApi";
-import { UpcomingAssignments } from "./UpcomingAssignments";
-import UpcomingEvents from "../WebsitePage/ClassManage/UpcomingEvents";
-import AddNoteModal from "../WebsitePage/Notes/AddNoteModal";
-import AddEventForm from "../WebsitePage/ClassManage/AddEventForm";
-import AddAssignmentForm from "../WebsitePage/ClassManage/AddAssignmentForm";
-import { io } from "socket.io-client";
+import { useGetNotesQuery } from "@/store/api/noteApi";
+import { useGetTasksQuery } from "@/store/api/taskApi";
 import { getBaseUrl } from "@/urils/baseUrl";
+import Link from "next/link";
+import { io } from "socket.io-client";
+import { NoteCard } from "../../shared/Notes/NoteCard";
+import AddAssignmentForm from "../WebsitePage/ClassManage/AddAssignmentForm";
+import AddEventForm from "../WebsitePage/ClassManage/AddEventForm";
+import AddNoteModal from "../WebsitePage/Notes/AddNoteModal";
+import { RecentTask } from "./RecentTask";
 
 // import { mockTasks, mockAssignments, mockNotes, mockNotices } from '../data/mockData';
 
