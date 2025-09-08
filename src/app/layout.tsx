@@ -1,12 +1,10 @@
-
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
-import { Teko , Poppins} from "next/font/google";
+import { Teko, Poppins } from "next/font/google";
 import "./globals.css";
 import Providers from "@/urils/Providers";
-import  { Toaster } from 'react-hot-toast';
-
+import { Toaster } from "react-hot-toast";
 
 const teko = Teko({
   variable: "--font-teko",
@@ -18,10 +16,6 @@ const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"], // optional, choose needed weights
 });
-
-
-
-
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -45,12 +39,12 @@ export default function RootLayout({
             },
           }}
         >
-            <Providers>
+          <Providers>
             <AntdRegistry>
               {children}
               <Toaster />
-              </AntdRegistry>
-              </Providers>          
+            </AntdRegistry>
+          </Providers>
         </ConfigProvider>
       </body>
     </html>

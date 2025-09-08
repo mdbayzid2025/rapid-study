@@ -54,7 +54,7 @@ const Navbar = () => {
     },
     {
       key: "3",
-      label: <Link href="/profile">Profile</Link>,
+      label: <Link href="/dashboard/profile">Profile</Link>,
       extra: "⌘P",
     },
     {
