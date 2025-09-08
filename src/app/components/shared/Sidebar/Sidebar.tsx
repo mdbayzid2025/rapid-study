@@ -24,7 +24,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <nav className="mt-7 w-72 flex-shrink-0 px-3">
+    <nav className="mt-7 w-72 flex-shrink-0 px-3 h-[98vh]">
       <ul>
         {navigation?.length > 0 &&
           navigation?.map((item) => {
