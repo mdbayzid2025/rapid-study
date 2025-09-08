@@ -22,10 +22,10 @@ export const UpcomingAssignments = ({ assignments }: any) => {
       <div className="p-6">
         <div className="space-y-4 max-h-[300px] overflow-y-auto">
           {assignments &&
-            assignments.map((assignment: any) => {
-              const daysLeft = assignment?.time
-                ? dayjs(assignment.time).diff(dayjs(), "day")
-                : 0;
+            assignments?.map((assignment: any) => {
+              // const daysLeft = assignment?.time
+              //   ? dayjs(assignment.time).diff(dayjs(), "day")
+              //   : 0;
 
               return (
                 <div

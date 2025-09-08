@@ -46,6 +46,7 @@ import AddNoteModal from "../WebsitePage/Notes/AddNoteModal";
 import AddEventForm from "../WebsitePage/ClassManage/AddEventForm";
 import AddAssignmentForm from "../WebsitePage/ClassManage/AddAssignmentForm";
 import { io } from "socket.io-client";
+import { getBaseUrl } from "@/urils/baseUrl";
 
 // import { mockTasks, mockAssignments, mockNotes, mockNotices } from '../data/mockData';
 
@@ -63,7 +64,7 @@ const Dashboard: React.FC = () => {
   // ------ Add events ------------
 
 
-const socket = io("http://localhost:5000");
+const socket = io(getBaseUrl());
 
 socket.on("connect", () => {
   console.log("Connected with socket ID:", socket.id);
@@ -72,7 +73,6 @@ socket.on("connect", () => {
   const handleAddEvent = async (newEvent: Event) => {
     try {
       const res = createEvent(newEvent);
-
       console.log("res", res);
     } catch (error) {
       console.log("error", error);
@@ -190,8 +190,8 @@ socket.on("connect", () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 md:gap-2 gap-6">
                   {notesData &&
-                    notesData.slice(0, 4)?.map((note: any) => (
-                      <div key={note._id} className="relative bg-transparent">
+                    notesData?.slice(0, 4)?.map((note: any) => (
+                      <div key={note?._id} className="relative bg-transparent">
                         <div className="absolute bg-transparent w-full px-5 top-2 right-2 z-10 flex justify-between gap-1">
                           <Button
                             size="icon"
@@ -215,7 +215,7 @@ socket.on("connect", () => {
                                 <AlertDialogTitle>Delete Note</AlertDialogTitle>
                                 <AlertDialogDescription>
                                   Are you sure you want to delete &quot;
-                                  {note.title}&quot;? This action cannot be
+                                  {note?.title}&quot;? This action cannot be
                                   undone.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
@@ -229,12 +229,12 @@ socket.on("connect", () => {
                           </AlertDialog>
                         </div>
                         <NoteCard
-                          title={note.title}
-                          description={note.description}
-                          createdAt={note.createdAt}
+                          title={note?.title}
+                          description={note?.description}
+                          createdAt={note?.createdAt}
                           images={note?.images}
-                          priority={note.priority}
-                          tags={note.tags}
+                          priority={note?.priority}
+                          tags={note?.tags}
                         />
                       </div>
                     ))}
@@ -277,7 +277,7 @@ socket.on("connect", () => {
                 <div className="space-y-6">
                   {mockNotices.map((notice) => (
                     <div
-                      key={notice.id}
+                      key={notice?.id}
                       className="p-4 border-l-4 border-yellow-500 bg-yellow-50 rounded-lg shadow-sm"
                     >
                       <div className="flex items-start space-x-3">
@@ -299,13 +299,13 @@ socket.on("connect", () => {
 
                         <div className="flex-1">
                           <h3 className="font-semibold text-gray-900">
-                            {notice.title}
+                            {notice?.title}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            {notice.createdAt}
+                            {notice?.createdAt}
                           </p>
                           <p className="mt-2 text-gray-700">
-                            {notice.description}
+                            {notice?.description}
                           </p>
                         </div>
                       </div>
@@ -316,7 +316,7 @@ socket.on("connect", () => {
             </div>
 
             {/* Upcoming Assignments */}
-            <UpcomingAssignments assignments={assignmentData} />
+            {/* <UpcomingAssignments assignments={assignmentData} /> */}
             {/* Quick Add  +----------------  hidden */}
             <div className="hidden bg-white rounded-xl shadow-sm border border-gray-100">
               <div className="p-6 border-b border-gray-100">
@@ -339,7 +339,7 @@ socket.on("connect", () => {
                 </button>
               </div>
             </div>
-            <UpcomingEvents upcomingEvents={eventsData} />
+            {/* <UpcomingEvents upcomingEvents={eventsData} /> */}
             {/* Important Links */}
             {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100">
               <div className="p-6 border-b border-gray-100">
