@@ -1,12 +1,10 @@
+import Dashboard from "@/app/components/ui/Dashboard/Dashboard";
+import React from "react";
 
-import Dashboard from '@/app/components/ui/Dashboard/Dashboard';
-
-const DashboardPage = () => {
-  return (    
-      <div className='flex'>
-        <Dashboard />
-      </div>    
+export default function page() {
+  return (
+    <div>
+      <Dashboard />
+    </div>
   );
 }
-
-export default DashboardPage;
