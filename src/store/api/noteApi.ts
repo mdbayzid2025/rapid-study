@@ -6,7 +6,7 @@ export const noteApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getNotes: builder.query({
       query: (params) => ({
-        url: '/notes',
+        url: `/notes${location.search}`,
         params,
       }),
       transformResponse: (res: {data : any})=> res?.data,

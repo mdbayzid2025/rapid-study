@@ -5,7 +5,8 @@ import { School } from "lucide-react";
 
 import Container from "@/app/components/shared/Container/Container";
 import SubjectCard from "./SubjectCard";
-import { useGetSemesterQuery } from "@/store/api/subjectApi";
+import { useGetSemesterQuery} from "@/store/api/subjectApi";
+import { PageLoader } from "@/app/components/shared/Loader/PageLoader";
 
 // Mock Classes and Subjects with Types
 
@@ -72,9 +73,10 @@ export const subjects: Subject[] = [
 const Classes: React.FC = () => {
   const {
     data: semesterData,
-    refetch,
     isLoading,
+    isError
   } = useGetSemesterQuery(undefined);
+  
   // Group classes by semester
   const groupedClasses = classes.reduce((acc, cls) => {
     if (!acc[cls.semester]) {
@@ -101,11 +103,20 @@ const Classes: React.FC = () => {
         </div>
 
         <div>
-          {semesterData && semesterData.map((semester: any) => (
-            <div key={semester?._id} className="mb-8">
-              <div className="grid gap-6">
-                <div>
-                  <h3 className="font-semibold text-lg">{semester.title}</h3>
+          {isLoading ? <PageLoader /> : isError ? (
+        <div className="flex justify-center items-center w-full h-full text-red-500">
+          <p>There was an error loading the notes. Please try again.</p>
+        </div>
+      ) : isError ? (
+        <div className="flex justify-center items-center w-full h-full text-red-500">
+          <p>There was an error loading the notes. Please try again.</p>
+        </div>
+      ) : (
+        semesterData && semesterData.map((semester: any) => (
+          <div key={semester?._id} className="mb-8">
+            <div className="grid gap-6">
+              <div>
+                <h3 className="font-semibold text-lg">{semester.title}</h3>
                   <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-5 gap-y-4">
                     {semester?.subjects?.map((subject: any) => (
                       <SubjectCard key={subject._id} subject={subject} />
@@ -114,7 +125,7 @@ const Classes: React.FC = () => {
                 </div>
               </div>
             </div>
-          ))}
+          )))}
         </div>
       </div>
     </Container>

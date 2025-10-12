@@ -5,10 +5,10 @@ import Link from "next/link";
 
 const HeroSection: React.FC = () => {
   const features = [
-    { icon: Calendar, label: "Schedule", color: "bg-blue-500/10" },
-    { icon: FileText, label: "Assignments", color: "bg-green-500/10" },
-    { icon: BookOpen, label: "Subjects", color: "bg-purple-500/10" },
-    { icon: Bell, label: "Updates", color: "bg-orange-500/10" },
+    { icon: Calendar, label: "Schedule", link: "/calendar", color: "bg-blue-500/10" },
+    { icon: FileText, label: "Assignments", link: "/assignments", color: "bg-green-500/10" },
+    { icon: BookOpen, label: "Subjects", link: "/classes", color: "bg-purple-500/10" },
+    { icon: Bell, label: "Updates", link: "/notice", color: "bg-orange-500/10" },
   ];
 
   return (
@@ -64,7 +64,7 @@ const HeroSection: React.FC = () => {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div
+                <Link href={feature.link}
                   key={feature.label}
                   className={`${feature.color} bg-opacity-20 backdrop-blur-sm  border border-white border-opacity-20 rounded-2xl p-6 hover:bg-opacity-30 transition-all duration-300 transform hover:scale-105`}
                   style={{ animationDelay: `${index * 0.1}s` }}
@@ -81,7 +81,7 @@ const HeroSection: React.FC = () => {
                       style={{ width: `${Math.random() * 40 + 60}%` }}
                     ></div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

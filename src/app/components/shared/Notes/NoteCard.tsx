@@ -114,9 +114,7 @@ export const NoteCard = ({
 
   const getDocumentName = (url: any) => {
     const fileName = url.split("/").pop();
-    console.log("file name", fileName);
     const withoutTime = fileName.replace(/^\d+-/, "");
-    console.log("withoutTime", withoutTime);
     const cleanName = withoutTime.replace(/\.[^\.]+$/, "");
 
     return cleanName;
@@ -242,18 +240,18 @@ export const NoteCard = ({
                 )}
               </div>
 
+              <div className="mt-2"></div>
               {documents?.length > 0 && (
                 <div className="mt-3 border-t pt-3">
                   <p className="text-xs font-medium mb-2">Attachments </p>
                   <div className="space-x-2 grid-cols-3 gap-2 grid">
                     {documents.map((doc: any, index: any) => (
-                      <Tooltip title={getDocumentName(doc)} >
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors"
-                        onClick={() => handleDownload(doc)}
-                      >
-                        
+                      <Tooltip title={getDocumentName(doc)}>
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                          onClick={() => handleDownload(doc)}
+                        >
                           <div className="flex items-center space-x-2">
                             {/* {getFileIcon(doc.type)} */}
                             <FileText className="h-4 w-4 text-red-500" />
@@ -261,15 +259,15 @@ export const NoteCard = ({
                               {`Doc. ${index + 1}`}
                             </span>
                           </div>
-                        
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="cursor-pointer h-6 w-6"
-                        >
-                          <Download className="h-3 w-3" />
-                        </Button>
-                      </div>
+
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="cursor-pointer h-6 w-6"
+                          >
+                            <Download className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </Tooltip>
                     ))}
                   </div>
@@ -350,3 +348,38 @@ export const NoteCard = ({
     </>
   );
 };
+
+{
+  /* ------------------ PDF Viewer ------------------ */
+}
+
+/*
+              <div className="space-x-2 grid grid-cols-3 gap-2">
+                {documents?.map((doc: any, index: number) => (
+                  <div key={index} className="bg-blue-500 rounded-t-sm text-xs">
+                    <div
+                      onClick={() => handleDownload(doc)}
+                      className="flex items-center justify-center text-white cursor-pointer gap-1"
+                    >
+                      <span>Download</span>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="cursor-pointer h-6 w-6"
+                      >
+                        <Download className="h-3 w-3" />
+                      </Button>
+                    </div>
+                    
+                    
+                      <iframe
+                        src={`${doc}#zoom=0`}
+                        width="120"
+                        height="80"
+                        style={{ border: "none", overflow: "hidden" }}
+                      />                    
+                  </div>
+                ))}
+              </div>
+
+              */

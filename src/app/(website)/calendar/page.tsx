@@ -2,7 +2,7 @@ import Container from '@/app/components/shared/Container/Container'
 import UserCalander from '@/app/components/ui/UserCalander/UserCalander'
 import React from 'react'
 
-const calander = () => {
+const calendar = () => {
   return (
     <div>
       <Container>
@@ -12,4 +12,4 @@ const calander = () => {
   )
 }
 
-export default calander
+export default calendar

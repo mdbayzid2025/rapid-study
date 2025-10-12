@@ -22,12 +22,13 @@ import {
 } from "@ant-design/icons";
 import { FaRegCommentDots } from "react-icons/fa6";
 import { LucideUserPen } from "lucide-react";
+import { PageLoader } from "@/app/components/shared/Loader/PageLoader";
 
 const { Title, Text } = Typography;
 const { Search } = Input;
 
 const Teachers = () => {
-  const { data: teachersData, isLoading } = useGetTeachersQuery(undefined);
+  const { data: teachersData, isLoading, isError } = useGetTeachersQuery(undefined);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -121,7 +122,15 @@ const Teachers = () => {
 
         {/* Loading */}
         {isLoading ? (
-          <p className="text-center">Loading...</p>
+          <PageLoader />
+        ) : isError ? (
+          <div className="flex justify-center items-center w-full min-h-[50vh] text-red-500">
+            <p>There was an error loading the teachers. Please try again.</p>
+          </div>
+        ) : filteredTeachers?.length === 0 ? (
+          <div className="flex justify-center items-center w-full min-h-[50vh] text-gray-500">
+            <p>No teachers available. Start adding your teachers!</p>
+          </div>
         ) : viewMode === "grid" ? (
           // 🟦 GRID VIEW
           <List

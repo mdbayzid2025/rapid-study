@@ -1,14 +1,16 @@
 "use client";
 import { useGetAssignmentsQuery } from "@/store/api/assignmentApi";
 import dayjs from "dayjs";
+import { PageLoader } from "../../shared/Loader/PageLoader";
 
 export const Assignments = () => {
   const {
-    data: assignments,    
-    error,
+    data: assignments,
+    isLoading,
+    isError,
   } = useGetAssignmentsQuery(undefined);
 
-  if (error) {
+  if (isError) {
     return <div>Error fetching assignments</div>;
   }
 
@@ -20,12 +22,21 @@ export const Assignments = () => {
             <h2 className="text-[14px] font-semibold text-gray-900">
               Upcoming Assignments
             </h2>
-
           </div>
         </div>
         <div className="p-6">
           <div className="space-y-2 ">
-            {assignments &&
+            {isLoading ? (
+              <PageLoader />
+            ) : isError ? (
+              <div className="flex justify-center items-center w-full min-h-[50vh] text-red-500">
+                <p>There was an error loading the assignment. Please try again.</p>
+              </div>
+            ) : assignments?.length === 0 ? (
+              <div className="flex justify-center items-center w-full min-h-[50vh] text-gray-500">
+                <p>No assignments available. Start adding your assignments!</p>
+              </div>
+            ) : (
               assignments?.map((assignment: any) => (
                 <div
                   key={assignment?._id}
@@ -49,7 +60,8 @@ export const Assignments = () => {
                     </span>
                   </div>
                 </div>
-              ))}            
+              ))  
+            )}
           </div>
         </div>
       </div>

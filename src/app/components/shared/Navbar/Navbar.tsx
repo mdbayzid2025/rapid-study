@@ -115,10 +115,10 @@ const Navbar = () => {
               Assignments
             </Link>
             <Link
-              href="/calander"
+              href="/calendar"
               className="text-gray-500 hover:text-gray-700"
             >
-              Calander
+              Calendar
             </Link>
           </nav>
 
