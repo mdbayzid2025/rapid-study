@@ -5,39 +5,10 @@ import { Calendar, momentLocalizer, View, Views } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { useGetCalanderDataQuery } from "@/store/api/settingApi";
+import { useGetCalanderDataQuery, useGetScheduleDataQuery } from "@/store/api/settingApi";
+import ScheduleViewModal from "../../shared/ScheduleViewModal";
 
-// JSON data for events
-const eventData = [
-  {
-    title: "Team Meeting",
-    start: new Date("2025-09-02T00:00:00.000Z"),
-    // end: new Date("2025-09-02T00:00:00.000Z"),
-    allDay: false,
-    color: "#edede1",
-  },
-  {
-    title: "Project Deadline",
-    start: new Date(2025, 8, 10, 23, 59),
-    end: new Date(2025, 8, 10, 23, 59),
-    allDay: true,
-    color: "#2a9d8f",
-  },
-  {
-    title: "Client Call",
-    start: new Date(2025, 8, 12, 15, 0),
-    end: new Date(2025, 8, 12, 16, 0),
-    allDay: false,
-    color: "#e76f51",
-  },
-  {
-    title: "Lunch Break",
-    start: new Date(2025, 8, 15, 12, 0),
-    end: new Date(2025, 8, 15, 13, 0),
-    allDay: false,
-    color: "#264653",
-  },
-];
+
 
 // Main Calendar Component
 const UserCalendar: React.FC = () => {  
@@ -45,9 +16,10 @@ const UserCalendar: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>(Views.MONTH);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
-  const {data: calenderDara } = useGetCalanderDataQuery(undefined)
+  const {data: calenderData } = useGetCalanderDataQuery(undefined)
+  const {data: scheduleData } = useGetScheduleDataQuery(undefined)
 
-const events = calenderDara?.map((event:any)=>{
+const events = calenderData?.map((event:any)=>{
   return {...event, start: new Date(event?.start), end: new Date(event?.start),}
 })
   // Setup localizer
@@ -203,7 +175,8 @@ const events = calenderDara?.map((event:any)=>{
       </div>
 
       {/* Event Modal */}
-      {showModal && <EventModal event={selectedEvent} />}
+      {/* {showModal && <EventModal event={selectedEvent} />} */}
+      {showModal && <ScheduleViewModal event={selectedEvent} setShowModal={setShowModal} />}
     </div>
   );
 };

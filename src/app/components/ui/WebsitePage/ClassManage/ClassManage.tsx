@@ -8,9 +8,11 @@ import ClassInfo from "./ClassInfo";
 import ClassNotifications from "./ClassNotifications";
 import TodoList from "./TodoList";
 import UpcomingEvents from "./UpcomingEvents";
+import { useParams } from "next/navigation";
 
 const ClassManage = () => {
-  const {data:subjectData, isLoading} = useGetSubjectQuery(undefined);
+  const {id} = useParams();
+  const {data:subjectData, isLoading} = useGetSubjectQuery(id as string);
 
   console.log("subjectData", subjectData);
   
@@ -18,10 +20,11 @@ const ClassManage = () => {
     <div>
       <div className="bg-gray-50 min-h-screen">
         <div className="max-w-7xl mx-auto p-6">
-          <ClassInfo />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
-              <ClassAllNotes notes={classNotesData} />
+          {/* @ts-ignore */}
+          <ClassInfo data={subjectData} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div className="lg:col-span-2 space-y-6 h-full">
+              
               {/* <Assignment assignments={subjectData?.assignments} /> */}
               <Assignment assignments={subjectData?.assignments} />
             </div>
@@ -29,9 +32,10 @@ const ClassManage = () => {
             <div className="space-y-6">
               <UpcomingEvents upcomingEvents={subjectData?.events} />
               <TodoList todos={subjectData?.todos} items={todoItems}/>
-              <ClassNotifications />
+              {/* <ClassNotifications /> */}
             </div>
           </div>
+          <ClassAllNotes notes={subjectData?.notes} />
         </div>
       </div>
     </div>

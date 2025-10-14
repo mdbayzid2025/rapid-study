@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X, Flag } from "lucide-react";
 import { useGetSubjectsQuery } from "@/store/api/subjectApi";
 import { useCreateToDoMutation } from "@/store/api/todosApi";
@@ -29,7 +29,7 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({
   const { data: subjects, isLoading, isError } = useGetSubjectsQuery(undefined);
   const [createTodo, { isLoading: adding }] = useCreateToDoMutation();
   const [formData, setFormData] = useState(initialState);
-
+  const { id } = useParams();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const todo = {
@@ -73,6 +73,13 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({
       color: "text-green-600 bg-green-100",
     },
   ];
+
+    useEffect(() => {
+      if (id) {
+        console.log("id", id);
+        setFormData({ ...formData, subject: id as string });
+      }
+    }, [id]);
 
   if (!isOpen) return null;
 

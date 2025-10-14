@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -22,10 +22,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCreateNoteMutation } from "@/store/api/noteApi";
+import { useParams } from "next/navigation";
 
 const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
   const [searchTerm, setSearchTerm] = useState("");
-
+const { id } = useParams();
   const { data: subjectData } = useGetSubjectsQuery(undefined);
   const [tags, setTags] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]); // For image uploads
@@ -40,6 +41,7 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
   });
 
   const handleAddNote = async () => {
+    
     console.log("Note added:", { ...noteForm, tags });
     console.log("images:", images);
     console.log("Documents:", documents);
@@ -81,6 +83,12 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
     setImages([]);
     setDocuments([]);
   };
+
+  useEffect(() => {
+    if (id) {      
+      setNoteForm({ ...noteForm, subject: id as string });
+    }
+  }, [id]);
 
   // Sample options for the dropdown
   const filteredOptions = subjectData?.filter((subject: any) =>
@@ -137,8 +145,8 @@ const AddNoteModal = ({ isAddDialogOpen, setIsAddDialogOpen }: any) => {
 
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-      <DialogContent className="sm:max-w-[650px] h-full max-h-[800px] overflow-y-auto">
-        <div className="grid gap-4 py-4">
+      <DialogContent className="sm:max-w-[650px] h-full max-h-[80vh] pb-0 overflow-y-auto">
+        <div className="grid gap-y-2 gap-x-4 py-4">
           {/* Title Input */}
           <div className="grid gap-2">
             <Label htmlFor="title">Title</Label>

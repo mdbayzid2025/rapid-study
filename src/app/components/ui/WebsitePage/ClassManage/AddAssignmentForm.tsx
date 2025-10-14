@@ -1,67 +1,79 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X, Calendar, AlertCircle } from "lucide-react";
 import { useGetSubjectsQuery } from "@/store/api/subjectApi";
 import { useCreateAssignmentMutation } from "@/store/api/assignmentApi";
+import { useParams } from "next/navigation";
 
 interface AddAssignmentFormProps {
   isOpen: boolean;
-  onClose: () => void;  
+  onClose: () => void;
 }
 
 const initialState = {
-    title: "",
-    submissionDate: "",
-    subject: '',
-    time: "",
-    detailedInstructions: "",
-  }
+  title: "",
+  submissionDate: "",
+  subject: "",
+  time: "",
+  detailedInstructions: "",
+};
 
 const AddAssignmentForm: React.FC<AddAssignmentFormProps> = ({
   isOpen,
-  onClose,  
+  onClose,
 }) => {
   const [formData, setFormData] = useState(initialState);
   const { data: subjects, isLoading, isError } = useGetSubjectsQuery(undefined);
-  const [createAssignment, {isLoading:adding}] = useCreateAssignmentMutation();
-  
+  const [createAssignment, { isLoading: adding }] =
+    useCreateAssignmentMutation();
+  const { id } = useParams();
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
- const combinedDate = new Date(`${formData.submissionDate}T${formData.time}`);
+    const combinedDate = new Date(
+      `${formData.submissionDate}T${formData.time}`
+    );
 
-  const assignment = {
-    title: formData.title,
-    subject: formData.subject,
-    submissionDate: combinedDate,
-    time: formData.time, 
-    detailedInstructions: formData.detailedInstructions,    
-  };
-
-
-     try {
-      const res = await createAssignment(assignment);
-      console.log("assignment", res);
-      
-      onClose();
-    } catch (error) {
-      console.log("error", error)
-    }               
-  };
-
-  if (!isOpen) return null;
-
-      const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {
-        onClose();
-        setFormData(initialState);
-      }
+    const assignment = {
+      title: formData.title,
+      subject: formData.subject,
+      submissionDate: combinedDate,
+      time: formData.time,
+      detailedInstructions: formData.detailedInstructions,
     };
 
+    try {
+      const res = await createAssignment(assignment);
+      console.log("assignment", res);
+
+      onClose();
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      console.log("id", id);
+      setFormData({ ...formData, subject: id as string });
+    }
+  }, [id]);
+
+  if (!isOpen) return null;
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+      setFormData(initialState);
+    }
+  };
+
   return (
-    <div onClick={handleOverlayClick} className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div
+      onClick={handleOverlayClick}
+      className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50 p-4"
+    >
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">

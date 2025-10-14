@@ -6,7 +6,13 @@ export const settingApi = baseApi.injectEndpoints({
 endpoints: (builder) => ({
     getCalanderData: builder.query({
       query: () => '/calendar',
+      providesTags: ['Assignment', 'Event', 'Subject', 'Class'],
     }),
+
+    getScheduleData: builder.query({
+      query: (id) => `/calendar/${id}`,      
+    }),
+
     addEvent: builder.mutation({
       query: (newEvent) => ({
         url: '/',
@@ -23,4 +29,4 @@ endpoints: (builder) => ({
   }),      
 });
 
-export const { useGetCalanderDataQuery, useAddEventMutation, useDeleteEventMutation } = settingApi;
+export const { useGetCalanderDataQuery, useGetScheduleDataQuery, useAddEventMutation, useDeleteEventMutation } = settingApi;

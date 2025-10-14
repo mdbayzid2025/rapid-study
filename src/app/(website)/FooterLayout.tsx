@@ -10,7 +10,8 @@ const FooterLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex flex-col">
       <div className="h-full">
-        <Navbar />
+        <Navbar  />
+        <div className="mt-16">
         <ConfigProvider
           theme={{
             token: {
@@ -20,6 +21,7 @@ const FooterLayout = ({ children }: { children: React.ReactNode }) => {
         >
           {children}
         </ConfigProvider>
+        </div>
       </div>
       {pathname === "/" ? "" : <LandingFooter />}
     </div>

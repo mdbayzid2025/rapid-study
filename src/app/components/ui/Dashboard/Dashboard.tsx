@@ -75,7 +75,7 @@ socket.on("connect", () => {
     <div className="flex-1 pt-6">
       <main className="">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* {stats.map((stat, index) => (
                         <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                             <div className="flex items-center justify-between">

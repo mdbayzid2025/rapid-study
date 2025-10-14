@@ -9,3 +9,6 @@ export const getImageUrl = () => {
     // return "http://168.231.74.216:8010"
     // return "https://rapid-study-server.onrender.com"
 }
+
+
+export const socketUrl = "http://localhost:5000";

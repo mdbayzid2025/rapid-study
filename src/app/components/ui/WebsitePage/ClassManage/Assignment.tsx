@@ -19,8 +19,6 @@ const Assignments = ({ assignments }: any) => {
     }
   };
 
-  console.log("assignments", assignments);
-
   return (
     <>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -28,15 +26,15 @@ const Assignments = ({ assignments }: any) => {
           <div className="flex items-center">
             <BookOpen className="w-5 h-5 text-green-600 mr-2" />
             <h3 className="text-lg font-semibold text-gray-900">
-              Assignments & Deadlines
+              Assignments
             </h3>
           </div>
           <button
             onClick={() => setShowAddForm(true)}
-            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            className="flex items-center px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Add Assignment
+            Add
           </button>
         </div>      
         <div className="space-y-4">

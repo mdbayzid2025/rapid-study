@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { X, Calendar, Clock } from 'lucide-react';
 import { useGetSubjectsQuery } from '@/store/api/subjectApi';
+import { useParams } from 'next/navigation';
 
 interface AddEventFormProps {
   isOpen: boolean;
@@ -22,7 +23,7 @@ const initialState = {
 const AddEventForm: React.FC<AddEventFormProps> = ({ isOpen, onClose, onSubmit }) => {
   const { data: subjects, isLoading, isError } = useGetSubjectsQuery(undefined);
   const [formData, setFormData] = useState(initialState);
-
+  const { id } = useParams();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const event = {
@@ -52,6 +53,13 @@ const AddEventForm: React.FC<AddEventFormProps> = ({ isOpen, onClose, onSubmit }
     { value: 'office-hours', label: 'Office Hours', color: 'text-green-600' },
     { value: 'assignment', label: 'Assignment', color: 'text-orange-600' }
   ];
+
+  useEffect(() => {
+    if (id) {
+      console.log("id", id);
+      setFormData({ ...formData, subject: id as string });
+    }
+  }, [id]);
 
   if (!isOpen) return null;
 

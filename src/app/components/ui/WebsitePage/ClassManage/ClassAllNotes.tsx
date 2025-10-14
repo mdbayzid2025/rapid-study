@@ -1,9 +1,9 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { Eye, FileText, Paperclip, Plus, Search } from 'lucide-react';
-
-
+import { Eye, FileText, Paperclip, Plus, Search } from "lucide-react";
+import { NoteCard } from "@/app/components/shared/Notes/NoteCard";
+import AddNoteModal from "../Notes/AddNoteModal";
 
 interface Note {
   id: string | number;
@@ -17,41 +17,21 @@ interface Note {
 }
 
 interface ClassNotesProps {
-  notes: Note[];
+  notes: any[];
   showAddButton?: boolean;
 }
 
-const ClassAllNotes: React.FC<ClassNotesProps> = ({ notes, showAddButton = true }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+const ClassAllNotes: React.FC<ClassNotesProps> = ({
+  notes,
+  showAddButton = true,
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [notesList, setNotesList] = useState(notes);
-
-  const allTags = Array.from(new Set(notes.flatMap(note => note.tags || [])));
-
-  const filteredNotes = notesList.filter(note => {
-    const matchesSearch =
-      note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      note.content.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTags =
-      selectedTags.length === 0 ||
-      selectedTags.some(tag => note.tags?.includes(tag));
-    return matchesSearch && matchesTags;
-  });
-
-  const toggleTag = (tag: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-    );
-  };
-
-  const handleAddNote = (newNote: Note) => {
-    setNotesList(prev => [newNote, ...prev]);
-  };
+  const [showAddNoteForm, setShowAddNoteForm] = useState(false);
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 py-2 px-1.5 md:p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
@@ -60,47 +40,34 @@ const ClassAllNotes: React.FC<ClassNotesProps> = ({ notes, showAddButton = true 
           </div>
           {showAddButton && (
             <button
-              onClick={() => setShowAddForm(true)}
-              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              onClick={() => setShowAddNoteForm(true)}
+              className="flex items-center px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add Note
+              Add
             </button>
           )}
         </div>
 
-        {/* Search + Tags */}
-        <div className="mb-6">
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search notes..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {allTags.map(tag => (
-              <button
-                key={tag}
-                onClick={() => toggleTag(tag)}
-                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                  selectedTags.includes(tag)
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {notes?.map((note: any) => (
+            <div key={note._id} className="relative bg-transparent">
+              <NoteCard
+                title={note?.title}
+                subject={note?.subject?.name}
+                description={note?.description}
+                createdAt={note?.createdAt}
+                images={note?.images}
+                priority={note?.priority}
+                tags={note?.tags}
+                documents={note?.documents}
+              />
+            </div>
+          ))}
         </div>
 
         {/* Notes list */}
-        <div className="space-y-4">
+        {/* <div className="space-y-4 hidden">
           {filteredNotes.map((note) => (
             <div
               key={note.id}
@@ -111,7 +78,9 @@ const ClassAllNotes: React.FC<ClassNotesProps> = ({ notes, showAddButton = true 
                   {note.title}
                 </h4>
                 <div className="flex items-center space-x-2">
-                  {note.attachments && <Paperclip className="w-4 h-4 text-gray-400" />}
+                  {note.attachments && (
+                    <Paperclip className="w-4 h-4 text-gray-400" />
+                  )}
                   {note.views !== undefined && (
                     <div className="flex items-center text-sm text-gray-500">
                       <Eye className="w-4 h-4 mr-1" />
@@ -125,7 +94,7 @@ const ClassAllNotes: React.FC<ClassNotesProps> = ({ notes, showAddButton = true 
               </p>
               <p className="text-gray-700 mb-3">{note.content}</p>
               <div className="flex flex-wrap gap-1">
-                {note.tags?.map((tag) => (
+                {note.tags?.map((tag: any) => (
                   <span
                     key={tag}
                     className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs"
@@ -136,15 +105,17 @@ const ClassAllNotes: React.FC<ClassNotesProps> = ({ notes, showAddButton = true 
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* No results */}
-        {filteredNotes.length === 0 && (
+        {/* {filteredNotes.length === 0 && (
           <div className="text-center py-12">
             <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500">No notes found matching your criteria.</p>
+            <p className="text-gray-500">
+              No notes found matching your criteria.
+            </p>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* AddNoteForm placeholder */}
@@ -155,6 +126,11 @@ const ClassAllNotes: React.FC<ClassNotesProps> = ({ notes, showAddButton = true 
         onSubmit={handleAddNote}
       /> 
       */}
+      <AddNoteModal
+        isAddDialogOpen={showAddNoteForm}
+        setIsAddDialogOpen={setShowAddNoteForm}
+      />
+
     </>
   );
 };

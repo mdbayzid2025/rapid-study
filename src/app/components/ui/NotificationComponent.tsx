@@ -21,15 +21,15 @@ const NotificationComponent = () => {
     );
   };
 
-  useEffect(() => {
-    socket.on("newNotification", (notification) => {
-      alert(notification.message);
-    });
+  // useEffect(() => {
+  //   socket.on("newNotification", (notification) => {
+  //     alert(notification.message);
+  //   });
 
-    return () => {
-      socket.off("newNotification");
-    };
-  }, []);
+  //   return () => {
+  //     socket.off("newNotification");
+  //   };
+  // }, []);
 
   console.log("data", data);
   

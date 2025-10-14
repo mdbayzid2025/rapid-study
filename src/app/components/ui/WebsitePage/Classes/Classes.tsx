@@ -98,7 +98,7 @@ const Classes: React.FC = () => {
             <School size={24} className=" text-indigo-600" />
           </div>
           <div className="">
-            <h1 className="text-3xl  leading-tight">Classes List</h1>
+            <h1 className="text-3xl  leading-tight">Classes</h1>
           </div>
         </div>
 
@@ -117,7 +117,7 @@ const Classes: React.FC = () => {
             <div className="grid gap-6">
               <div>
                 <h3 className="font-semibold text-lg">{semester.title}</h3>
-                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4  gap-5 gap-y-4">
+                  <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-5 gap-y-4">
                     {semester?.subjects?.map((subject: any) => (
                       <SubjectCard key={subject._id} subject={subject} />
                     ))}

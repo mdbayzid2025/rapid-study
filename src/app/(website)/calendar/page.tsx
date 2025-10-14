@@ -6,7 +6,7 @@ const calendar = () => {
   return (
     <div>
       <Container>
-        <UserCalander />        
+      <UserCalander />        
         </Container>
     </div>
   )
