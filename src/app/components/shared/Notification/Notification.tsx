@@ -1,86 +1,109 @@
-import React, { useEffect, useState } from 'react'
-import { Drawer, List, Button, Spin } from "antd";
+import React, { useEffect, useState } from "react";
+import { Drawer, List, Avatar, Skeleton, Divider } from "antd";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Link from "next/link";
+import { getBaseUrl } from "@/urils/baseUrl";
 
+const PAGE_SIZE = 10;
 
-// Fake API (simulates server-side pagination)
-const fakeApi = (page: number, limit: number): Promise<{ data: string[]; hasMore: boolean }> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const total = 100;
-      const start = (page - 1) * limit;
-      const end = Math.min(start + limit, total);
-
-      const data = Array.from({ length: end - start }, (_, i) => `Notification ${start + i + 1}`);
-      resolve({ data, hasMore: end < total });
-    }, 800); // simulate delay
-  });
-};
-
-
-export const Notification = ({open, setOpen}:any) => {
-     const [notifications, setNotifications] = useState<string[]>([]);
+export const Notification = ({ open, setOpen }: any) => {
+  const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-
-      const loadData = async (pageNum: number) => {
+  // ✅ Load one page of data
+  const loadMoreData = async (pageNum: number) => {
     if (loading || !hasMore) return;
-    setLoading(true);   
-    const res = await fakeApi(pageNum, 10);
-    setNotifications((prev) => [...prev, ...res.data]);
-    setHasMore(res.hasMore);
-    setLoading(false);
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        `${getBaseUrl()}/notifications?page=${pageNum}&limit=${PAGE_SIZE}`
+      );
+      const newData = await response.json();
+
+      // stop loading if no data
+      if (!newData?.data?.length) {
+        setHasMore(false);
+      } else {
+        setData((prev) => [...prev, ...newData?.data]);
+        if (newData.length < PAGE_SIZE) {
+          setHasMore(false);
+        } else {
+          setPage((prev) => prev + 1);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading data:", error);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // ✅ Load initial data when drawer opens
   useEffect(() => {
     if (open) {
-      // reset when open
-      setNotifications([]);
+      setData([]);
       setPage(1);
       setHasMore(true);
-      loadData(1);
+      loadMoreData(1);
     }
   }, [open]);
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop <= clientHeight + 20 && !loading && hasMore) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      loadData(nextPage);
-    }
-  };
-
   return (
-    <>
-      <Drawer
-        title="Notifications"
-        placement="right"
-        width={400}
-        onClose={() => setOpen(false)}
-        open={open}        
+    <Drawer
+      title="Notifications"
+      placement="right"
+      width={400}
+      onClose={() => setOpen(false)}
+      open={open}
+    >
+      <div
+        id="scrollableDiv"
+        style={{
+          height: "calc(100vh - 100px)",
+          overflow: "auto",
+          padding: "10px 0px",
+        }}
       >
-        <div
-          style={{ height: "calc(100vh - 64px)", overflowY: "auto", padding: "12px" }}
-          onScroll={handleScroll}
+        <InfiniteScroll
+          dataLength={data.length}
+          next={() => loadMoreData(page)}
+          hasMore={hasMore}
+          loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+          endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+          scrollableTarget="scrollableDiv"
         >
           <List
-            dataSource={notifications}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
+            dataSource={data}
+            renderItem={(item) => (
+              <List.Item key={item?.email}>
+                <List.Item.Meta
+                  avatar={
+                    <Avatar
+                      src={
+                        "https://imgs.search.brave.com/79G2pzWuzqP-HJnPBrBY2PNIICYl_YfBA7RAHhJF_9I/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4t/aWNvbnMtcG5nLmZy/ZWVwaWsuY29tLzI1/Ni8xMTU2LzExNTY5/NDkucG5nP3NlbXQ9/YWlzX3doaXRlX2xh/YmVs"
+                      }
+                      size={25}
+                    />
+                  }
+                  title={
+                    <Link
+                      href="https://ant.design"
+                      className="font-semibold text-md"
+                    >
+                      {item?.title}
+                    </Link>
+                  }
+                  description={item?.message}
+                />
+              </List.Item>
+            )}
           />
-          {loading && (
-            <div style={{ textAlign: "center", padding: 12 }}>
-              <Spin />
-            </div>
-          )}
-          {!hasMore && (
-            <div style={{ textAlign: "center", padding: 12, color: "#999" }}>
-              🎉 All notifications loaded
-            </div>
-          )}
-        </div>
-      </Drawer>
-    </>
-  )
-}
+        </InfiniteScroll>
+      </div>
+    </Drawer>
+  );
+};
