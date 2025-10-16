@@ -1,10 +1,10 @@
-import ClassManage from '@/app/components/ui/WebsitePage/ClassManage/ClassManage'
+import Events from '@/app/components/ui/Events/Events'
 import React from 'react'
 
 const Page = () => {
   return (
     <div>
-        <ClassManage />
+        <Events />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import Profile from '@/app/components/ui/Profile/Profile'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
   return (
     <div>
         <Profile />
@@ -9,4 +9,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

@@ -1,7 +1,7 @@
 import Classes from '@/app/components/ui/WebsitePage/Classes/Classes'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
   return (
     <div>
         <Classes />
@@ -9,4 +9,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

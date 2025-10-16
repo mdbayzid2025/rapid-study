@@ -16,36 +16,30 @@ import { Button } from "@/components/ui/button";
 import { useDeleteNoteMutation, useGetNotesQuery } from "@/store/api/noteApi";
 import { ConfigProvider, Input, Pagination } from "antd";
 import { Edit, Plus, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import AddNoteModal from "./AddNoteModal";
 import EditNoteModal from "./EditNoteModal";
-import { FaSpinner } from "react-icons/fa";
 import { PageLoader } from "@/app/components/shared/Loader/PageLoader";
 import { useUpdateSearchParams } from "@/urils/updateSearchParams";
-import { getSearchParams } from "@/urils/getSearchParams";
+import { useSearchParams } from "next/navigation";
 
 const Notes = () => {
+  const searchParams = useSearchParams()
+  
   const {
     data: notesData,
-    refetch,
     isLoading,
     isError,
-  } = useGetNotesQuery(null);
+  } = useGetNotesQuery(searchParams.toString());
   const [deleteNote] = useDeleteNoteMutation();
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [deleteNoteId, setDeleteNoteId] = useState(null);
-  const { searchTerms } = getSearchParams(); // Get query params
-
-  console.log(searchTerms); // Example: { searchTerms: 'example', page: '1' }
-
-  useEffect(() => {
-    refetch();
-  }, [searchTerms]);
-
+    
+  console.log('notesData', notesData)
   const updateSearchParams = useUpdateSearchParams();
 
   const handleDeleteNote = async () => {

@@ -1,7 +1,7 @@
 import { Gallery } from '@/app/components/ui/Gallery/Gallery'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
   return (
     <div>
         <Gallery/>
@@ -9,4 +9,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

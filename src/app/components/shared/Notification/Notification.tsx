@@ -3,6 +3,7 @@ import { Drawer, List, Avatar, Skeleton, Divider } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Link from "next/link";
 import { getBaseUrl } from "@/urils/baseUrl";
+import DOMPurify from 'dompurify';
 
 const PAGE_SIZE = 10;
 
@@ -11,6 +12,7 @@ export const Notification = ({ open, setOpen }: any) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+
 
   // ✅ Load one page of data
   const loadMoreData = async (pageNum: number) => {
@@ -52,6 +54,10 @@ export const Notification = ({ open, setOpen }: any) => {
     }
   }, [open]);
 
+  const getNavigateUrl = (item:any)=>{
+    console.log('item, ', item?.type)
+    return `/${item?.type?.toLowerCase() === 'note' ? 'notes' : item?.type?.toLowerCase() === 'assignment'  ? 'assignments' : 'events'}`
+  }
   return (
     <Drawer
       title="Notifications"
@@ -79,7 +85,7 @@ export const Notification = ({ open, setOpen }: any) => {
           <List
             dataSource={data}
             renderItem={(item) => (
-              <List.Item key={item?.email}>
+              <List.Item key={item?.title}>
                 <List.Item.Meta
                   avatar={
                     <Avatar
@@ -91,13 +97,19 @@ export const Notification = ({ open, setOpen }: any) => {
                   }
                   title={
                     <Link
-                      href="https://ant.design"
-                      className="font-semibold text-md"
+                      href={`${getNavigateUrl(item)}`}
+                      className="font-bold text-[14px]"
                     >
                       {item?.title}
                     </Link>
                   }
-                  description={item?.message}
+                  description={
+                    <span className="text-slate-500 text-sm"
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(item.message),
+                      }}
+                    />
+                  }
                 />
               </List.Item>
             )}

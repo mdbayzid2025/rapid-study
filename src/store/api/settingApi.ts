@@ -12,6 +12,9 @@ endpoints: (builder) => ({
     getScheduleData: builder.query({
       query: (id) => `/calendar/${id}`,      
     }),
+    getNotice: builder.query({
+      query: (id) => `/notice`,      
+    }),
 
     addEvent: builder.mutation({
       query: (newEvent) => ({
@@ -29,4 +32,4 @@ endpoints: (builder) => ({
   }),      
 });
 
-export const { useGetCalanderDataQuery, useGetScheduleDataQuery, useAddEventMutation, useDeleteEventMutation } = settingApi;
+export const { useGetCalanderDataQuery, useGetNoticeQuery, useGetScheduleDataQuery, useAddEventMutation, useDeleteEventMutation } = settingApi;

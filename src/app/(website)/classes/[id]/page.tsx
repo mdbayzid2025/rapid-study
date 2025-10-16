@@ -2,7 +2,7 @@ import ClassManage from "@/app/components/ui/WebsitePage/ClassManage/ClassManage
 
 
 
-const page = () => {
+const Page = () => {
   return (
     <div>      
       <ClassManage />
@@ -10,4 +10,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

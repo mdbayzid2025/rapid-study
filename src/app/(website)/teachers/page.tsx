@@ -2,7 +2,7 @@ import Container from '@/app/components/shared/Container/Container'
 import Teachers from '@/app/components/ui/WebsitePage/Teachers/Teachers'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
   return (
     <div>
         <Container>
@@ -12,4 +12,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

@@ -2,7 +2,7 @@
 import { TaskList } from '@/app/components/TaskList/TaskList'
 import React from 'react'
 
- const page = () => {
+ const Page = () => {
   return (
     <div>
       <TaskList />
@@ -11,4 +11,4 @@ import React from 'react'
 }
 
 
-export default page
+export default Page

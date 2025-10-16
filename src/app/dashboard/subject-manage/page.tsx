@@ -1,7 +1,7 @@
 import SubjectManage from '@/app/components/ui/WebsitePage/SubjectManage/SubjectManage'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
   return (
     <div>
         <SubjectManage />
@@ -9,4 +9,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

@@ -1,15 +1,17 @@
-import Container from '@/app/components/shared/Container/Container'
-import Notes from '@/app/components/ui/WebsitePage/Notes/Notes'
-import React from 'react'
+import Container from "@/app/components/shared/Container/Container";
+import Notes from "@/app/components/ui/WebsitePage/Notes/Notes";
+import React, { Suspense } from "react";
 
-const page = () => {
+const Page = () => {
   return (
-    <div>
+    <Suspense fallback={<div>Loading notes...</div>}>
+      <div>
         <Container>
-        <Notes />
+          <Notes />
         </Container>
-    </div>
-  )
-}
+      </div>
+    </Suspense>
+  );
+};
 
-export default page
+export default Page;

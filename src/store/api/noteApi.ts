@@ -5,10 +5,11 @@ import { baseApi } from './baseApi';
 export const noteApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getNotes: builder.query({
-      query: (params) => ({
-        url: `/notes${location.search}`,
-        params,
-      }),
+      query: (query) => {
+        return {
+        url: `/notes${query}`,
+      }
+      },
       transformResponse: (res: {data : any})=> res?.data,
       providesTags: ['Note'],
     }),

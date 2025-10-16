@@ -1,7 +1,7 @@
 import Notification from '@/app/components/ui/WebsitePage/Notification/Notification'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
   return (
     <div>
         <Notification />
@@ -9,4 +9,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
