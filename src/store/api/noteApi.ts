@@ -7,7 +7,7 @@ export const noteApi = baseApi.injectEndpoints({
     getNotes: builder.query({
       query: (query) => {
         return {
-        url: `/notes${query}`,
+        url: `/notes?${query}`,
       }
       },
       transformResponse: (res: {data : any})=> res?.data,

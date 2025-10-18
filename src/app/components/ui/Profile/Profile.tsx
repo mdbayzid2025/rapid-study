@@ -1,19 +1,23 @@
 "use client";
 
+import { useUpdateProfileMutation } from "@/store/api/userApi";
+import { Edit, Mail, Phone, User } from "lucide-react";
 import React, { useState } from "react";
-import { Edit, Mail, Phone, MapPin, User } from "lucide-react";
 
 const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [updateProfile] = useUpdateProfileMutation()
   const [profileData, setProfileData] = useState<any>({
     name: "Sarah Johnson",
     idNo: "123456789",
     contact: "+1 (555) 123-4567",
     email: "sarah.johnson@example.com",
     profession: "Product Designer",
-    area: "Downtown",
-    upazilla: "Uptown",
-    thana: "Thana A",
+    address: {
+      area: "Downtown",
+      upazilla: "Uptown",
+      thana: "Thana A",
+    },
     district: "District B",
     bloodGroup: "O+",
     emergencyContact: {
@@ -39,15 +43,29 @@ const Profile: React.FC = () => {
           [fieldName]: value,
         },
       }));
+    } else if (name.startsWith("address")) {
+      const fieldName = name.split(".")[1];
+      setProfileData((prev: any) => ({
+        ...prev,
+        address: {
+          ...prev.emergencyContact,
+          [fieldName]: value,
+        },
+      }));
     } else {
       setProfileData((prev: any) => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async() => {
     setIsEditing(false);
-    // Save to backend or console log for now
-    console.log("Profile saved:", profileData);
+    
+    try {
+      const res = await updateProfile(profileData).unwrap();
+      console.log('response', res);
+    } catch (error) {
+      console.log('error')
+    }
   };
 
   const handleCancel = () => {
@@ -231,14 +249,14 @@ const Profile: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    name="area"
-                    value={profileData.area}
+                    name="address.area"
+                    value={profileData?.address?.area}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-600"
                   />
                 </div>
-                
+
                 {/* Thana */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -246,8 +264,8 @@ const Profile: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    name="thana"
-                    value={profileData.thana}
+                    name="address.thana"
+                    value={profileData?.address?.thana}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-600"
@@ -261,8 +279,8 @@ const Profile: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    name="district"
-                    value={profileData.district}
+                    name="address.district"
+                    value={profileData?.address?.district}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-600"

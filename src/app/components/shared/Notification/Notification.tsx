@@ -3,7 +3,7 @@ import { Drawer, List, Avatar, Skeleton, Divider } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Link from "next/link";
 import { getBaseUrl } from "@/urils/baseUrl";
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 
 const PAGE_SIZE = 10;
 
@@ -12,7 +12,6 @@ export const Notification = ({ open, setOpen }: any) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
-
 
   // ✅ Load one page of data
   const loadMoreData = async (pageNum: number) => {
@@ -29,11 +28,11 @@ export const Notification = ({ open, setOpen }: any) => {
       if (!newData?.data?.length) {
         setHasMore(false);
       } else {
-        setData((prev) => [...prev, ...newData?.data]);
-        if (newData.length < PAGE_SIZE) {
-          setHasMore(false);
-        } else {
+        if (newData?.pagination?.totalPage !== page) {
+          setData((prev) => [...prev, ...newData?.data]);
           setPage((prev) => prev + 1);
+        } else {          
+          setHasMore(false);
         }
       }
     } catch (error) {
@@ -54,10 +53,16 @@ export const Notification = ({ open, setOpen }: any) => {
     }
   }, [open]);
 
-  const getNavigateUrl = (item:any)=>{
-    console.log('item, ', item?.type)
-    return `/${item?.type?.toLowerCase() === 'note' ? 'notes' : item?.type?.toLowerCase() === 'assignment'  ? 'assignments' : 'events'}`
-  }
+  const getNavigateUrl = (item: any) => {
+    console.log("item, ", item?.type);
+    return `/${
+      item?.type?.toLowerCase() === "note"
+        ? "notes"
+        : item?.type?.toLowerCase() === "assignment"
+        ? "assignments"
+        : "events"
+    }`;
+  };
   return (
     <Drawer
       title="Notifications"
@@ -104,7 +109,8 @@ export const Notification = ({ open, setOpen }: any) => {
                     </Link>
                   }
                   description={
-                    <span className="text-slate-500 text-sm"
+                    <span
+                      className="text-slate-500 text-sm"
                       dangerouslySetInnerHTML={{
                         __html: DOMPurify.sanitize(item.message),
                       }}
