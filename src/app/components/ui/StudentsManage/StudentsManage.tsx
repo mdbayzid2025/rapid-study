@@ -17,6 +17,7 @@ import React, { useState } from "react";
 import { mockStudents } from "@/app/data/mockData";
 import { Student } from "@/types";
 import StudentAddModal from "./StudentAddModal";
+import { useGetUsersQuery, useUpdateUserMutation } from "@/store/api/userApi";
 
 const StudentsManage: React.FC = () => {
   const [students, setStudents] = useState<Student[]>(mockStudents);
@@ -28,10 +29,12 @@ const StudentsManage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [studentsPerPage] = useState(10);
 
+  const { data: studentsData, isLoading } = useGetUsersQuery(undefined);
+  const  [ updateUser ] = useUpdateUserMutation()
   const [modalState, setModalState] = useState({
     isOpen: false,
     mode: "add" as "add" | "edit" | "view",
-    student: null as Student | null,
+    student: null as any | null,
   });
 
   // Filter students based on search and filters
@@ -57,7 +60,7 @@ const StudentsManage: React.FC = () => {
   );
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
 
-  const handleAddStudent = (studentData: Omit<Student, "id">) => {
+  const handleAddStudent = (studentData:any) => {
     const newStudent: Student = {
       ...studentData,
       id: (students.length + 1).toString(),
@@ -67,20 +70,12 @@ const StudentsManage: React.FC = () => {
     setStudents([...students, newStudent]);
   };
 
-  const handleEditStudent = (studentData: Omit<Student, "id">) => {
-    if (modalState.student) {
-      setStudents(
-        students.map((s) =>
-          s.id === modalState.student!.id
-            ? {
-                ...studentData,
-                id: modalState.student!.id,
-                avatar: modalState.student!.avatar,
-              }
-            : s
-        )
-      );
-    }
+  const handleEditStudent = async (studentData: any) => {
+    try {
+      
+      const res = await updateUser({id: modalState?.student?._id, ...studentData})
+      console.log('res', res)
+    } catch (error) {console.log(error)}
   };
 
   const handleDeleteStudent = (studentId: string) => {
@@ -224,7 +219,7 @@ const StudentsManage: React.FC = () => {
             <h2 className="text-lg font-semibold text-gray-900">
               Student List
             </h2>
-           
+
             <button
               onClick={() => openModal("add")}
               className="cursor-pointer flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
@@ -252,13 +247,16 @@ const StudentsManage: React.FC = () => {
                       Student ID
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Grade
+                      Profession
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Section
+                      Contact
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
+                      Blood Group
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Address
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Enrollment Date
@@ -269,9 +267,9 @@ const StudentsManage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {currentStudents.map((student) => (
+                  {studentsData?.data?.map((student: any) => (
                     <tr
-                      key={student.id}
+                      key={student?._id}
                       className="hover:bg-gray-50 transition-colors"
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -284,42 +282,43 @@ const StudentsManage: React.FC = () => {
                         <div className="flex items-center space-x-3">
                           <img
                             src={
-                              student.avatar ||
+                              student?.avatar ||
                               "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop&crop=face"
                             }
-                            alt={student.name}
+                            alt={student?.name}
                             className="w-10 h-10 rounded-full object-cover"
                           />
                           <div>
                             <div className="font-medium text-gray-900">
-                              {student.name}
+                              {student?.name}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {student.email}
+                              {student?.email}
                             </div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900">
-                        {student.studentId}
+                        {student?.idNo}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900">
-                        {student.grade}
+                        {student?.profession}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900">
-                        {student.section}
+                        {student?.contact}
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap text-red-600">
+                        {student?.bloodGroup}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(
-                            student.status
+                            student?.status
                           )}`}
                         >
-                          {student.status}
+                          {student?.status}
                         </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-900">
-                        {student.enrollmentDate}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center space-x-2">
@@ -490,7 +489,7 @@ const StudentsManage: React.FC = () => {
         onSave={
           modalState.mode === "add" ? handleAddStudent : handleEditStudent
         }
-        student={modalState.student}
+        user={modalState.student}
         mode={modalState.mode}
       />
     </div>

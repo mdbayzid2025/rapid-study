@@ -53,7 +53,7 @@ export const eventApi = baseApi.injectEndpoints({
     }),
     getNotification: builder.query({
       query: () => `/notifications`,
-      transformResponse: (res: { data: any }) => res?.data,
+      // transformResponse: (res: { data: any }) => res?.data,
     }),
     getStats: builder.query({
       query: () => `/notifications/stats`,

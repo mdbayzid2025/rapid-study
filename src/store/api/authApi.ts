@@ -11,33 +11,50 @@ export interface LoginResponse {
 }
 
 export interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
-  role: 'admin' | 'teacher' | 'student';
+  contact: string;
+  idNo: string;
+  profession: string;
+  bloodGroup: string;  
+  address: {
+    area: string;
+    thana: string;
+    district: string;
+  };
+  emergencyContact: {
+    name: string;
+    relation: string;
+    mobile: string;
+    address: string;
+  };
   profileImage?: string;
-  phone?: string;
-  emergencyContact?: string;
-  classes?: string[];
+  coverImage?: string;
+  verified: boolean;
+  isDeleted: boolean;
+  status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+  updatedAt: string;
 }
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
+    login: builder.mutation({
       query: (credentials) => ({
         url: '/auth/login',
         method: 'POST',
         body: credentials,
       }),
     }),
-    signup: builder.mutation<LoginResponse, Partial<User> & { password: string }>({
+    signup: builder.mutation({
       query: (userData) => ({
-        url: '/auth/signup',
+        url: '/auth/register',
         method: 'POST',
         body: userData,
       }),
     }),
-    logout: builder.mutation<void, void>({
+    logout: builder.mutation({
       query: () => ({
         url: '/auth/logout',
         method: 'POST',

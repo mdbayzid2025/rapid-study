@@ -4,51 +4,40 @@ import { useGetNotificationQuery } from "@/store/api/eventApi";
 import { Bell, User, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import { Notification } from "../Notification/Notification";
 import { FiMenu } from "react-icons/fi";
 import { Dropdown, Menu } from "antd";
 import Container from "../Container/Container";
-
-// Connect to the Socket.io server
-const socket = io("http://localhost:5000"); // Use your backend URL
-socket.on("connect", () => {
-  console.log(`you are connect with socket ${socket?.id}`);
-});
+import { connectSocket } from "@/urils/socketConnect";
+import { useGetProfileQuery } from "@/store/api/userApi";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const { data: notificationData } = useGetNotificationQuery(undefined);
-const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: notificationData, refetch } = useGetNotificationQuery(undefined);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: profileData } = useGetProfileQuery(undefined);
 
-
-  const unRead = notificationData?.filter(
+  const unRead = notificationData?.data?.filter(
     (notification: any) => notification?.isRead === false
   );
 
-  // useEffect(() => {
-  //   const socket = io(); // Connects to the server on the same domain by default
+  const userId = profileData?.data?._id;
+  const socket = userId ? connectSocket(userId) : null;
 
-  //   socket.on("connect", () => {
-  //     console.log("Connected to the server!");
-  //   });
+  useEffect(() => {
+    if (!socket || !userId) return;
 
-  //   socket.on("disconnect", () => {
-  //     console.log("Disconnected from the server");
-  //   });
+    const event = `get-notification::${userId}`;
+    socket.on(event, () => {
+      refetch();
+    });
 
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
+    return () => {
+      socket.off(event);
+    };
+  }, [socket, userId, refetch]);
   
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setIsMenuOpen(false);
-  };
+console.log('notification', unRead)
 
   const items = [
     {
@@ -74,8 +63,7 @@ const [isMenuOpen, setIsMenuOpen] = useState(false);
       extra: "⌘B",
     },
   ];
-
-  console.log('notificationData', notificationData)
+  
   return (
     <div className="bg-white shadow-sm border-b border-gray-200 fixed top-0 z-50 w-full">
       <Container>
@@ -206,11 +194,11 @@ const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 export default Navbar;
 
-  const navigationItems = [
-    { label: "Teachers", href: "/teachers" },
-    { label: "Classes", href: "/classes" },
-    { label: "Notes", href: "/notes" },
-    { label: "Events", href: "/events" },
-    { label: "Assignments", href: "/assignments" },
-    { label: "Calendar", href: "/calendar" },
-  ];
+const navigationItems = [
+  { label: "Teachers", href: "/teachers" },
+  { label: "Classes", href: "/classes" },
+  { label: "Notes", href: "/notes" },
+  { label: "Events", href: "/events" },
+  { label: "Assignments", href: "/assignments" },
+  { label: "Calendar", href: "/calendar" },
+];

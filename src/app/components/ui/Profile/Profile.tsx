@@ -1,32 +1,33 @@
 "use client";
 
-import { useUpdateProfileMutation } from "@/store/api/userApi";
+import { useGetProfileQuery, useUpdateProfileMutation } from "@/store/api/userApi";
 import { Edit, Mail, Phone, User } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [updateProfile] = useUpdateProfileMutation()
   const [profileData, setProfileData] = useState<any>({
-    name: "Sarah Johnson",
-    idNo: "123456789",
-    contact: "+1 (555) 123-4567",
-    email: "sarah.johnson@example.com",
-    profession: "Product Designer",
+    name: "",
+    idNo: "",
+    contact: "",
+    email: "",
+    profession: "",
     address: {
-      area: "Downtown",
-      upazilla: "Uptown",
-      thana: "Thana A",
+      area: "",
+      thana: "",
+      district: "",
     },
-    district: "District B",
-    bloodGroup: "O+",
+    district: "",
+    bloodGroup: "",
     emergencyContact: {
-      name: "John Doe",
-      relation: "Husband",
-      mobile: "+1 (555) 987-6543",
-      address: "123 Main Street, Apt 4B",
+      name: "",
+      relation: "",
+      mobile: "",
+      address: "",
     },
   });
+  const {data: profile} = useGetProfileQuery(undefined)
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -48,7 +49,7 @@ const Profile: React.FC = () => {
       setProfileData((prev: any) => ({
         ...prev,
         address: {
-          ...prev.emergencyContact,
+          ...prev.address,
           [fieldName]: value,
         },
       }));
@@ -60,7 +61,7 @@ const Profile: React.FC = () => {
   const handleSave = async() => {
     setIsEditing(false);
     
-    try {
+    try {      
       const res = await updateProfile(profileData).unwrap();
       console.log('response', res);
     } catch (error) {
@@ -73,6 +74,14 @@ const Profile: React.FC = () => {
     // Reset to original data if needed
   };
 
+  useEffect(()=>{
+    if(profile?.data){
+      setProfileData({...profile?.data})
+    }
+  },[profile?.data])
+if(profile){
+  console.log('profile', profile)
+}
   return (
     <div className="flex-1 bg-gray-50">
       <main className="p-8">

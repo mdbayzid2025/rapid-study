@@ -1,98 +1,226 @@
 "use client";
 import { useState } from "react";
-import { Button, Input, Form, Checkbox } from "antd";
+import { Button, Input, Form, Checkbox, ConfigProvider } from "antd";
 import {
   UserOutlined,
   LockOutlined,
+  MailOutlined,
   BookOutlined,
-  TeamOutlined,
 } from "@ant-design/icons";
+import { useLoginMutation, useSignupMutation } from "@/store/api/authApi";
+import Cookie from "js-cookie";
+import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
-  const [role, setRole] = useState("student");
+export default function AuthPage() {
+  const [login] = useLoginMutation();
+  const [signup] = useSignupMutation();
+
+  const [isLogin, setIsLogin] = useState(true);
+  const router = useRouter()
+
+
+  const handleSubmit = async (values: {
+    name?: string;
+    email: string;
+    password: string;
+  }) => {
+    try {
+      if (isLogin) {
+        const res: any = await login(values).unwrap();
+        console.log("res:any", res);
+        Cookie.set("accessToken", res?.data?.accessToken);
+      } else {
+        const res: any = await signup(values).unwrap();
+        console.log("res:any", res);
+        Cookie.set("accessToken", res?.data?.accessToken);
+      }
+      router.push('/')
+    } catch (error) {
+      console.log("error", error);
+    }
+    // console.log(isLogin ? "Login Data:" : "Signup Data:", values);
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden">
-      {/* Background Decoration */}
+    <div className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden md:p-0 p-4">
+      {/* Background */}
       <div className="absolute w-full h-full inset-0 opacity-10 bg-[url('https://img.freepik.com/free-vector/education-pattern-background-doodle-style_53876-115365.jpg?t=st=1756877977~exp=1756881577~hmac=5f2d2c80363a05f9be19e7935cd4ae545bdbd896d41a4cbcccb3e7526f18f7db&w=1480')] bg-center bg-cover bg-no-repeat"></div>
 
       {/* Main Card */}
-      <div className="relative bg-white p-8 rounded-2xl w-full max-w-md shadow-xl z-10">
-        {/* Logo */}
-        <div className="flex justify-center mb-4">
-          <div className="bg-blue-100 p-4 rounded-full shadow-sm">
-            <BookOutlined className="text-blue-600 text-3xl" />
-          </div>
+      <div className="relative bg-white flex gap-8 p-8 pb-10 rounded-2xl w-full !h-full max-w-5xl shadow-xl z-10 ">
+        {/* Left Image (Constant) */}
+        <div className="w-1/2 hidden md:block">
+          <img
+            className="w-full h-full object-cover"
+            src="/login icon.png"
+            alt="auth"
+          />
         </div>
 
-        {/* Title */}
-        <h1 className="text-center text-2xl font-bold mb-1">
-          Login to Your Account
-        </h1>
-        <p className="text-center text-gray-500 mb-6">
-          Welcome back! Please sign in to continue
-        </p>
+        {/* Right Panel */}
+        <div className="w-full md:w-1/2 relative">
+          {/* Container with transition */}
+          <div className="relative">
+            {/* LOGIN */}
+            <div
+              className={`absolute top-0 left-0 w-full h-full   transition-all duration-500 ease-in-out ${
+                isLogin
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 translate-x-10 pointer-events-none"
+              }`}
+            >
+              <div className="flex justify-center w-14 mx-auto border p-2 mb-2 ">
+                <img
+                  src="/Prime_University.png"
+                  className="w-12 object-cover"
+                  alt=""
+                />
+              </div>
+              <h1 className="text-center text-2xl font-bold mb-1">
+                Login to Your Account
+              </h1>
+              <p className="text-center text-gray-500 mb-6">
+                Welcome back! Please sign in to continue
+              </p>
 
-        {/* Role Selection */}
-        <p className="mb-2 font-medium text-gray-700">Select Your Role</p>
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <Button
-            block
-            size="large"
-            className={`!h-[80px] flex flex-col items-center justify-center py-4 rounded-xl ${
-              role === "student" ? "border-blue-500 bg-blue-50 shadow-md" : ""
-            }`}
-            icon={<BookOutlined className="text-xl" />}
-            onClick={() => setRole("student")}
-          >
-            Student
-          </Button>
-          <Button
-            block
-            size="large"
-            className={`!h-[80px] flex flex-col items-center justify-center py-4 rounded-xl ${
-              role === "teacher" ? "border-blue-500 bg-blue-50 shadow-md" : ""
-            }`}
-            icon={<TeamOutlined className="text-xl" />}
-            onClick={() => setRole("teacher")}
-          >
-            Teacher
-          </Button>
-        </div>
+              <Form layout="vertical" onFinish={handleSubmit}>
+                <Form.Item
+                  label="Email Address"
+                  name="email"
+                  rules={[{ required: true }]}
+                >
+                  <Input
+                    size="large"
+                    prefix={<MailOutlined />}
+                    style={{ height: 48 }}
+                    placeholder="Enter your email"
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  rules={[{ required: true }]}
+                >
+                  <Input.Password
+                    size="large"
+                    prefix={<LockOutlined />}
+                    style={{ height: 48 }}
+                    placeholder="Enter your password"
+                  />
+                </Form.Item>
 
-        {/* Form */}
-        <Form layout="vertical">
-          <Form.Item label="Email Address" name="email">
-            <Input
-              size="large"
-              prefix={<UserOutlined />}
-              style={{ height: 48 }}
-              placeholder="Enter your email"
-            />
-          </Form.Item>
-          <Form.Item label="Password" name="password">
-            <Input.Password
-              size="large"
-              prefix={<LockOutlined />}
-              style={{ height: 48 }}
-              placeholder="Enter your password"
-            />
-          </Form.Item>
+                <div className="flex justify-between items-center mb-6">
+                  <Checkbox>Remember me</Checkbox>
+                </div>
 
-          <div className="flex justify-between items-center mb-6">
-            <Checkbox>Remember me</Checkbox>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  block
+                  size="large"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg"
+                >
+                  Login
+                </Button>
+              </Form>
+
+              <p className="text-center text-gray-600 mt-4">
+                Don’t have an account?{" "}
+                <button
+                  onClick={() => setIsLogin(false)}
+                  className="cursor-pointer text-blue-600 hover:underline font-semibold"
+                >
+                  Sign Up
+                </button>
+              </p>
+            </div>
+
+            {/* SIGNUP */}
+            <div
+              className={`md:absolute top-0 left-0 w-full h-full transition-all duration-500 ease-in-out ${
+                isLogin
+                  ? "opacity-0 -translate-x-10 pointer-events-none"
+                  : "opacity-100 translate-x-0"
+              }`}
+            >
+              <div className="flex justify-center w-14 mx-auto border p-2 mb-2 ">
+                <img
+                  src="/Prime_University.png"
+                  className="w-12 object-cover"
+                  alt=""
+                />
+              </div>
+
+              <h1 className="text-center text-xl font-bold mb-1">
+                Create an Account
+              </h1>
+              <p className="text-center text-sm text-gray-500 mb-3">
+                Join the Student Class Management System
+              </p>
+              <Form layout="vertical" onFinish={handleSubmit}>
+                <Form.Item
+                  className="!mb-2"
+                  label="Full Name"
+                  name="name"
+                  rules={[{ required: true }]}
+                >
+                  <Input
+                    size="large"
+                    prefix={<UserOutlined />}
+                    style={{ height: 48 }}
+                    placeholder="Enter your full name"
+                  />
+                </Form.Item>
+                <Form.Item
+                  className="!mb-2"
+                  label="Email Address"
+                  name="email"
+                  rules={[{ required: true }]}
+                >
+                  <Input
+                    size="large"
+                    prefix={<MailOutlined />}
+                    style={{ height: 48 }}
+                    placeholder="Enter your email"
+                  />
+                </Form.Item>
+                <Form.Item
+                  className="!mb-2"
+                  label="Password"
+                  name="password"
+                  rules={[{ required: true }]}
+                >
+                  <Input.Password
+                    size="large"
+                    prefix={<LockOutlined />}
+                    style={{ height: 48 }}
+                    placeholder="Enter your password"
+                  />
+                </Form.Item>
+
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  block
+                  size="large"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg mt-3"
+                >
+                  Sign Up
+                </Button>
+              </Form>
+
+              <p className="text-center text-gray-600 mt-4">
+                Already have an account?{" "}
+                <button
+                  onClick={() => setIsLogin(true)}
+                  className="cursor-pointer text-blue-600 hover:underline font-semibold"
+                >
+                  Login
+                </button>
+              </p>
+            </div>
           </div>
-
-          <Button
-            type="primary"
-            htmlType="submit"
-            block
-            size="large"
-            className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg"
-          >
-            Login / Sign Up
-          </Button>
-        </Form>
+        </div>
       </div>
     </div>
   );

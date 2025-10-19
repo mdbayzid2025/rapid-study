@@ -1,30 +1,38 @@
-import { baseApi } from './baseApi';
-import type { User } from './authApi';
+import { baseApi } from "./baseApi";
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getUsers: builder.query<User[], void>({
-      query: () => '/users',
-      providesTags: ['User'],
+    getUsers: builder.query({
+      query: () => "/users",
+      providesTags: ["User"],
     }),
-    getProfile: builder.query<User, void>({
-      query: () => '/users/profile',
-      providesTags: ['User'],
+    updateUser: builder.mutation({
+      query: ({id, ...rest}) => ({
+        url: `/users/${id}`,
+        method: "PATCH",
+        body: rest,
+      }),
+      invalidatesTags: ["User"],
     }),
-    updateProfile: builder.mutation<User, Partial<User>>({
+
+    getProfile: builder.query({
+      query: () => "/users/profile",
+      providesTags: ["User"],
+    }),
+    updateProfile: builder.mutation({
       query: (updates) => ({
-        url: '/users/profile',
-        method: 'PATCH',
+        url: "/users/profile",
+        method: "PATCH",
         body: updates,
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: ["User"],
     }),
-    deleteUser: builder.mutation<void, string>({
+    deleteUser: builder.mutation({
       query: (id) => ({
         url: `/users/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: ["User"],
     }),
   }),
 });
@@ -34,4 +42,5 @@ export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useDeleteUserMutation,
+  useUpdateUserMutation,
 } = userApi;
