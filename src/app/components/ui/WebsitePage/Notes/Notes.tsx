@@ -21,7 +21,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import AddNoteModal from "./AddNoteModal";
 import EditNoteModal from "./EditNoteModal";
 import { PageLoader } from "@/app/components/shared/Loader/PageLoader";
-import { useUpdateSearchParams } from "@/urils/updateSearchParams";
+import { useUpdateSearchParams } from "@/utils/updateSearchParams";
 import { useSearchParams } from "next/navigation";
 
 const Notes = () => {

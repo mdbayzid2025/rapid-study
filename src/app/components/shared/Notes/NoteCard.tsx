@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { handleDownload } from "@/urils/downloadFile";
+import { handleDownload } from "@/utils/downloadFile";
 import { url } from "inspector/promises";
 import { Tooltip } from "antd";
 

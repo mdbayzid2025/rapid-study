@@ -32,7 +32,7 @@ import {
 import { useGetAssignmentsQuery } from "@/store/api/assignmentApi";
 import { useGetNotesQuery } from "@/store/api/noteApi";
 import { useGetTasksQuery } from "@/store/api/taskApi";
-import { getBaseUrl } from "@/urils/baseUrl";
+import { getBaseUrl } from "@/utils/baseUrl";
 import Link from "next/link";
 import { io } from "socket.io-client";
 import { NoteCard } from "../../shared/Notes/NoteCard";

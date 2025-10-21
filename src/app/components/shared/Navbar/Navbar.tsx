@@ -8,7 +8,7 @@ import { Notification } from "../Notification/Notification";
 import { FiMenu } from "react-icons/fi";
 import { Dropdown, Menu } from "antd";
 import Container from "../Container/Container";
-import { connectSocket } from "@/urils/socketConnect";
+import { connectSocket } from "@/utils/socketConnect";
 import { useGetProfileQuery } from "@/store/api/userApi";
 
 const Navbar = () => {

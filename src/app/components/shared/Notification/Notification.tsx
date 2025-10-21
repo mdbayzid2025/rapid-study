@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Drawer, List, Avatar, Skeleton, Divider } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Link from "next/link";
-import { getBaseUrl } from "@/urils/baseUrl";
+import { getBaseUrl } from "@/utils/baseUrl";
 import DOMPurify from "dompurify";
 
 const PAGE_SIZE = 10;

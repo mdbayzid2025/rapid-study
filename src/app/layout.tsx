@@ -3,7 +3,7 @@ import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
 import { Teko, Poppins } from "next/font/google";
 import "./globals.css";
-import Providers from "@/urils/Providers";
+import Providers from "@/utils/Providers";
 import { Toaster } from "react-hot-toast";
 
 const teko = Teko({
