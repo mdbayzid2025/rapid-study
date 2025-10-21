@@ -5,6 +5,7 @@ import { Teko, Poppins } from "next/font/google";
 import "./globals.css";
 import Providers from "@/utils/Providers";
 import { Toaster } from "react-hot-toast";
+import { NotificationProvider } from "@/context/NotificationProvider";
 
 const teko = Teko({
   variable: "--font-teko",
@@ -40,10 +41,12 @@ export default function RootLayout({
           }}
         >
           <Providers>
+            <NotificationProvider>
             <AntdRegistry>
               {children}
               <Toaster />
             </AntdRegistry>
+            </NotificationProvider>
           </Providers>
         </ConfigProvider>
       </body>

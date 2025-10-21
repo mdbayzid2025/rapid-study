@@ -34,7 +34,7 @@ import { useGetNotesQuery } from "@/store/api/noteApi";
 import { useGetTasksQuery } from "@/store/api/taskApi";
 import { getBaseUrl } from "@/utils/baseUrl";
 import Link from "next/link";
-import { io } from "socket.io-client";
+
 import { NoteCard } from "../../shared/Notes/NoteCard";
 import AddAssignmentForm from "../WebsitePage/ClassManage/AddAssignmentForm";
 import AddEventForm from "../WebsitePage/ClassManage/AddEventForm";
@@ -56,12 +56,6 @@ const Dashboard: React.FC = () => {
   const [showAddForm, setShowAddForm] = React.useState(false);
   // ------ Add events ------------
 
-
-const socket = io(getBaseUrl());
-
-socket.on("connect", () => {
-  console.log("Connected with socket ID:", socket.id);
-});
 
   const handleAddEvent = async (newEvent: Event) => {
     try {

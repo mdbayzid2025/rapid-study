@@ -7,6 +7,8 @@ import LandingFooter from "../components/ui/Landing/LandingFooter";
 
 const FooterLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
+
+ 
   return (
     <div className="flex flex-col">
       <div className="h-full">

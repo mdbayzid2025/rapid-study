@@ -19,6 +19,8 @@ const LandingFooter: React.FC = () => {
     { label: "Privacy Policy", href: "/privacy" },
   ];
 
+
+
   return (
     <footer id="contact" className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
