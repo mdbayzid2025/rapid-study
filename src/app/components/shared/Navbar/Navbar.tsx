@@ -27,7 +27,8 @@ const Navbar = () => {
   useEffect(() => {
     if (!socket || !userId) return;
 
-    const event = `get-notification::${userId}`;
+    // const event = `get-notification::${userId}`;
+    const event = `get-notification::68f4b1d61f88c346b4742b61`;
     socket.on(event, () => {
       refetch();
     });

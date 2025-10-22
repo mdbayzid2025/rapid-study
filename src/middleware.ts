@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
   }
  
   // Get the current user from server
-  const userRes = await myFetch("/client", { tags: ["profile"] });
+  const userRes = await myFetch("/login", { tags: ["profile"] });
   const profile = userRes.data;
  
   if (!profile) {
