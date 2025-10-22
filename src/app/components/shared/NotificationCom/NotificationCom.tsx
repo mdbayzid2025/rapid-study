@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 
 const PAGE_SIZE = 10;
 
-export const Notification = ({ open, setOpen }: any) => {
+export const NotificationCom = ({ open, setOpen }: any) => {
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);

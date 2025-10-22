@@ -10,7 +10,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FiMenu } from "react-icons/fi";
 import Container from "../Container/Container";
-import { Notification } from "../Notification/Notification";
+import { NotificationCom } from "../NotificationCom/NotificationCom";
+import { BrowserNotification } from "../BrowserNotification";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false); 
@@ -23,7 +24,7 @@ const Navbar = () => {
  
 
 
-  // ✅ Real-time update via socket
+  
   // @ts-ignore
   useEffect(() => {
     if (!socket || !userId) return;
@@ -145,11 +146,12 @@ const handleLogOut = () => {
       </Container>
 
       {/* ✅ Pass notification props */}
-      <Notification
+      <NotificationCom
         open={open}
         setOpen={setOpen}       
         hadnleReadAll={hadnleReadAll}
       />
+      <BrowserNotification />
     </div>
   );
 };
