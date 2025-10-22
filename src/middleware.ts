@@ -15,6 +15,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
  
   const accessToken = request.cookies.get("accessToken")?.value;
+  
   if (!accessToken) {
     // Allow unauthenticated access to auth routes
     if (authRoutes.includes(pathname)) {
@@ -28,7 +29,7 @@ export async function middleware(request: NextRequest) {
   }
  
   // Get the current user from server
-  const userRes = await myFetch("/login", { tags: ["profile"] });
+  const userRes = await myFetch("/users/profile", { tags: ["profile"] });
   const profile = userRes.data;
  
   if (!profile) {
