@@ -34,6 +34,7 @@ const ScheduleViewModal = ({
   const schedule = data || {};
   const item = schedule.item || {};
 
+  console.log('events', schedule)
   return (
     <div
       className="fixed inset-0 bg-gray-800/40 flex items-center justify-center z-50 px-3"
@@ -55,7 +56,7 @@ const ScheduleViewModal = ({
         <div className="mb-4 border-b pb-3">
           <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
             <Tag className="text-blue-500" size={18} />
-            {schedule?.title || 'Untitled Event'}
+            {schedule?.data?.title || 'Untitled Event'}
           </h2>
           {/* <p className="text-sm text-gray-500 mt-1 capitalize">
             Type: {schedule?.type}
@@ -66,21 +67,21 @@ const ScheduleViewModal = ({
         <div className="space-y-3">
           <div className="bg-primary py-1.5 text-center text-gray-200 text-sm">
             <span>
-                {item?.subject?.name}                
+                {schedule?.data?.item?.subject?.name}                
             </span>
           </div>
 
           <div className="flex items-center gap-2 text-gray-700">            
             <HiOutlineSpeakerphone size={20}/>
             <span className='font-semibold'>
-               {item.title ?? item.eventTitle}
+               {schedule?.data?.item.title ?? schedule?.data?.item.eventTitle}
             </span>
           </div>
 
           <div className="flex items-center gap-2 text-gray-700">
             <Calendar className="text-green-500" size={18} />
             <span>
-                {dayjs(schedule?.end).format('DD MMMM YYYY, hh:mm A')}
+                {schedule?.data?.end ? dayjs(schedule?.data?.end).format('DD MMMM YYYY, hh:mm A') : dayjs(schedule?.data?.start).format('DD MMMM YYYY, hh:mm A')}
             </span>
           </div>
 
@@ -89,7 +90,7 @@ const ScheduleViewModal = ({
                 <span className={`font-semibold text-[${schedule?.color}]`}>Instruction :</span>
               
               <p className="text-sm leading-relaxed">
-                {item.detailedInstructions ?? item.description}
+                {schedule?.data?.item.detailedInstructions ?? schedule?.data?.item.description}
               </p>
             </div>          
         </div>

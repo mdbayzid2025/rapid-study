@@ -16,10 +16,9 @@ const UserCalendar: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>(Views.MONTH);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
-  const {data: calenderData } = useGetCalanderDataQuery(undefined)
-  const {data: scheduleData } = useGetScheduleDataQuery(undefined)
+  const {data: calenderData } = useGetCalanderDataQuery(undefined)  
 
-const events = calenderData?.map((event:any)=>{
+const events = calenderData?.data?.map((event:any)=>{
   return {...event, start: new Date(event?.start), end: new Date(event?.start),}
 })
   // Setup localizer

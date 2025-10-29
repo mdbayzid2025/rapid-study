@@ -12,47 +12,22 @@ import {
   ChevronRight,
   Maximize2,
   Download,
-  FileText,
-  FileType,
-  FileImage,
   Book,
-  Check,
   LucideBookOpenText,
+  FileText,
 } from "lucide-react";
-import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { handleDownload } from "@/utils/downloadFile";
-import { url } from "inspector/promises";
 import { Tooltip } from "antd";
-
-export interface DocumentAttachment {
-  url: string;
-  fileName: string;
-  type: "pdf" | "word" | "powerpoint" | "other";
-  size?: number;
-}
-
-interface NoteCardProps {
-  _id?: string;
-  title: string;
-  description: string;
-  createdAt: Date | string;
-  updatedAt?: Date | string;
-  images: string[];
-  documents: DocumentAttachment[];
-  priority?: number;
-  isPrepared?: boolean;
-  onTogglePrepared?: () => void;
-  tags?: string[];
-}
+import { getImageUrl } from "@/utils/baseUrl";
+import { handleDownload } from "@/utils/downloadFile";
 
 export const NoteCard = ({
   title,
   subject,
   description,
   createdAt,
-  images,
-  documents,
+  images = [],
+  document = [],
   priority,
   isPrepared = false,
   onTogglePrepared,
@@ -62,29 +37,21 @@ export const NoteCard = ({
   const [viewerOpen, setViewerOpen] = useState(false);
   const [viewerImageIndex, setViewerImageIndex] = useState(0);
 
-  const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images?.length);
-  };
-  const handlePrevImage = () => {
-    setCurrentImageIndex(
-      (prev) => (prev - 1 + images?.length) % images?.length
-    );
-  };
+  const handleNextImage = () =>
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  const handlePrevImage = () =>
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
 
   const openImageViewer = (index: number) => {
     setViewerImageIndex(index);
     setViewerOpen(true);
   };
 
-  const handleViewerNext = () => {
-    setViewerImageIndex((prev) => (prev + 1) % images?.length);
-  };
+  const handleViewerNext = () =>
+    setViewerImageIndex((prev) => (prev + 1) % images.length);
+  const handleViewerPrev = () =>
+    setViewerImageIndex((prev) => (prev - 1 + images.length) % images.length);
 
-  const handleViewerPrev = () => {
-    setViewerImageIndex((prev) => (prev - 1 + images?.length) % images?.length);
-  };
-
-  // Generate star rating based on priority
   const getPriorityColor = () => {
     switch (priority) {
       case "High":
@@ -93,202 +60,189 @@ export const NoteCard = ({
         return "text-yellow-600 bg-yellow-100";
       case "Low":
         return "text-green-600 bg-green-100";
+      default:
+        return "text-gray-600 bg-gray-100";
     }
   };
 
-  // Border color based on priority
   const getPriorityBorderColor = () => {
     switch (priority) {
-      case 5:
+      case "High":
         return "border-l-red-500";
-      case 4:
-        return "border-l-orange-500";
-      case 3:
-        return "border-l-blue-500";
-      case 2:
+      case "Medium":
+        return "border-l-orange-400";
+      case "Low":
         return "border-l-green-500";
       default:
         return "border-l-gray-500";
     }
   };
 
-  const getDocumentName = (url: any) => {
+  const getDocumentName = (url: string) => {
     const fileName = url.split("/").pop();
-    const withoutTime = fileName.replace(/^\d+-/, "");
-    const cleanName = withoutTime.replace(/\.[^\.]+$/, "");
-
-    return cleanName;
+    const withoutTime = fileName?.replace(/^\d+-/, "") || "";
+    return withoutTime.replace(/\.[^\.]+$/, "");
   };
 
   return (
     <>
       <Card
-        className={`overflow-hidden hover:shadow-md mb-1 transition-all border-l-4  ${getPriorityBorderColor()}`}
+        className={`overflow-hidden hover:shadow-md mb-1 transition-all border-l-4 ${getPriorityBorderColor()}`}
       >
         <CardContent className="p-0">
-          <div className="relative">
-            <div className="relative w-full h-48 bg-gray-200 dark:bg-gray-700 overflow-hidden">
-              {images?.length > 0 ? (
-                <>
-                  <img
-                    src={images[currentImageIndex]}
-                    alt={`Note image ${currentImageIndex + 1}`}
-                    className="w-full  transition-all hover:-translate-y-1/2 !duration-1000 "
-                  />
-                </>
-              ) : (
-                <div className="flex items-center justify-center h-full text-muted-foreground">
-                  <Book className="h-12 w-12 opacity-30" />
-                  <span className="ml-2">No images available</span>
-                </div>
-              )}
+          {/* ---------- IMAGE PREVIEW ---------- */}
+          <div className="relative w-full h-48 bg-gray-200 dark:bg-gray-700 overflow-hidden">
+            {images.length > 0 ? (
+              <img
+                src={`${getImageUrl()}${images[currentImageIndex]}`}
+                alt={`Note image ${currentImageIndex + 1}`}
+                className="w-full h-full object-cover transition-all duration-700"
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full text-muted-foreground">
+                <Book className="h-12 w-12 opacity-30" />
+                <span className="ml-2">No images available</span>
+              </div>
+            )}
+
+            {/* Navigation Buttons */}
+            {images.length > 1 && (
+              <div className="absolute top-2 left-2 flex gap-2">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="bg-purple-800/40 hover:bg-purple-800/60 text-white h-8 w-8 rounded-none"
+                  onClick={handlePrevImage}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="bg-purple-800/40 hover:bg-purple-800/60 text-white h-8 w-8 rounded-none"
+                  onClick={handleNextImage}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+
+            {/* Image Actions */}
+            {images.length > 0 && (
+              <div className="absolute top-2 right-2 flex gap-2">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="bg-black/40 hover:bg-black/60 text-white rounded-full h-8 w-8"
+                  onClick={() => openImageViewer(currentImageIndex)}
+                >
+                  <Maximize2 className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="bg-green-700 hover:bg-green-800 text-white rounded-full h-8 w-8"
+                  onClick={() => handleDownload(images[currentImageIndex])}
+                >
+                  <Download className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {/* ---------- CONTENT ---------- */}
+          <div className="p-4">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex gap-1 items-center text-muted-foreground">
+                <LucideBookOpenText
+                  size={18}
+                  color="currentColor"
+                  className="text-orange-500/80"
+                />
+                {subject?.name}
+              </div>
+              <div
+                className={`text-center ${getPriorityColor()} text-xs px-2 mb-1 py-0.5 rounded-full`}
+              >
+                {priority}
+              </div>
             </div>
 
-            <div className="p-4 ">
-              <div className="flex items-center justify-between pb-2">
-                {/* ------------- Image Slide ----------- */}
-                {images?.length > 1 && (
-                  <div className="flex gap-2">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="!rounded-none cursor-pointer transform  bg-purple-800/40 hover:bg-purple-800/60 text-white  h-8 w-8"
-                      onClick={handlePrevImage}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="!rounded-none cursor-pointer  transform  bg-purple-800/40 hover:bg-purple-800/60 text-white  h-8 w-8"
-                      onClick={handleNextImage}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
+            <h3 className="font-semibold text-lg">{title}</h3>
+            <p className="text-sm text-muted-foreground mt-1 mb-2">
+              {description}
+            </p>
 
-                {/* ---------------- Full View Button ---------------- */}
-                {images?.length > 0 && (
-                  <div className="flex gap-2 items-center">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className=" bg-black/40 cursor-pointer hover:bg-black/60 text-white rounded-full h-8 w-8"
-                      onClick={() => openImageViewer(currentImageIndex)}
-                    >
-                      <Maximize2 className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="  bg-green-800 hover:bg-green-800 cursor-pointer !text-white rounded-full h-8 w-8"
-                      onClick={() => handleDownload(images[currentImageIndex])}
-                    >
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2 mb-3">
+                {tags.map((tag: any, i: number) => (
+                  <span
+                    key={i}
+                    className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full"
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
+            )}
 
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex gap-1 items-center text-muted-foreground">
-                  <LucideBookOpenText
-                    size={18}
-                    color="currentColor"
-                    className="text-orange-500/80"
-                  />
-                  {/* <span className="whitespace-nowrap">{subject?.length > 100 ? subject?.slice(0, 100) + '...' : subject}</span> */}
-                  {subject}
-                </div>
-                <div
-                  className={`text-center ${getPriorityColor()} text-xs px-2 mb-1 py-0.5 rounded-full`}
-                >
-                  {priority}
-                </div>
-              </div>
-              <div className="flex justify-between items-start">
-                <h3 className="font-semibold text-lg">{title}</h3>
-              </div>
-              <p className="text-sm text-muted-foreground mt-1 mb-2">
-                {description}
-              </p>
+            {onTogglePrepared && (
+              <Button
+                variant={isPrepared ? "outline" : "default"}
+                size="sm"
+                onClick={onTogglePrepared}
+                className="text-xs h-7 rounded-md"
+              >
+                {isPrepared ? "Mark as Not Prepared" : "Mark as Prepared"}
+              </Button>
+            )}
 
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-2 mb-3">
-                  {tags.map((tag: any, index: any) => (
-                    <span
-                      key={index}
-                      className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full dark:bg-blue-900/30 dark:text-blue-300"
-                    >
-                      {tag}
-                    </span>
+            {/* ---------- DOCUMENTS ---------- */}
+            {document?.length > 0 && (
+              <div className="mt-3 border-t pt-3">
+                <p className="text-xs font-medium mb-2">Attachments</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {document.map((doc: string, index: number) => (
+                    <Tooltip key={index} title={getDocumentName(doc)}>
+                      <div
+                        className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-md hover:bg-gray-100 cursor-pointer transition-colors"
+                        onClick={() => handleDownload(doc)}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <FileText className="h-4 w-4 text-red-500" />
+                          <span className="text-[12px] truncate">
+                            {`Doc. ${index + 1}`}
+                          </span>
+                        </div>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="cursor-pointer h-6 w-6"
+                        >
+                          <Download className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </Tooltip>
                   ))}
                 </div>
-              )}
-
-              <div className="flex items-center justify-between">
-                {onTogglePrepared && (
-                  <Button
-                    variant={isPrepared ? "outline" : "default"}
-                    size="sm"
-                    onClick={onTogglePrepared}
-                    className="text-xs h-7 rounded-md"
-                  >
-                    {isPrepared ? "Mark as Not Prepared" : "Mark as Prepared"}
-                  </Button>
-                )}
               </div>
-
-              <div className="mt-2"></div>
-              {documents?.length > 0 && (
-                <div className="mt-3 border-t pt-3">
-                  <p className="text-xs font-medium mb-2">Attachments </p>
-                  <div className="space-x-2 grid-cols-3 gap-2 grid">
-                    {documents.map((doc: any, index: any) => (
-                      <Tooltip title={getDocumentName(doc)}>
-                        <div
-                          key={index}
-                          className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors"
-                          onClick={() => handleDownload(doc)}
-                        >
-                          <div className="flex items-center space-x-2">
-                            {/* {getFileIcon(doc.type)} */}
-                            <FileText className="h-4 w-4 text-red-500" />
-                            <span className="text-[12px] truncate whitespace-wrap">
-                              {`Doc. ${index + 1}`}
-                            </span>
-                          </div>
-
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="cursor-pointer h-6 w-6"
-                          >
-                            <Download className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </Tooltip>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </CardContent>
       </Card>
 
+      {/* ---------- IMAGE VIEWER DIALOG ---------- */}
       <Dialog open={viewerOpen} onOpenChange={setViewerOpen}>
         <DialogContent className="max-w-3xl h-[80vh] p-0 overflow-hidden">
           <DialogHeader className="absolute top-0 left-0 right-0 z-10 bg-black/50 backdrop-blur-sm">
             <DialogTitle className="text-white px-4 py-2">
-              {title} - Image {viewerImageIndex + 1} of {images?.length}
+              {title} - Image {viewerImageIndex + 1} of {images.length}
             </DialogTitle>
           </DialogHeader>
 
           <div className="relative flex items-center justify-center w-full h-full bg-black">
             <img
-              src={images[viewerImageIndex]}
+              src={`${getImageUrl()}${images[viewerImageIndex]}`}
               alt={`Full size ${viewerImageIndex + 1}`}
               className="max-h-full max-w-full object-contain"
             />
@@ -311,27 +265,8 @@ export const NoteCard = ({
               <ChevronRight className="h-6 w-6" />
             </Button>
 
-            <div className="absolute bottom-4 left-4">
-              <Button
-                size="sm"
-                variant="outline"
-                className="bg-black/40 hover:bg-black/60 cursor-pointer !text-white  border-white/20"
-                onClick={() =>
-                  // downloadFile(
-                  //   images[currentImageIndex]
-                  //   // `image-
-                  //   // ${currentImageIndex + 1}.jpg`
-                  // )
-                  handleDownload(images[currentImageIndex])
-                }
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Download
-              </Button>
-            </div>
-
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-              {images.map((_: any, index: any) => (
+              {images.map((_: any, index: number) => (
                 <div
                   key={index}
                   className={cn(
@@ -348,38 +283,3 @@ export const NoteCard = ({
     </>
   );
 };
-
-{
-  /* ------------------ PDF Viewer ------------------ */
-}
-
-/*
-              <div className="space-x-2 grid grid-cols-3 gap-2">
-                {documents?.map((doc: any, index: number) => (
-                  <div key={index} className="bg-blue-500 rounded-t-sm text-xs">
-                    <div
-                      onClick={() => handleDownload(doc)}
-                      className="flex items-center justify-center text-white cursor-pointer gap-1"
-                    >
-                      <span>Download</span>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer h-6 w-6"
-                      >
-                        <Download className="h-3 w-3" />
-                      </Button>
-                    </div>
-                    
-                    
-                      <iframe
-                        src={`${doc}#zoom=0`}
-                        width="120"
-                        height="80"
-                        style={{ border: "none", overflow: "hidden" }}
-                      />                    
-                  </div>
-                ))}
-              </div>
-
-              */

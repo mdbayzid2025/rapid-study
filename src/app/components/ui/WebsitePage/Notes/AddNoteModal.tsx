@@ -41,10 +41,7 @@ const { id } = useParams();
   });
 
   const handleAddNote = async () => {
-    
-    console.log("Note added:", { ...noteForm, tags });
-    console.log("images:", images);
-    console.log("Documents:", documents);
+            
     // setIsAddDialogOpen(false);
     // resetNoteForm();
 
@@ -61,7 +58,7 @@ const { id } = useParams();
       });
     documents?.length > 0 &&
       documents.forEach((doc) => {
-        formData.append("documents", doc);
+        formData.append("document", doc);
       });
 
     try {

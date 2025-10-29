@@ -146,7 +146,7 @@ const Notes = () => {
                 images={note?.images}
                 priority={note?.priority}
                 tags={note?.tags}
-                documents={note?.documents}
+                document={note?.document}
               />
             </div>
           ))}
