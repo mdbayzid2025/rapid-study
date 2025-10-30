@@ -44,7 +44,7 @@ const handleLogOut = () => {
   route.push("/login");
   // Optional: force reload after navigation
   setTimeout(() => {
-    window.location.reload();
+    window?.location?.reload();
   }, 300);
 };
   const items = [

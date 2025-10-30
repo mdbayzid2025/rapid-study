@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -32,7 +31,7 @@ const Notification = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = 15;
 
-  const { data: notificationData } = useGetNotificationQuery(undefined);
+  const { data: notificationData } = useGetNotificationQuery({});
 
   //   useEffect(() => {
   //     socket.on("newNotification", (notification) => {

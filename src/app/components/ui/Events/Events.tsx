@@ -11,8 +11,9 @@ import AddEventForm from "../WebsitePage/ClassManage/AddEventForm";
 import { Button } from "antd";
 
 const Events = () => {
+
   // @ts-ignore
-  const { data: eventsData, isLoading, isError } = useGetEventsQuery(undefined);
+  const { data: eventsData, isLoading, isError } = useGetEventsQuery({});
   const [showAddEventForm, setShowAddEventForm] = React.useState(false);
   const [createEvent, { isLoading: addingEvents }] = useCreateEventMutation();
 

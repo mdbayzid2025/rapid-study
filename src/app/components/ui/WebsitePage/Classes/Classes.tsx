@@ -75,7 +75,7 @@ const Classes: React.FC = () => {
     data: semesterData,
     isLoading,
     isError
-  } = useGetSemesterQuery(undefined);
+  } = useGetSemesterQuery({});
   
   // Group classes by semester
   const groupedClasses = classes.reduce((acc, cls) => {

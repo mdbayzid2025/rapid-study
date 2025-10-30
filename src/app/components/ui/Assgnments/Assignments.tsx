@@ -11,7 +11,7 @@ export const Assignments = () => {
     data: assignments,
     isLoading,
     isError,
-  } = useGetAssignmentsQuery(undefined);
+  } = useGetAssignmentsQuery({});
     const [showAddForm, setShowAddForm] = React.useState(false);
 
   if (isError) {
