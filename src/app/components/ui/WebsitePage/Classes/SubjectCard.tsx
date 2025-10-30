@@ -14,8 +14,7 @@ interface SubjectCardProps {
   subject: Subject;
 }
 
-const SubjectCard: React.FC<any> = ({ subject }) => {
-  console.log("asdfasd", subject);
+const SubjectCard: React.FC<any> = ({ subject }) => {  
   
   // Static Teacher Data
   const teacher = {

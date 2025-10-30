@@ -1,5 +1,6 @@
 export const getBaseUrl = () => {
-    return "http://10.10.7.102:5001/api/v1"
+    // return "http://10.10.7.102:5001/api/v1"
+    return "http://192.168.0.101:5001/api/v1"
     // return "https://classmanage.crockeriesview.xyz/api/v1"
 }
 
@@ -12,4 +13,4 @@ export const getImageUrl = () => {
 
 
 // export const socketUrl = "https://classmanage.crockeriesview.xyz";
-export const socketUrl = "http://10.10.7.102:5001";
+export const socketUrl = "http://192.168.0.101:5001";

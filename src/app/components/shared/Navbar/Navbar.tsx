@@ -15,7 +15,7 @@ import { BrowserNotification } from "../BrowserNotification";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false); 
-  const { data: profileData } = useGetProfileQuery(undefined);
+  const { data: profileData, refetch } = useGetProfileQuery(undefined);
   
   const userId = profileData?.data?._id;
   const socket = userId ? connectSocket(userId) : null;
@@ -24,21 +24,19 @@ const Navbar = () => {
  
 
 
-  
+  console.log('socket', socket?.connected);
   // @ts-ignore
   useEffect(() => {
-    if (!socket || !userId) return;
+    if (!socket?.connected || !userId) return;
 
     const event = `get-notification::${userId}`;
     socket.on(event, () => {
-      // setNotifications([]);
-      // setPage(1);
-      // setHasMore(true);
-      // loadMoreNotifications(1);
+      console.log("New notification received via socket");
+     refetch()
     });
 
     return () => socket.off(event);
-  }, [socket, userId]);
+  }, [socket?.connected, userId]);
 
    // --- Logout ----
 const handleLogOut = () => {
@@ -50,12 +48,11 @@ const handleLogOut = () => {
   }, 300);
 };
   const items = [
-    { key: "1", label: "My Account", disabled: true },
+    { key: "1", label: <p className="font-semibold">{profileData?.data?.name ?? "My Account"}</p>},
     { key: "2", label: <Link href="/dashboard">Dashboard</Link> },
     { type: "divider" as const },
-    { key: "3", label: <Link href="/dashboard/profile">Profile</Link> },
-    { key: "4", label: "Billing" },
-    { key: "5", label: <Button onClick={()=>handleLogOut()}>Logout </Button>},
+    { key: "3", label: <Link href="/dashboard/profile">Profile</Link> },    
+    { key: "4", label: <Button size="middle" style={{display: 'block', width: '100%'}} onClick={()=>handleLogOut()}>Logout </Button>},
   ];
 
   const hadnleReadAll = () => {
@@ -122,18 +119,15 @@ const handleLogOut = () => {
           </nav>
           <div className="flex items-center gap-3">
             {/* Notification Button */}
-            <button className="relative border border-1.5 cursor-pointer p-2 text-gray-400 hover:text-gray-500">
-              <Bell onClick={() => setOpen(true)} className="w-5 h-5" />
-              {/* <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                {localStorage?.getItem("readNotification")
-                  ? Number(localStorage?.getItem("readNotification")) -
-                    totalNotification
-                  : 0}
-              </span> */}
+            <button className="relative border border-1.5 rounded-full cursor-pointer p-2 text-gray-400 hover:text-gray-500">
+              <Bell onClick={() => setOpen(true)} className="w-5 h-5 " />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                {profileData?.data?.unReadMsg ?? 0}
+              </span> 
             </button>
 
             <Dropdown menu={{ items }}>
-              <button className="p-2 text-gray-400 hover:text-gray-500">
+              <button className="p-2 text-gray-400 hover:text-gray-500 cursor-pointer">
                 <User className="w-7 h-7" />
               </button>
             </Dropdown>
