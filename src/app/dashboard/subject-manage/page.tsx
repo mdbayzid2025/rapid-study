@@ -1,4 +1,4 @@
-import SubjectManage from '@/app/components/ui/WebsitePage/SubjectManage/SubjectManage'
+import SubjectManage from '@/components/UI-InterFace/WebsitePage/SubjectManage/SubjectManage'
 import React from 'react'
 
 const Page = () => {

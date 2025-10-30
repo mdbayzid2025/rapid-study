@@ -1,7 +1,7 @@
 import React from "react";
-import Navbar from "../components/shared/Navbar/Navbar";
-import Sidebar from "../components/shared/Sidebar/Sidebar";
-import LandingFooter from "../components/ui/Landing/LandingFooter";
+import Navbar from "../../components/shared/Navbar/Navbar";
+import Sidebar from "../../components/shared/Sidebar/Sidebar";
+import LandingFooter from "../../components/UI-InterFace/Landing/LandingFooter";
 
 export default function layout({ children }: { children: React.ReactNode }) {
   return (

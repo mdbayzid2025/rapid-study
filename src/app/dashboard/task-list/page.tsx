@@ -1,5 +1,6 @@
 
-import { TaskList } from '@/app/components/TaskList/TaskList'
+
+import { TaskList } from '@/components/TaskList/TaskList'
 import React from 'react'
 
  const Page = () => {

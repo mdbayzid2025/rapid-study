@@ -1,5 +1,5 @@
-import Container from "@/app/components/shared/Container/Container";
-import Notes from "@/app/components/ui/WebsitePage/Notes/Notes";
+import Container from "@/components/shared/Container/Container";
+import Notes from "@/components/UI-InterFace/WebsitePage/Notes/Notes";
 import React, { Suspense } from "react";
 
 const Page = () => {

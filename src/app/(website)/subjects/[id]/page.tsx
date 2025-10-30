@@ -1,4 +1,4 @@
-import ClassManage from '@/app/components/ui/WebsitePage/ClassManage/ClassManage'
+import ClassManage from '@/components/UI-InterFace/WebsitePage/ClassManage/ClassManage'
 import React from 'react'
 
 const Page = () => {

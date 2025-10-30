@@ -1,4 +1,4 @@
-import Notice from '@/app/components/ui/Notice/Notice'
+import Notice from '@/components/UI-InterFace/Notice/Notice'
 import React from 'react'
 
 const Page = () => {

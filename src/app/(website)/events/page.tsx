@@ -1,4 +1,4 @@
-import Events from '@/app/components/ui/Events/Events'
+import Events from '@/components/UI-InterFace/Events/Events'
 import React from 'react'
 
 const Page = () => {

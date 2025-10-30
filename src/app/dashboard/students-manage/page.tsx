@@ -1,4 +1,4 @@
-import StudentsManage from '@/app/components/ui/StudentsManage/StudentsManage'
+import StudentsManage from '@/components/UI-InterFace/StudentsManage/StudentsManage'
 import React from 'react'
 
 const Page = () => {

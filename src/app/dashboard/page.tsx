@@ -1,4 +1,4 @@
-import Dashboard from "@/app/components/ui/Dashboard/Dashboard";
+import Dashboard from "@/components/UI-InterFace/Dashboard/Dashboard";
 import React from "react";
 
 export default function page() {

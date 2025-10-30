@@ -1,12 +1,12 @@
-"use client";
+
 import React from "react";
-import Navbar from "../components/shared/Navbar/Navbar";
+import Navbar from "../../components/shared/Navbar/Navbar";
 import { ConfigProvider } from "antd";
-import { usePathname } from "next/navigation";
-import LandingFooter from "../components/ui/Landing/LandingFooter";
+// import { usePathname } from "next/navigation";
+// import LandingFooter from "../../components/UI-InterFace/Landing/LandingFooter";
 
 const FooterLayout = ({ children }: { children: React.ReactNode }) => {
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
  
   return (
@@ -25,7 +25,7 @@ const FooterLayout = ({ children }: { children: React.ReactNode }) => {
         </ConfigProvider>
         </div>
       </div>
-      {pathname === "/" ? "" : <LandingFooter />}
+      {/* {pathname === "/" ? "" : <LandingFooter />} */}
     </div>
   );
 };

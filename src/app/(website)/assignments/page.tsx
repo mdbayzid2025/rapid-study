@@ -1,5 +1,7 @@
-import Container from '@/app/components/shared/Container/Container'
-import { Assignments } from '@/app/components/ui/Assgnments/Assignments'
+
+import Container from '@/components/shared/Container/Container'
+import Assignments from '@/components/UI-InterFace/Assgnments/Assignments'
+
 import React from 'react'
 
 const Page = () => {
@@ -8,6 +10,7 @@ const Page = () => {
         <Container>
         <Assignments />
         </Container>
+        
     </div>
   )
 }

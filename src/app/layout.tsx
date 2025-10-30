@@ -6,6 +6,7 @@ import "./globals.css";
 import Providers from "@/utils/Providers";
 import { Toaster } from "react-hot-toast";
 import { NotificationProvider } from "@/context/NotificationProvider";
+export const dynamic = "force-dynamic";
 
 const teko = Teko({
   variable: "--font-teko",

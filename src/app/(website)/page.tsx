@@ -1,4 +1,4 @@
-import HomeMain from '@/app/components/ui/WebsitePage/Home/HomeMain'
+import HomeMain from '@/components/UI-InterFace/WebsitePage/Home/HomeMain'
 
 
 const Home = () => {

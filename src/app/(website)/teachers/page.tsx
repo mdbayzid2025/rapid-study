@@ -1,5 +1,5 @@
-import Container from '@/app/components/shared/Container/Container'
-import Teachers from '@/app/components/ui/WebsitePage/Teachers/Teachers'
+import Container from '@/components/shared/Container/Container'
+import Teachers from '@/components/UI-InterFace/WebsitePage/Teachers/Teachers'
 import React from 'react'
 
 const Page = () => {
