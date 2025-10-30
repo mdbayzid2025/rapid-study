@@ -24,7 +24,7 @@ const AboutSection: React.FC = () => {
             </div>
 
             <div className="space-y-4">
-              {benefits.map((benefit, index) => (
+              {benefits && benefits?.map((benefit, index) => (
                 <div key={index} className="flex items-center space-x-3">
                   <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
                     <CheckCircle className="w-4 h-4 text-blue-600" />

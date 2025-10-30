@@ -79,9 +79,8 @@ const StudentsManage: React.FC = () => {
   };
 
   const handleDeleteStudent = (studentId: string) => {
-    if (window.confirm("Are you sure you want to delete this student?")) {
-      setStudents(students.filter((s) => s.id !== studentId));
-    }
+    console.log("studentId", studentId);
+    
   };
 
   const openModal = (mode: "add" | "edit" | "view", student?: Student) => {
