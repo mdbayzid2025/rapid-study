@@ -8,7 +8,7 @@ const layout = ({children}: {children: React.ReactNode}) => {
   return (
     <div>
         <Navbar  />
-        <div>
+        <div className='mt-20'>
             {children}
         </div>
         <LandingFooter />
