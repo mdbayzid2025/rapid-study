@@ -55,10 +55,7 @@ const Notes = () => {
     <div className="mt-10">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold mb-2">Study Notes Gallery</h1>
-          <p className="text-muted-foreground">
-            Browse through your collection of study notes and materials
-          </p>
+          <h1 className="text-2xl font-bold mb-2">Study Notes</h1>          
         </div>
 
         <Button
