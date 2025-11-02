@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { getBaseUrl } from "@/utils/baseUrl";
-import { connectSocket } from "@/utils/socketConnect";
+// import { connectSocket } from "@/utils/socketConnect";
 import { useGetProfileQuery } from "@/store/api/userApi";
 
 const PAGE_SIZE = 10;
@@ -14,7 +14,7 @@ export const useNotifications = () => {
   const { data: profileData } = useGetProfileQuery(undefined);
   const userId = profileData?.data?._id;
 
-  const socket = userId ? connectSocket(userId) : null;
+  // const socket = userId ? connectSocket(userId) : null;
 
   const fetchNotifications = async (pageNum = 1, reset = false) => {
     if (loading || (!hasMore && !reset)) return;
@@ -59,14 +59,14 @@ export const useNotifications = () => {
 
   // 🔁 Socket listener for real-time updates 
   // @ts-ignore
-  useEffect(() => {
-    if (!socket || !userId) return;
+  // useEffect(() => {
+  //   if (!socket || !userId) return;
 
-    const event = `get-notification::${userId}`;
-    socket.on(event, () => fetchNotifications(1, true));
+  //   const event = `get-notification::${userId}`;
+  //   socket.on(event, () => fetchNotifications(1, true));
 
-    return () => socket.off(event);
-  }, [socket, userId]);
+  //   return () => socket.off(event);
+  // }, [socket, userId]);
 
   const unReadCount = notifications?.filter((n) => !n.isRead).length;
 

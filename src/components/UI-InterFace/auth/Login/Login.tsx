@@ -1,15 +1,14 @@
 "use client";
-import { useState } from "react";
-import { Button, Input, Form, Checkbox, ConfigProvider } from "antd";
+import { useLoginMutation, useSignupMutation } from "@/store/api/authApi";
 import {
-  UserOutlined,
   LockOutlined,
   MailOutlined,
-  BookOutlined,
+  UserOutlined
 } from "@ant-design/icons";
-import { useLoginMutation, useSignupMutation } from "@/store/api/authApi";
+import { Button, Checkbox, Form, Input } from "antd";
 import Cookie from "js-cookie";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function AuthPage() {
   const [login] = useLoginMutation();

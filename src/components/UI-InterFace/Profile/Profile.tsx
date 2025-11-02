@@ -84,11 +84,11 @@ if(profile){
 }
   return (
     <div className="flex-1 bg-gray-50">
-      <main className="p-8">
+      <main className="p-3 md:p-8">
         <div className=" mx-auto">
           {/* Profile Header */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mb-8">
-            <div className="flex items-start space-x-6">
+            <div className="flex flex-col text-center md:text-start items-center md:flex-row md:items-start md:space-x-6">
               <div className="relative">
                 <img
                   src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop&crop=face"
@@ -100,15 +100,15 @@ if(profile){
                 </div>
               </div>
 
-              <div className="flex-1">
+              <div className="flex-1 mt-3 md:mt-0">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
                   {profileData.name}
                 </h1>
-                <p className="text-lg text-gray-600 mb-4">
+                <p className="text-lg text-gray-600 md:mb-4">
                   {profileData.profession}
                 </p>
 
-                <div className="flex items-center space-x-6 text-gray-600">
+                <div className="flex flex-col md:flex-row items-center space-x-6 text-gray-600">
                   <div className="flex items-center space-x-2">
                     <Mail size={16} />
                     <span>{profileData.email}</span>
@@ -134,7 +134,7 @@ if(profile){
                   className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                 >
                   <Edit size={16} />
-                  <span>Edit Profile</span>
+                  <span>Edit</span>
                 </button>
               ) : (
                 <div className="flex items-center space-x-3">
