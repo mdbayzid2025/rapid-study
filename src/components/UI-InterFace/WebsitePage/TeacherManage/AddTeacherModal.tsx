@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Teacher } from "@/types";
 import { useCreateTeacherMutation } from "@/store/api/teacherApi";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useUpdateTeacherMutation } from "@/store/api/teacherApi";
 
 interface TeacherModalProps {

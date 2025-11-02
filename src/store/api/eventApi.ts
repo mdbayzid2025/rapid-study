@@ -52,7 +52,7 @@ export const eventApi = baseApi.injectEndpoints({
       invalidatesTags: ["Event"],
     }),
     getNotification: builder.query({
-      query: () => `/notifications`,
+      query: () => `/notification`,
       // transformResponse: (res: { data: any }) => res?.data,
     }),
     getStats: builder.query({

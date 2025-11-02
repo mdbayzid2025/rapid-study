@@ -2,7 +2,7 @@ import React from "react";
 
 import dayjs from "dayjs";
 import { useUpdateToDoMutation } from "@/store/api/todosApi";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {

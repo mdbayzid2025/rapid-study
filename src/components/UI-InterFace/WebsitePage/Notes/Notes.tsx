@@ -16,13 +16,14 @@ import { Button } from "@/components/ui/button";
 import { useDeleteNoteMutation, useGetNotesQuery } from "@/store/api/noteApi";
 import { ConfigProvider, Input, Pagination } from "antd";
 import { Edit, Plus, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import AddNoteModal from "./AddNoteModal";
 import EditNoteModal from "./EditNoteModal";
 import { PageLoader } from "@/components/shared/Loader/PageLoader";
 import { useUpdateSearchParams } from "@/utils/updateSearchParams";
 import { useSearchParams } from "next/navigation";
+import { getSearchParams } from "@/utils/getSearchParams";
 
 const Notes = () => {
   const searchParams = useSearchParams()
@@ -31,6 +32,7 @@ const Notes = () => {
     data: notesData,
     isLoading,
     isError,
+    refetch
   } = useGetNotesQuery(searchParams.toString());
   const [deleteNote] = useDeleteNoteMutation();
 
@@ -38,9 +40,18 @@ const Notes = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [deleteNoteId, setDeleteNoteId] = useState(null);
-    
-  console.log('notesData', notesData)
+  const [currentPage, setCurrentPage] = useState(1);
   const updateSearchParams = useUpdateSearchParams();
+  const {page, searchTerm} = getSearchParams();
+    
+
+  useEffect(()=>{
+    updateSearchParams({page: currentPage})
+  },[currentPage])
+  // -------------- Filter Notes -----------
+  useEffect(()=>{
+  refetch()
+  },[page, searchTerm])
 
   const handleDeleteNote = async () => {
     try {
@@ -52,7 +63,7 @@ const Notes = () => {
   };
 
   return (
-    <div className="mt-10">
+    <div className="mt-10 min-h-[50vh]">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold mb-2">Study Notes</h1>          
@@ -69,7 +80,7 @@ const Notes = () => {
       <div className="w-full flex md:flex-row  gap-5 flex-col justify-between mb-3 border p-3 rounded-md">
         <Input
           onChange={(value) =>
-            updateSearchParams({ searchTerms: value.target.value })
+            updateSearchParams({ searchTerm: value.target.value })
           }
           placeholder="Search notes by title, description or tags"
           prefix={<IoSearchOutline />}
@@ -166,8 +177,9 @@ const Notes = () => {
         <Pagination
           style={{ paddingTop: 20 }}
           align="center"
-          total={30}
-          pageSize={10}
+          total={notesData?.pagination?.total}
+          pageSize={notesData?.pagination?.limit}
+          onChange={(page)=> setCurrentPage(page)}
           showQuickJumper={false}
           showSizeChanger={false}
         />

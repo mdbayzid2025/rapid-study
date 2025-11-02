@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { useCreateSemesterMutation } from "@/store/api/subjectApi";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 interface Semester {
   id: string;

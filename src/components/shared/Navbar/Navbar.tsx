@@ -51,7 +51,7 @@ const Navbar = () => {
   return (
     <div className="bg-white shadow-sm border-b border-gray-200 fixed top-0 z-50 w-full">
       <Container>
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-18">
           {/* Logo */}
           <div className="flex items-center gap-3">
             <Link href="/">

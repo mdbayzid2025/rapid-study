@@ -29,7 +29,7 @@ export interface User {
     mobile: string;
     address: string;
   };
-  profileImage?: string;
+  photo?: string;
   coverImage?: string;
   verified: boolean;
   isDeleted: boolean;

@@ -4,8 +4,9 @@ import type { Metadata } from "next";
 import { Teko, Poppins } from "next/font/google";
 import "./globals.css";
 import Providers from "@/utils/Providers";
-import { Toaster } from "react-hot-toast";
+
 import { NotificationProvider } from "@/context/NotificationProvider";
+import { Toaster } from "sonner";
 export const dynamic = "force-dynamic";
 
 const teko = Teko({
@@ -45,7 +46,7 @@ export default function RootLayout({
             <NotificationProvider>
             <AntdRegistry>
               {children}
-              <Toaster />
+              <Toaster position="top-center" richColors />
             </AntdRegistry>
             </NotificationProvider>
           </Providers>

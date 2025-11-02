@@ -7,7 +7,7 @@ import {
   useGetSemesterQuery,
 } from "@/store/api/subjectApi";
 import { useGetTeachersQuery } from "@/store/api/teacherApi";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 
 interface SubjectModalProps {

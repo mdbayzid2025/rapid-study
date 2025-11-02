@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import Link from "next/link";
 import {
@@ -11,6 +12,8 @@ import {
   Heart,
 } from "lucide-react";
 
+import { usePathname } from 'next/navigation'
+
 const LandingFooter: React.FC = () => {
   const quickLinks = [
     { label: "Student Portal", href: "/auth" },
@@ -18,11 +21,13 @@ const LandingFooter: React.FC = () => {
     { label: "Support Center", href: "/support" },
     { label: "Privacy Policy", href: "/privacy" },
   ];
+    const pathname = usePathname()
 
-
+  console.log("bayzid", pathname);
+  
 
   return (
-    <footer id="contact" className="bg-gray-900 text-white">
+    <footer className={`bg-gray-900 text-white w-full ${pathname == "/" && 'hidden'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* University Info */}

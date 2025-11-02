@@ -2,7 +2,7 @@
 import { useGetTasksQuery } from "@/store/api/taskApi";
 import { useUpdateToDoMutation } from "@/store/api/todosApi";
 import dayjs from "dayjs";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 // import Container from "../../../components/shared/Container/Container";
 import { Plus } from "lucide-react";
 import { useState } from "react";

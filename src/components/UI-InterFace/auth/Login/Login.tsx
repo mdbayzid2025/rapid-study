@@ -9,6 +9,7 @@ import { Button, Checkbox, Form, Input } from "antd";
 import Cookie from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function AuthPage() {
   const [login] = useLoginMutation();
@@ -34,8 +35,10 @@ export default function AuthPage() {
         setIsLogin(true)
       }
       router.push('/')
-    } catch (error) {
+      toast.success('Login Successfull')
+    } catch (error: any) {
       console.log("error", error);
+      toast.error(error?.data?.errorMessages[0]?.message)
     }
     // console.log(isLogin ? "Login Data:" : "Signup Data:", values);
   };
