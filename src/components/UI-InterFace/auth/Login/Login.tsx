@@ -31,7 +31,7 @@ export default function AuthPage() {
       } else {
         const res: any = await signup(values).unwrap();
         console.log("res:any", res);
-        Cookie.set("accessToken", res?.data?.accessToken);
+        setIsLogin(true)
       }
       router.push('/')
     } catch (error) {
