@@ -12,7 +12,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
       <div className="mt-16">
       <div className="flex items-start  !h-[calc-(100vh-64px)] overflow-hidden">
         <Sidebar />
-      <div className="flex-1 h-[calc-(100vh-64px)] md:mt-0 mt-4 overflow-y-auto md:px-5">
+      <div className="flex-1 h-[calc-(100vh-64px)] md:mt-0 mt-10 overflow-y-auto px-5">
         {children}
         </div>
         </div>
