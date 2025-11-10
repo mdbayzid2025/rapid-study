@@ -46,7 +46,7 @@ export default function RootLayout({
             <NotificationProvider>
             <AntdRegistry>
               {children}
-              <Toaster position="top-center" richColors />
+              <Toaster position="top-center" richColors toastOptions={{ duration: 2000 }}/>
             </AntdRegistry>
             </NotificationProvider>
           </Providers>
