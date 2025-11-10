@@ -2,9 +2,10 @@
 
 import { Edit, Mail, Phone, User, Camera } from "lucide-react";
 import { useRef } from "react";
-import { message } from "antd";
+
 import { useUpdateProfileMutation } from "@/store/api/userApi";
 import { getImageUrl } from "@/utils/baseUrl";
+import { toast } from "sonner";
 
 interface Props {
   data: {
@@ -18,6 +19,7 @@ interface Props {
   onEdit: () => void;
   onCancel: () => void;
   onSave: () => void;
+  refetch: () => void;
 }
 
 export const ProfileHeader: React.FC<Props> = ({
@@ -26,6 +28,7 @@ export const ProfileHeader: React.FC<Props> = ({
   onEdit,
   onCancel,
   onSave,
+  refetch
 }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [updateProfile] = useUpdateProfileMutation();
@@ -39,9 +42,12 @@ export const ProfileHeader: React.FC<Props> = ({
 
     try {
       const res = await updateProfile(formData).unwrap();
-      message.success(res?.message || "Profile photo updated successfully!");
+      toast.success(res?.message || "Profile photo updated successfully!");
+      refetch();
     } catch (err: any) {
-      message.error(err?.data?.message || "Failed to update profile photo");
+      console.log("err", err);
+      
+      toast.error(err?.data?.message || "Failed to update profile photo");
     }
   };
 

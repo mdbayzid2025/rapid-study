@@ -5,6 +5,7 @@ import { Plus, Search, Eye, Edit3, Download, MoreHorizontal } from 'lucide-react
 import SubjectModal from './SubjectModal';
 import SemesterModal from './SemesterModal';
 import { useGetSemesterQuery } from '@/store/api/subjectApi';
+import { Button } from 'antd';
 
 interface Subject {
   id: string;
@@ -49,11 +50,6 @@ const Subjects: React.FC = () => {
   const [selectSemester, setSelectSemester] = useState(null);
 
   const {data:semesterData, refetch, isLoading} = useGetSemesterQuery(undefined);
-
-
-  if(isLoading) <p>Loading...</p>
-
-  console.log("editingSubject", editingSubject);
 
   const academicYears = ['Academic Year 2025', 'Academic Year 2024', 'Academic Year 2023'];
 
@@ -108,52 +104,49 @@ const Subjects: React.FC = () => {
   };
 
   return (
-    <div className="p-8">
-      {/* Breadcrumb */}
-      <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
-        <span>Dashboard</span>
-        <span>›</span>
-        <span>Academic</span>
-        <span>›</span>
-        <span className="text-gray-900 font-medium">Subjects</span>
-      </nav>
+    <div className="md:p-8 pt-5 ">
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex md:flex-row flex-col gap-3 items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Subject Management</h1>
         <div className="flex items-center gap-5">
-        <button
-          onClick={handleAddSemester}
-          className="flex items-center space-x-2 bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+        <Button
+        type='primary'
+        size='large'
+        variant='solid'
+          onClick={handleAddSemester}         
         >
           <Plus className="h-5 w-5" />
           <span>Add Semester</span>
-        </button>
-        <button
-          onClick={handleAddSubject}
-          className="flex items-center space-x-2 bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+        </Button>
+        <Button
+        type='primary'
+        size='large'
+        variant='filled'
+        style={{background: "#000"}}
+          onClick={handleAddSubject}         
         >
           <Plus className="h-5 w-5" />
           <span>Add New Subject</span>
-        </button>
+        </Button>
         </div>
       </div>
 
       {/* Filters Section */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Semester Wise Subject List</h2>
-          <div className="flex items-center space-x-4">
+        <div className="flex md:flex-row flex-col items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 mb-3">Semester Wise Subject List</h2>
+          <div className="flex md:flex-row flex-col gap-2 md:gap-0  items-center md:space-x-4">
             <select
               value={academicYear}
               onChange={(e) => setAcademicYear(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               {academicYears.map(year => (
                 <option key={year} value={year}>{year}</option>
               ))}
             </select>
-            <div className="relative">
+            <div className="relative w-full">
               <Search className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
               <input
                 type="text"
