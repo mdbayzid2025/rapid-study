@@ -41,19 +41,19 @@ const SubjectModal: React.FC<SubjectModalProps> = ({
     if (subjectData) {
       console.log("edit data", subjectData);
       setFormData({
-        name: subjectData.name || "",
-        semester: subjectData.semester?._id || "",
-        subjectCode: subjectData.subjectCode || "",
-        teacher: subjectData.teacher?._id || "",
-        status: subjectData.status || "Active",
+        name: subjectData?.name || "",
+        semester: subjectData?.semester?._id || "",
+        subjectCode: subjectData?.subjectCode || "",
+        teacher: subjectData?.teacher?._id || "",
+        status: subjectData?.status || "Active",
       });
     } else {
       if (semesterData && teachersData) {
         setFormData({
           name: "",
-          semester: semesterData[0]._id || "",
+          semester: semesterData[0]?._id || "",
           subjectCode: semesterData?.subjectCode || "",
-          teacher: teachersData[0]._id || "",
+          teacher: teachersData[0]?._id || "",
           status: "Active",
         });
       }
